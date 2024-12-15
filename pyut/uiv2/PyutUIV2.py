@@ -62,12 +62,14 @@ from pyutplugins.ExternalTypes import SelectedOglObjectsCallback
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 
-from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
-from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
-from pyut.uiv2.dialogs.Wrappers import DlgEditActor
-from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
-from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.ui.dialogs.DlgEditClass import DlgEditClass
+from pyut.ui.dialogs.DlgEditInterface import DlgEditInterface
+
+from pyut.ui.dialogs.Wrappers import DlgEditActor
+from pyut.ui.dialogs.Wrappers import DlgEditUseCase
+
+from pyut.ui.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.ui.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.enums.DiagramType import DiagramType
 
@@ -618,7 +620,7 @@ class PyutUIV2(SplitterWindow):
 
         projectInformation.projectName     = self._projectManager.currentProject.projectName
         projectInformation.projectModified = self._projectManager.currentProject.modified
-        projectInformation.frameZoom       = self._projectManager.currentFrame.GetCurrentZoom()
+        projectInformation.frameZoom       = self._projectManager.currentFrame.currentZoom
 
         cb = event.callback
         cb(projectInformation)

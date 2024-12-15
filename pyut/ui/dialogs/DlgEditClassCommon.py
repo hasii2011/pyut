@@ -19,13 +19,13 @@ from pyut.uiv2.PyutAdvancedListBox import CallbackAnswer
 from pyut.uiv2.PyutAdvancedListBox import DownCallbackData
 from pyut.uiv2.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.uiv2.PyutAdvancedListBox import UpCallbackData
-from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
-from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
-from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButtons
+from pyut.ui.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.ui.dialogs.BaseEditDialog import CustomDialogButton
+from pyut.ui.dialogs.BaseEditDialog import CustomDialogButtons
 
-from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
-from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
-from pyut.uiv2.dialogs.DlgEditStereotype import DlgEditStereotype
+from pyut.ui.dialogs.DlgEditDescription import DlgEditDescription
+from pyut.ui.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.ui.dialogs.DlgEditStereotype import DlgEditStereotype
 
 from pyutmodelv2.PyutClass import PyutClass
 from pyutmodelv2.PyutInterface import PyutInterface

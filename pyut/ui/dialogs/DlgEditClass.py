@@ -29,8 +29,8 @@ from pyut.uiv2.PyutAdvancedListBox import CallbackAnswer
 from pyut.uiv2.PyutAdvancedListBox import DownCallbackData
 from pyut.uiv2.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.uiv2.PyutAdvancedListBox import UpCallbackData
-from pyut.uiv2.dialogs.DlgEditClassCommon import DlgEditClassCommon
-from pyut.uiv2.dialogs.DlgEditField import DlgEditField
+from pyut.ui.dialogs.DlgEditClassCommon import DlgEditClassCommon
+from pyut.ui.dialogs.DlgEditField import DlgEditField
 
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 

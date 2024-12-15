@@ -43,7 +43,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
 
-from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
+from pyut.ui.dialogs.tips.TipHandler import TipHandler
 
 
 # DEFAULT SIZE

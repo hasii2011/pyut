@@ -22,7 +22,7 @@ from wx.lib.sized_controls import SizedPanel
 from pyutmodelv2.PyutMethod import PyutModifiers
 from pyutmodelv2.PyutModifier import PyutModifier
 
-from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.ui.dialogs.BaseEditDialog import BaseEditDialog
 
 
 class DlgEditMethodModifiers(BaseEditDialog):

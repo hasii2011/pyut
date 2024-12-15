@@ -8,7 +8,7 @@ from pyutmodelv2.PyutType import PyutType
 
 from pyutmodelv2.enumerations.PyutVisibility import PyutVisibility
 
-from pyut.uiv2.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
+from pyut.ui.dialogs.BaseEditParamFieldDialog import BaseEditParamFieldDialog
 
 
 class DlgEditField(BaseEditParamFieldDialog):

@@ -7,7 +7,7 @@ from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.PyutConstants import PyutConstants
 
-from pyut.uiv2.dialogs.tips.TipHandler import TipHandler
+from pyut.ui.dialogs.tips.TipHandler import TipHandler
 
 from tests.ProjectTestBase import ProjectTestBase
 

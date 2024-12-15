@@ -31,7 +31,7 @@ from wx import SizeEvent
 
 from wx import NewIdRef as wxNewIdRef
 
-from pyut.uiv2.dialogs.DebugListControl import DebugListControl
+from pyut.ui.dialogs.DebugListControl import DebugListControl
 
 
 class DlgPyutDebug(Dialog):

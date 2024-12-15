@@ -8,7 +8,7 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.ui.dialogs.BaseEditDialog import BaseEditDialog
 
 from pyutmodelv2.PyutText import PyutText
 

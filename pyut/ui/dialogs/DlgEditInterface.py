@@ -36,7 +36,7 @@ from pyutmodelv2.PyutInterface import PyutInterfaces
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from pyut.uiv2.dialogs.DlgEditClassCommon import DlgEditClassCommon
+from pyut.ui.dialogs.DlgEditClassCommon import DlgEditClassCommon
 
 # Remove this after https://github.com/hasii2011/pyutmodelv2/issues/7 is implemented
 PyutInterfacesDict = NewType('PyutInterfacesDict', Dict[str, PyutInterface])

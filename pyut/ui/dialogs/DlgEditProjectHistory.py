@@ -16,9 +16,9 @@ from wx.lib.sized_controls import SizedStaticBox
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
-from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
-from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButtons
+from pyut.ui.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.ui.dialogs.BaseEditDialog import CustomDialogButton
+from pyut.ui.dialogs.BaseEditDialog import CustomDialogButtons
 
 
 class DlgEditProjectHistory(BaseEditDialog):

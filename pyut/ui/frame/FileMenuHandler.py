@@ -38,8 +38,8 @@ from pyutplugins.PluginManager import PluginManager
 from pyutplugins.plugintypes.PluginDataTypes import PluginIDMap
 
 from pyut.PyutUtils import PyutUtils
-from pyut.uiv2.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
-from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
+from pyut.ui.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
+from pyut.ui.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
 
 from pyut.enums.DiagramType import DiagramType
 

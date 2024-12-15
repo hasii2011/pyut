@@ -38,12 +38,12 @@ from pyut.uiv2.PyutAdvancedListBox import CallbackAnswer
 from pyut.uiv2.PyutAdvancedListBox import DownCallbackData
 from pyut.uiv2.PyutAdvancedListBox import PyutAdvancedListBox
 from pyut.uiv2.PyutAdvancedListBox import UpCallbackData
-from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
-from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
-from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButtons
-from pyut.uiv2.dialogs.DlgEditCode import DlgEditCode
-from pyut.uiv2.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
-from pyut.uiv2.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.ui.dialogs.BaseEditDialog import BaseEditDialog
+from pyut.ui.dialogs.BaseEditDialog import CustomDialogButton
+from pyut.ui.dialogs.BaseEditDialog import CustomDialogButtons
+from pyut.ui.dialogs.DlgEditCode import DlgEditCode
+from pyut.ui.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
+from pyut.ui.dialogs.DlgEditParameter import DlgEditParameter
 
 
 class DlgEditMethod(BaseEditDialog):

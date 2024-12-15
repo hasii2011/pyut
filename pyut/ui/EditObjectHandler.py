@@ -41,17 +41,17 @@ from ogl.OglObject import OglObject
 from pyut.ui.wxcommands.CommandModify import CommandModify
 from pyut.ui.wxcommands.CommandModify import Parameters
 
-from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
-from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
-from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.ui.dialogs.DlgEditClass import DlgEditClass
+from pyut.ui.dialogs.DlgEditLink import DlgEditLink
+from pyut.ui.dialogs.DlgEditInterface import DlgEditInterface
 
-from pyut.uiv2.dialogs.Wrappers import DlgEditSDInstanceName
-from pyut.uiv2.dialogs.Wrappers import DlgEditSDMessage
-from pyut.uiv2.dialogs.Wrappers import DlgEditActor
-from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+from pyut.ui.dialogs.Wrappers import DlgEditSDInstanceName
+from pyut.ui.dialogs.Wrappers import DlgEditSDMessage
+from pyut.ui.dialogs.Wrappers import DlgEditActor
+from pyut.ui.dialogs.Wrappers import DlgEditUseCase
 
-from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.ui.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.ui.dialogs.textdialogs.DlgEditText import DlgEditText
 
 from pyut.ui.umlframes.UmlFrame import UmlFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
@@ -219,19 +219,6 @@ class EditObjectHandler:
                 cmdModify.newParameters = Parameters([dlg.value])
                 self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
                 self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # don't do this in Pyut
-
-    # def _editSDInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
-    #     pyutSDInstance:    PyutSDInstance = oglSDInstance.pyutObject
-    #     cmdModify:         CommandModify  = CommandModify(name='Undo Instance Name', anyObject=pyutSDInstance, eventEngine=self._eventEngine)
-    #     cmdModify.methodName       = 'instanceName'
-    #     cmdModify.methodIsProperty = True
-    #     cmdModify.oldParameters    = Parameters([pyutSDInstance.instanceName])
-    #
-    #     with DlgEditSDInstanceName(umlFrame, instanceName=pyutSDInstance.instanceName) as dlg:
-    #         if dlg.ShowModal() == ID_OK:
-    #             cmdModify.newParameters = Parameters([dlg.GetValue()])
-    #             self._submitModifyCommand(umlFrame=umlFrame, cmdModifyCommand=cmdModify)
-    #             self._eventEngine.sendEvent(EventType.UMLDiagramModified)
 
     def _editSDInstanceName(self, umlFrame: UmlFrame, oglSDInstance: OglSDInstance):
 

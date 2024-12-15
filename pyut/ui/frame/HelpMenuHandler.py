@@ -12,8 +12,8 @@ from semantic_version import Version as SemanticVersion
 
 from pyut import __version__ as pyutVersion
 
-from pyut.uiv2.dialogs.DlgAbout import DlgAbout
-from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.ui.dialogs.DlgAbout import DlgAbout
+from pyut.ui.dialogs.DlgPyutDebug import DlgPyutDebug
 
 from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 

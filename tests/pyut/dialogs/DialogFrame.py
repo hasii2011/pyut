@@ -29,7 +29,7 @@ from wx import NewIdRef as wxNewIdRef
 
 from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
 
-from pyut.uiv2.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
+from pyut.ui.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
 
 
 FH_APPLICATION_NAME: str = 'TestADialog'
