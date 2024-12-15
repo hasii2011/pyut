@@ -21,7 +21,7 @@ from pyut.ui.PyutAppV2 import PyutAppV2
 from pyut.enums.ResourceTextType import ResourceTextType
 
 
-class PyutV2:
+class Pyut:
 
     JSON_LOGGING_CONFIG_FILENAME: str = "loggingConfiguration.json"
 
@@ -50,7 +50,7 @@ class PyutV2:
 
     def _setupApplicationLogging(self):
 
-        configFilePath: str = PyutUtils.retrieveResourcePath(PyutV2.JSON_LOGGING_CONFIG_FILENAME)
+        configFilePath: str = PyutUtils.retrieveResourcePath(Pyut.JSON_LOGGING_CONFIG_FILENAME)
 
         with open(configFilePath, 'r') as loggingConfigurationFile:
             configurationDictionary = jsonLoad(loggingConfigurationFile)
@@ -63,7 +63,7 @@ class PyutV2:
         self._displayIntroduction()
         app: PyutAppV2 = PyutAppV2(redirect=False)
 
-        pyutV2._displaySystemMetrics()
+        pyut._displaySystemMetrics()
 
         app.MainLoop()
 
@@ -148,8 +148,8 @@ if __name__ == "__main__":
 
     print(f'Starting Pyut')
 
-    pyutV2: PyutV2 = PyutV2()
+    pyut: Pyut = Pyut()
 
     # Launch pyut
-    if pyutV2.cmdLineArgsHandled is False:
-        pyutV2.startApplication()
+    if pyut.cmdLineArgsHandled is False:
+        pyut.startApplication()

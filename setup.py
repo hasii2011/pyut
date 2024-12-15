@@ -8,7 +8,7 @@ from pyut import __version__
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
-APP = ['pyut/PyutV2.py']
+APP = ['pyut/Pyut.py']
 DATA_FILES = [('pyut/resources', ['pyut/resources/loggingConfiguration.json']),
               ('pyut/resources', ['pyut/resources/Kilroy-Pyut.txt']),
               ('pyut/resources', ['pyut/resources/Help.txt']),
