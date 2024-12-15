@@ -20,6 +20,7 @@ from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
 DEFAULT_STARTUP_SIZE:     str = Dimensions(1024, 768).__str__()
 DEFAULT_STARTUP_POSITION: str = Position(5, 5).__str__()
+DEFAULT_TB_ICON_SIZE:     str = ToolBarIconSize.SIZE_32.value
 
 SECTION_GENERAL: ValueDescriptions = ValueDescriptions(
     {
@@ -30,11 +31,11 @@ SECTION_GENERAL: ValueDescriptions = ValueDescriptions(
         KeyName('autoResizeShapesOnEdit'):  ValueDescription(defaultValue='True',   deserializer=SecureConversions.secureBoolean),
         KeyName('fullScreen'):              ValueDescription(defaultValue='False',  deserializer=SecureConversions.secureBoolean),
         KeyName('centerAppOnStartup'):      ValueDescription(defaultValue='False',  deserializer=SecureConversions.secureBoolean),
-        KeyName('toolBarIconSize'):         ValueDescription(defaultValue=ToolBarIconSize.SIZE_32.value, enumUseValue=True),
         KeyName('currentTip'):              ValueDescription(defaultValue='0',      deserializer=SecureConversions.secureInteger),
         KeyName('diagramsDirectory'):       ValueDescription(defaultValue=''),     # will be rationally set by CurrentDirectoryHandler
         KeyName('startupSize'):             ValueDescription(defaultValue=DEFAULT_STARTUP_SIZE,     deserializer=Dimensions.deSerialize),
         KeyName('startupPosition'):         ValueDescription(defaultValue=DEFAULT_STARTUP_POSITION, deserializer=Position.deSerialize),
+        KeyName('toolBarIconSize'):         ValueDescription(defaultValue=DEFAULT_TB_ICON_SIZE,     deserializer=ToolBarIconSize.deSerialize, enumUseValue=True, ),
     }
 )
 
@@ -58,11 +59,11 @@ PYUT_SECTIONS: Sections = Sections(
 )
 
 
-class PyutPreferencesV3(DynamicConfiguration, metaclass=SingletonV3):
+class PyutPreferences(DynamicConfiguration, metaclass=SingletonV3):
 
     def __init__(self):
 
-        super().__init__(baseFileName='pyutv3.ini', moduleName='pyut', sections=PYUT_SECTIONS)
+        super().__init__(baseFileName='pyut.ini', moduleName='pyut', sections=PYUT_SECTIONS)
 
         self._logger: Logger = getLogger(__name__)
 

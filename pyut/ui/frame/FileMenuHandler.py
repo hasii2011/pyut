@@ -45,7 +45,7 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 from pyut.ui.PyutPrintout import PyutPrintout
@@ -79,9 +79,9 @@ class FileMenuHandler(BaseMenuHandler):
         self._pluginManager: PluginManager = pluginManager
         self._fileHistory:   FileHistory   = fileHistory
 
-        self.logger:       Logger            = getLogger(__name__)
-        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
-        self._plugins:     PluginIDMap       = PluginIDMap({})
+        self.logger:       Logger          = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
+        self._plugins:     PluginIDMap     = PluginIDMap({})
 
         self._exportPlugins: PluginIDMap   = cast(PluginIDMap, None)
         self._importPlugins: PluginIDMap   = cast(PluginIDMap, None)

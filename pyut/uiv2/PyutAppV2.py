@@ -25,7 +25,7 @@ from wx.lib.agw.advancedsplash import AS_CENTER_ON_PARENT
 from wx.lib.agw.advancedsplash import AS_TIMEOUT
 from wx.lib.agw.advancedsplash import AdvancedSplash
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 
@@ -107,7 +107,7 @@ class PyutAppV2(wxApp):
         """
         try:
             # Handle application filenames on the command line
-            prefs: PyutPreferencesV2 = PyutPreferencesV2()
+            prefs: PyutPreferences = PyutPreferences()
             self._handleCommandLineFileNames(prefs)
 
             if self._frame is None:
@@ -136,7 +136,7 @@ class PyutAppV2(wxApp):
             dlg.Destroy()
             return False
 
-    def _handleCommandLineFileNames(self, prefs: PyutPreferencesV2):
+    def _handleCommandLineFileNames(self, prefs: PyutPreferences):
 
         loadedAFile: bool                 = False
         appFrame:    PyutApplicationFrameV2 = self._frame

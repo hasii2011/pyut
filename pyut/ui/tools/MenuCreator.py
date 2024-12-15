@@ -36,7 +36,7 @@ from pyutplugins.plugininterfaces.ToolPluginInterface import ToolPluginInterface
 
 from pyut.general.exceptions.InvalidCategoryException import InvalidCategoryException
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
@@ -58,9 +58,9 @@ class MenuCreator:
 
         self._containingFrame: Frame = frame
 
-        self.logger:    Logger            = getLogger(__name__)
-        self._prefs:    PyutPreferencesV2 = PyutPreferencesV2()
-        self.plugMgr:   PluginManager     = pluginManager
+        self.logger:    Logger          = getLogger(__name__)
+        self._prefs:    PyutPreferences = PyutPreferences()
+        self.plugMgr:   PluginManager   = pluginManager
 
         self._plugins:    PluginIDMap   = PluginIDMap({})     # To store the plugins and their activation IDs
         self._toolboxIds: ToolboxIdMap = ToolboxIdMap({})  # Dictionary id --> toolbox

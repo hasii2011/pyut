@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from wx import Bitmap
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
@@ -40,7 +40,7 @@ class ToolIconOwner:
 
     def initializeIcons(self):
 
-        pyutPreferences: PyutPreferencesV2 = PyutPreferencesV2()
+        pyutPreferences: PyutPreferences = PyutPreferences()
 
         if pyutPreferences.toolBarIconSize == ToolBarIconSize.SIZE_16:
             self._loadSmallIcons()

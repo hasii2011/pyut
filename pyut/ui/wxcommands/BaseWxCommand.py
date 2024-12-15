@@ -23,7 +23,7 @@ from ogl.sd.OglSDMessage import OglSDMessage
 
 from ogl.preferences.OglPreferences import OglPreferences
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.wxcommands.Types import DoableObjectType
 
@@ -42,8 +42,8 @@ class BaseWxCommand(Command):
     def __init__(self, canUndo: bool, name: str):
 
         super().__init__(canUndo=canUndo, name=name)
-        self._preferences:    PyutPreferencesV2 = PyutPreferencesV2()
-        self._oglPreferences: OglPreferences    = OglPreferences()
+        self._preferences:    PyutPreferences = PyutPreferences()
+        self._oglPreferences: OglPreferences  = OglPreferences()
 
     def _removeOglObjectFromFrame(self, umlFrame: 'UmlDiagramsFrame', oglObject: DoableObjectType, pyutClass: PyutLinkedObject | None = None):
 

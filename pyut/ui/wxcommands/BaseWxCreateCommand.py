@@ -7,7 +7,7 @@ from logging import getLogger
 from abc import ABCMeta
 from abc import abstractmethod
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
@@ -46,8 +46,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
         self._eventEngine: IEventEngine = eventEngine
         self._name:        str = name
 
-        self._prefs: PyutPreferencesV2 = PyutPreferencesV2()
-
+        self._prefs: PyutPreferences  = PyutPreferences()
         self._shape: DoableObjectType = self._createPrototypeInstance()
         #
         # Save these for later

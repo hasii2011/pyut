@@ -4,7 +4,7 @@ from unittest import main as unitTestMain
 from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class TestPyutPreferencesV2(UnitTestBase):
@@ -21,14 +21,14 @@ class TestPyutPreferencesV2(UnitTestBase):
     def setUp(self):
         super().setUp()
 
-        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        self._preferences: PyutPreferences = PyutPreferences()
 
     def tearDown(self):
         super().tearDown()
 
     def testSingletonBehavior(self):
 
-        preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        preferences: PyutPreferences = PyutPreferences()
 
         original:     str = f'{hex(id(self._preferences))}'
         doppleGanger: str = f'{hex(id(preferences))}'

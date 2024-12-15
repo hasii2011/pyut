@@ -18,7 +18,7 @@ from ogl.OglLink import OglLink
 
 from ogl.sd.OglSDInstance import OglSDInstance
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class UmlFrameShapeHandler(DiagramFrame):
@@ -32,8 +32,8 @@ class UmlFrameShapeHandler(DiagramFrame):
 
         super().__init__(parent)
 
-        self.logger:       Logger = getLogger(__name__)
-        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        self.logger:       Logger          = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
 
     def addShape(self, shape: Union[OglObject, OglInterface2, SelectAnchorPoint, OglLink, OglAssociationLabel, OglSDInstance],
                  x: int, y: int, pen: Pen = None, brush: Brush = None, withModelUpdate: bool = True):

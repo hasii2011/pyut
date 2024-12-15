@@ -4,7 +4,7 @@ from unittest import main as unitTestMain
 
 from wx import Size
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
@@ -22,7 +22,7 @@ class TestToolbox(UnitTestBase):
 
     def setUp(self):
         super().setUp()
-        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        self._preferences: PyutPreferences = PyutPreferences()
 
     def tearDown(self):
         super().tearDown()

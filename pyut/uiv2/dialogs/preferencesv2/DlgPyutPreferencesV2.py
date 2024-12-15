@@ -27,7 +27,7 @@ from pyut.uiv2.dialogs.preferencesv2.GeneralPrefencesPage import GeneralPreferen
 
 from pyut.uiv2.dialogs.preferencesv2.PositioningPreferencesPage import PositioningPreferencesPage
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
@@ -59,8 +59,8 @@ class DlgPyutPreferencesV2(SizedDialog):
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
         dlgSize: Size = Size(460, 500)
         super().__init__(parent, ID_ANY, "Pyut Preferences", size=dlgSize, style=style)
-        self.logger:  Logger            = getLogger(__name__)
-        self.__prefs: PyutPreferencesV2 = PyutPreferencesV2()
+        self.logger:  Logger          = getLogger(__name__)
+        self.__prefs: PyutPreferences = PyutPreferences()
 
         sizedPanel: SizedPanel = self.GetContentsPane()
         sizedPanel.SetSizerProps(expand=True)

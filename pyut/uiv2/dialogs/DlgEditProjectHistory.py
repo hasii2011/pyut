@@ -14,7 +14,7 @@ from wx import Size
 from wx.lib.sized_controls import SizedPanel
 from wx.lib.sized_controls import SizedStaticBox
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.uiv2.dialogs.BaseEditDialog import BaseEditDialog
 from pyut.uiv2.dialogs.BaseEditDialog import CustomDialogButton
@@ -52,7 +52,7 @@ class DlgEditProjectHistory(BaseEditDialog):
         files:   List[str] = []
         fhCount: int       = self._fileHistory.GetCount()
 
-        showProjectExtension: bool = PyutPreferencesV2().displayProjectExtension
+        showProjectExtension: bool = PyutPreferences().displayProjectExtension
         for i in range(fhCount):
             fName:     str = self._fileHistory.GetHistoryFile(i)
             path:      Path = Path(fName)

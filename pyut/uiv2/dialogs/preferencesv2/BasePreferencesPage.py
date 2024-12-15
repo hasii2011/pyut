@@ -6,7 +6,7 @@ from wx import Window
 
 from wx.lib.sized_controls import SizedPanel
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class MyMetaBasePreferencesPage(ABCMeta, type(SizedPanel)):        # type: ignore
@@ -25,7 +25,7 @@ class BasePreferencesPage(SizedPanel):
 
         super().__init__(parent)
 
-        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        self._preferences: PyutPreferences = PyutPreferences()
 
     @property
     @abstractmethod

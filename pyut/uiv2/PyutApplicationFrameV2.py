@@ -48,7 +48,6 @@ from codeallybasic.SecureConversions import SecureConversions
 from pyutplugins.PluginManager import PluginManager
 
 from pyut import __version__ as pyutVersion
-from pyut.preferences.PyutPreferencesV3 import PyutPreferencesV3
 
 from pyut.ui.Action import Action
 
@@ -69,7 +68,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.PyutConstants import PyutConstants
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
@@ -114,9 +113,9 @@ class PyutApplicationFrameV2(Frame):
         Args:
             title:      Application title
         """
-        self._prefs: PyutPreferencesV2 = PyutPreferencesV2()
+        self._prefs: PyutPreferences = PyutPreferences()
 
-        self._prefsNew: PyutPreferencesV3 = PyutPreferencesV3()
+        self._prefsNew: PyutPreferences = PyutPreferences()
 
         appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
@@ -257,7 +256,7 @@ class PyutApplicationFrameV2(Frame):
             # I need to check this on a larger monitor;
             self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1] - HACK_ADJUST_EXIT_HEIGHT)
 
-        self._prefs     = cast(PyutPreferencesV2, None)
+        self._prefs     = cast(PyutPreferences, None)
         self._pluginMgr = cast(PluginManager, None)
         self._pyutUIV2  = cast(PyutUIV2, None)
 
@@ -386,7 +385,7 @@ class PyutApplicationFrameV2(Frame):
         else:
             # Display tips frame
             self._tipAlreadyDisplayed = True
-            prefs: PyutPreferencesV2 = PyutPreferencesV2()
+            prefs: PyutPreferences = PyutPreferences()
             self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal

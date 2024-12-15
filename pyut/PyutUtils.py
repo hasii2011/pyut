@@ -21,7 +21,7 @@ from codeallybasic.ResourceManager import ResourceManager
 from pyut.enums.ResourceTextType import ResourceTextType
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 @dataclass
@@ -219,7 +219,7 @@ class PyutUtils:
             A project name as determined by preferences
         """
         fileNamePath: Path = Path(filename)
-        if PyutPreferencesV2().displayProjectExtension is False:
+        if PyutPreferences().displayProjectExtension is False:
             projectName: str = fileNamePath.stem
         else:
             projectName = fileNamePath.name

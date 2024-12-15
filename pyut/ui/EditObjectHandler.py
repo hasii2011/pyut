@@ -60,7 +60,7 @@ from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.uiv2.eventengine.Events import EventType
 from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.PyutUtils import PyutUtils
 
@@ -275,7 +275,7 @@ class EditObjectHandler:
             obj:
 
         """
-        prefs: PyutPreferencesV2 = PyutPreferencesV2()
+        prefs: PyutPreferences = PyutPreferences()
 
         if prefs.autoResizeShapesOnEdit is True:
             if isinstance(obj, PyutClass):

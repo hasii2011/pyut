@@ -14,7 +14,7 @@ from pyut import __version__ as pyutVersion
 
 from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.uiv2.PyutAppV2 import PyutAppV2
 
@@ -111,7 +111,7 @@ class PyutV2:
         print('')
         print(f'Display Size: {DisplaySize()}')
         print(f'x-DPI: {size.GetWidth()} y-DPI: {size.GetHeight()}')
-        print(f'toolBarIconSize: {PyutPreferencesV2().toolBarIconSize.value}')
+        print(f'toolBarIconSize: {PyutPreferences().toolBarIconSize.value}')
 
         # noinspection PyUnreachableCode
         if __debug__:

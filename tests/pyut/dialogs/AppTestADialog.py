@@ -61,7 +61,7 @@ from ogl.preferences.OglPreferences import OglPreferences
 
 from pyut.enums.DiagramType import DiagramType
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
@@ -118,10 +118,10 @@ class AppTestADialog(App):
 
     def __init__(self, redirect: bool):
 
-        self.logger:          Logger            = getLogger(__name__)
-        self._preferences:    PyutPreferencesV2 = PyutPreferencesV2()
-        self._oglPreferences: OglPreferences    = OglPreferences()
-        self._dlgSelectionId: wxNewIdRef        = wxNewIdRef()
+        self.logger:          Logger          = getLogger(__name__)
+        self._preferences:    PyutPreferences = PyutPreferences()
+        self._oglPreferences: OglPreferences  = OglPreferences()
+        self._dlgSelectionId: wxNewIdRef      = wxNewIdRef()
 
         self._frame:       DialogFrame  = cast(DialogFrame, None)
         self._eventEngine: IEventEngine = cast(EventEngine, None)

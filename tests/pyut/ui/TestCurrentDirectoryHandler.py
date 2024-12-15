@@ -4,7 +4,7 @@ from unittest import main as unitTestMain
 
 from codeallybasic.UnitTestBase import UnitTestBase
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 # from pyut.ui.CurrentDirectoryHandler import CurrentDirectoryHandler
 
@@ -23,7 +23,7 @@ class TestCurrentDirectoryHandler(UnitTestBase):
     def setUp(self):
         super().setUp()
 
-        self._preferences: PyutPreferencesV2 = PyutPreferencesV2()
+        self._preferences: PyutPreferences = PyutPreferences()
 
     # TODO Broken when run as part of all unit tests;  Works standalone
 

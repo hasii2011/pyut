@@ -39,7 +39,7 @@ from pyut.PyutUtils import PyutUtils
 
 from pyut.general.LineSplitter import LineSplitter
 
-from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.resources.img.ImgTipsFrameTipsLogo import embeddedImage as TipsLogo
 
@@ -63,9 +63,9 @@ class DlgTipsV2(SizedDialog):
 
         self.logger: Logger = getLogger(__name__)
 
-        self._prefs:        PyutPreferencesV2 = PyutPreferencesV2()
-        self._tipsFileName: str               = PyutUtils.retrieveResourcePath(f'{PyutConstants.TIPS_FILENAME}')
-        self._tipHandler:   TipHandler        = TipHandler(fqFileName=self._tipsFileName)
+        self._prefs:        PyutPreferences = PyutPreferences()
+        self._tipsFileName: str             = PyutUtils.retrieveResourcePath(f'{PyutConstants.TIPS_FILENAME}')
+        self._tipHandler:   TipHandler      = TipHandler(fqFileName=self._tipsFileName)
 
         panel: SizedPanel = self.GetContentsPane()
 

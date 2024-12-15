@@ -237,9 +237,9 @@ class DlgEditClass(DlgEditClassCommon):
         self._pyutClass.fields      = self._pyutModelCopy.fields
         self._pyutClass.description = self._pyutModelCopy.description
 
-        from pyut.preferences.PyutPreferencesV2 import PyutPreferencesV2
+        from pyut.preferences.PyutPreferences import PyutPreferences
 
-        prefs: PyutPreferencesV2 = PyutPreferencesV2()
+        prefs: PyutPreferences = PyutPreferences()
         if prefs.autoResizeShapesOnEdit is True:
             oglClass: OglClass = self._getAssociatedOglClass(self._pyutClass)
 
