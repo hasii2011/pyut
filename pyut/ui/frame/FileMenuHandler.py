@@ -39,7 +39,7 @@ from pyutplugins.plugintypes.PluginDataTypes import PluginIDMap
 
 from pyut.PyutUtils import PyutUtils
 from pyut.uiv2.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
-from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
+from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
 
 from pyut.enums.DiagramType import DiagramType
 
@@ -266,7 +266,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self.logger.debug(f"Before dialog show")
 
-        with DlgPyutPreferencesV2(self._parent) as dlg:
+        with DlgPyutPreferences(self._parent) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:

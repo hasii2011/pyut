@@ -32,7 +32,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
 
-class DlgPyutPreferencesV2(SizedDialog):
+class DlgPyutPreferences(SizedDialog):
     """
     This class is Pyut's preference dialog.
     This implementation is version 2 of this dialog from the legacy application.

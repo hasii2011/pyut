@@ -67,7 +67,7 @@ class PyutPreferences(DynamicConfiguration, metaclass=SingletonV3):
 
         self._logger: Logger = getLogger(__name__)
 
-        self._overrideProgramExitSize: bool = False
+        self._overrideProgramExitSize:     bool = False
         self._overrideProgramExitPosition: bool = False
         """
         Set to `True` by the preferences dialog when the end-user either manually specifies

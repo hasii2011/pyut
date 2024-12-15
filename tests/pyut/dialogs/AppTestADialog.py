@@ -70,7 +70,7 @@ from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
 
 from pyut.uiv2.Types import UmlFrameType
 
-from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferencesV2 import DlgPyutPreferencesV2
+from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
 
 from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
 from pyut.uiv2.dialogs.DlgEditCode import DlgEditCode
@@ -365,7 +365,7 @@ class AppTestADialog(App):
 
     def _testDlgPyutPreferencesV2(self) -> str:
 
-        with DlgPyutPreferencesV2(parent=self._frame) as dlg:
+        with DlgPyutPreferences(parent=self._frame) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
             else:

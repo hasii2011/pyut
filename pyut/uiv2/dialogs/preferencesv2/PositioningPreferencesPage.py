@@ -99,10 +99,14 @@ class PositioningPreferencesPage(BasePreferencesPage):
     def _appPositionChanged(self, newValue: Position):
         self._preferences.startupPosition = newValue
         self._valuesChanged = True
+        # self._preferences.overrideProgramExitPosition = True
+        # Send event here
 
     def _appSizeChanged(self, newValue: Dimensions):
         self._preferences.startupSize = newValue
         self._valuesChanged = True
+        # self._preferences.overrideProgramExitSize = True
+        # Send event here
 
     def _onCenterOnStartupChanged(self, event: CommandEvent):
         """
