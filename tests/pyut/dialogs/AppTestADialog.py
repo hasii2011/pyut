@@ -71,7 +71,7 @@ from pyut.ui.PyutDocumentV2 import PyutDocumentV2
 
 from pyut.ui.Types import UmlFrameType
 
-from pyut.ui.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
+from pyut.ui.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
 from pyut.ui.dialogs.DlgEditClass import DlgEditClass
 from pyut.ui.dialogs.DlgEditCode import DlgEditCode

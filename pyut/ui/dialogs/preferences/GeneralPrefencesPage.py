@@ -29,7 +29,7 @@ from wx.lib.sized_controls import SizedStaticBox
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.ui.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
+from pyut.ui.dialogs.preferences.BasePreferencesPage import BasePreferencesPage
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
