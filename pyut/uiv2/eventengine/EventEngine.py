@@ -20,7 +20,6 @@ from pyutmodelv2.PyutNote import PyutNote
 from pyutmodelv2.PyutText import PyutText
 from pyutmodelv2.PyutActor import PyutActor
 from pyutmodelv2.PyutUseCase import PyutUseCase
-from pyutmodelv2.PyutInterface import PyutInterface
 
 from ogl.OglObject import OglObject
 from ogl.OglClass import OglClass
@@ -51,6 +50,8 @@ from pyut.uiv2.eventengine.Events import FrameInformationEvent
 from pyut.uiv2.eventengine.Events import NewNamedProjectEvent
 from pyut.uiv2.eventengine.Events import NewProjectDiagramEvent
 from pyut.uiv2.eventengine.Events import NewProjectEvent
+from pyut.uiv2.eventengine.Events import OverrideProgramExitPositionEvent
+from pyut.uiv2.eventengine.Events import OverrideProgramExitSizeEvent
 from pyut.uiv2.eventengine.Events import PasteShapesEvent
 from pyut.uiv2.eventengine.Events import RedoEvent
 from pyut.uiv2.eventengine.Events import RefreshFrameEvent
@@ -120,6 +121,7 @@ NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER: str = 'newProjectDiagramInformation'
 
 OLD_CLASS_NAME_PARAMETER: str = 'oldClassName'
 NEW_CLASS_NAME_PARAMETER: str = 'newClassName'
+OVERRIDE_PARAMETER:       str = 'override'
 
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for callback
@@ -234,6 +236,13 @@ class EventEngine(IEventEngine):
                 self._sendRequestCurrentProjectEvent(**kwargs)
             case EventType.ClassNameChanged:
                 self._sendClassNameChangedEvent(**kwargs)
+
+            case EventType.OverrideProgramExitPosition:
+                self._sendOverrideProgramExitPositionEvent(**kwargs)
+
+            case EventType.OverrideProgramExitSize:
+                self._sendOverrideProgramExitSizeEvent(**kwargs)
+
             case EventType.GetLollipopInterfaces:
                 self._sendGetLollipopInterfacesEvent(**kwargs)
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
@@ -425,4 +434,14 @@ class EventEngine(IEventEngine):
     def _sendRequestCurrentProjectEvent(self, **kwargs):
         callback:    CurrentProjectCallback     = kwargs[CALLBACK_PARAMETER]
         eventToPost: RequestCurrentProjectEvent = RequestCurrentProjectEvent(callback=callback)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendOverrideProgramExitPositionEvent(self, **kwargs):
+        value:       bool = kwargs[OVERRIDE_PARAMETER]
+        eventToPost: OverrideProgramExitPositionEvent = OverrideProgramExitPositionEvent(override=value)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendOverrideProgramExitSizeEvent(self, **kwargs):
+        value:       bool = kwargs[OVERRIDE_PARAMETER]
+        eventToPost: OverrideProgramExitSizeEvent = OverrideProgramExitSizeEvent(override=value)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

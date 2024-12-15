@@ -69,12 +69,5 @@ class PyutPreferences(DynamicConfiguration, metaclass=SingletonV3):
 
         self._overrideProgramExitSize:     bool = False
         self._overrideProgramExitPosition: bool = False
-        """
-        Set to `True` by the preferences dialog when the end-user either manually specifies
-        the size or position of the Pyut application.  If it is False, then normal end
-        of application logic prevails;
-
-        These are not persisted
-        """
 
         self._configParser.optionxform = str  # type: ignore

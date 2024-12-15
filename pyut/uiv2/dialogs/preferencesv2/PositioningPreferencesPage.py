@@ -19,6 +19,8 @@ from codeallyadvanced.ui.widgets.DimensionsControl import DimensionsControl
 from codeallyadvanced.ui.widgets.PositionControl import PositionControl
 
 from pyut.uiv2.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
+from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
 
 
 class PositioningPreferencesPage(BasePreferencesPage):
@@ -26,7 +28,10 @@ class PositioningPreferencesPage(BasePreferencesPage):
     Implemented using sized components for better platform look and feel
     """
 
-    def __init__(self, parent: Window):
+    def __init__(self, parent: Window, eventEngine: IEventEngine):
+
+        self._eventEngine: IEventEngine = eventEngine
+
         super().__init__(parent)
         self.SetSizerType('vertical')
         self._centerAppOnStartupId: int  = wxNewIdRef()
@@ -99,14 +104,12 @@ class PositioningPreferencesPage(BasePreferencesPage):
     def _appPositionChanged(self, newValue: Position):
         self._preferences.startupPosition = newValue
         self._valuesChanged = True
-        # self._preferences.overrideProgramExitPosition = True
-        # Send event here
+        self._eventEngine.sendEvent(EventType.OverrideProgramExitPosition, override=True)
 
     def _appSizeChanged(self, newValue: Dimensions):
         self._preferences.startupSize = newValue
         self._valuesChanged = True
-        # self._preferences.overrideProgramExitSize = True
-        # Send event here
+        self._eventEngine.sendEvent(EventType.OverrideProgramExitSize, override=True)
 
     def _onCenterOnStartupChanged(self, event: CommandEvent):
         """

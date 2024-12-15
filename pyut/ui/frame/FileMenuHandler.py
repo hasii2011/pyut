@@ -266,7 +266,7 @@ class FileMenuHandler(BaseMenuHandler):
 
         self.logger.debug(f"Before dialog show")
 
-        with DlgPyutPreferences(self._parent) as dlg:
+        with DlgPyutPreferences(self._parent, eventEngine=self._eventEngine) as dlg:
             if dlg.ShowModal() == ID_OK:
                 self.logger.debug(f'Waiting for answer')
             else:

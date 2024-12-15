@@ -45,6 +45,9 @@ ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 GetLollipopInterfacesEvent,    EVENT_GET_LOLLIPOP_INTERFACES    = NewEvent()
 
+OverrideProgramExitSizeEvent,     EVENT_OVERRIDE_PROGRAM_EXIT_SIZE     = NewEvent()
+OverrideProgramExitPositionEvent, EVENT_OVERRIDE_PROGRAM_EXIT_POSITION = NewEvent()
+
 # The following specifically for the plugin adapter
 FrameInformationEvent,         EVENT_FRAME_INFORMATION       = NewEvent()
 FrameSizeEvent,                EVENT_FRAME_SIZE              = NewEvent()
@@ -227,3 +230,6 @@ class EventType(Enum):
     RequestCurrentProject    = 'RequestCurrentProject'
     DeleteLink               = 'DeleteLink'
     CreateLink               = 'CreateLink'
+
+    OverrideProgramExitSize     = 'OverrideProgramExitSize'
+    OverrideProgramExitPosition = 'OverrideProgramExitPosition'

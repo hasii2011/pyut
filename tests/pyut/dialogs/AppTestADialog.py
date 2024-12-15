@@ -212,7 +212,7 @@ class AppTestADialog(App):
                 dlgAnswer = self._testDlgEditNote()
             case DialogNamesEnum.DLG_EDIT_DESCRIPTION:
                 dlgAnswer = self._testDlgEditDescription()
-            case DialogNamesEnum.DLG_PYUT_PREFERENCES_V2:
+            case DialogNamesEnum.DLG_PYUT_PREFERENCES:
                 dlgAnswer = self._testDlgPyutPreferencesV2()
             case DialogNamesEnum.DLG_EDIT_PARAMETER:
                 dlgAnswer = self._testDlgEditParameter()
@@ -365,7 +365,7 @@ class AppTestADialog(App):
 
     def _testDlgPyutPreferencesV2(self) -> str:
 
-        with DlgPyutPreferences(parent=self._frame) as dlg:
+        with DlgPyutPreferences(parent=self._frame, eventEngine=self._eventEngine) as dlg:
             if dlg.ShowModal() == OK:
                 return f'Preferences returned Ok'
             else:

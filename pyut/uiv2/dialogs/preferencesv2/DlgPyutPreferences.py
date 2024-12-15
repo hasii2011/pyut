@@ -31,6 +31,8 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
+from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
 
 class DlgPyutPreferences(SizedDialog):
     """
@@ -51,11 +53,13 @@ class DlgPyutPreferences(SizedDialog):
         dlg.Destroy()
     ```
     """
-    def __init__(self, parent):
+    def __init__(self, parent, eventEngine: IEventEngine):
         """
         Args:
             parent:
         """
+        self._eventEngine: IEventEngine = eventEngine
+
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
         dlgSize: Size = Size(460, 500)
         super().__init__(parent, ID_ANY, "Pyut Preferences", size=dlgSize, style=style)
@@ -82,7 +86,7 @@ class DlgPyutPreferences(SizedDialog):
         book.SetSizerProps(expand=True, proportion=1)
 
         generalPreferences:     GeneralPreferencesPage       = GeneralPreferencesPage(book)
-        positioningPreferences: PositioningPreferencesPage   = PositioningPreferencesPage(book)
+        positioningPreferences: PositioningPreferencesPage   = PositioningPreferencesPage(book, eventEngine=self._eventEngine)
         diagramPreferences:     DiagramPreferencesPage       = DiagramPreferencesPage(book)
         valuePreferences:       DefaultValuesPreferencesPage = DefaultValuesPreferencesPage(book)
         pluginPreferences:      PluginPreferencesPage        = PluginPreferencesPage(book)

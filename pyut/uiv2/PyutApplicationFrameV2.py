@@ -7,7 +7,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-
 from sys import platform as sysPlatform
 
 from os import getenv as osGetEnv
@@ -79,10 +78,14 @@ from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 from pyut.uiv2.eventengine.EventEngine import EventEngine
 from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
 from pyut.uiv2.eventengine.Events import EVENT_ASSOCIATE_EDIT_MENU
+from pyut.uiv2.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_POSITION
+from pyut.uiv2.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_SIZE
 from pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
 from pyut.uiv2.eventengine.Events import EVENT_UPDATE_EDIT_MENU
 from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
 from pyut.uiv2.eventengine.Events import EventType
+from pyut.uiv2.eventengine.Events import OverrideProgramExitPositionEvent
+from pyut.uiv2.eventengine.Events import OverrideProgramExitSizeEvent
 from pyut.uiv2.eventengine.Events import SelectToolEvent
 from pyut.uiv2.eventengine.Events import UpdateEditMenuEvent
 from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
@@ -114,10 +117,7 @@ class PyutApplicationFrameV2(Frame):
             title:      Application title
         """
         self._prefs: PyutPreferences = PyutPreferences()
-
-        self._prefsNew: PyutPreferences = PyutPreferences()
-
-        appSize: Size = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
+        appSize:     Size            = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
 
         appModeStr: Optional[str] = osGetEnv(PyutConstants.APP_MODE)
         if appModeStr is None:
@@ -127,6 +127,7 @@ class PyutApplicationFrameV2(Frame):
 
         # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
         # in production mode use FRAME_TOOL_WINDOW
+        # Still the behavior in 4.2.2
         #
         frameStyle: int = DEFAULT_FRAME_STYLE | FRAME_FLOAT_ON_PARENT
         if appMode is True:
@@ -161,7 +162,7 @@ class PyutApplicationFrameV2(Frame):
         self._fileHistory.UseMenu(fileMenu)
         self._fileHistory.Load(fileHistoryConfiguration)
 
-        self.__setupKeyboardShortcuts()
+        self._setupKeyboardShortcuts()
 
         self._eventEngine.sendEvent(EventType.NewProject)
         wxYield()       # A hacky way to get the above to act like a method call
@@ -179,59 +180,23 @@ class PyutApplicationFrameV2(Frame):
         if self.GetThemeEnabled() is True:
             self.SetThemeEnabled(True)
 
-        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE,  self._onUpdateTitle)
-        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_STATUS, self._onUpdateStatus)
-        self._eventEngine.registerListener(EVENT_SELECT_TOOL,               self._onSelectTool)
-        self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS,    self._onUpdateRecentProjects)
-        self._eventEngine.registerListener(EVENT_UPDATE_EDIT_MENU,          self._onUpdateEditMenu)
-        self._eventEngine.registerListener(EVENT_ASSOCIATE_EDIT_MENU,       self._onAssociateEditMenu)
+        self._initializeEventEngineHandlers()
 
         self._fileMenu: Menu = fileMenu     # So we can destroy you later !!!
         self._editMenu: Menu = editMenu
 
+        self._overrideProgramExitSize:     bool = False
+        self._overrideProgramExitPosition: bool = False
+        """
+        Set to `True` by the preferences dialog when the end-user either manually specifies
+        the size or position of the Pyut application.  If it is False, then normal end
+        of application logic prevails;  The preferences dialog sends this class an
+        event; To change the value
+        """
+
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
         self.Bind(EVT_ACTIVATE,       self._onActivate)
         self.Bind(EVT_CLOSE,          self.Close)
-
-    def _initializeMenuHandlers(self) -> Tuple[Menu, Menu]:
-        """
-        Returns: a tuple with the file menu and the edit menu
-        """
-
-        fileMenu:  Menu = Menu()
-        editMenu:  Menu = Menu()
-        toolsMenu: Menu = Menu()
-        helpMenu:  Menu = Menu()
-        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
-                                                                 pluginManager=self._pluginMgr,
-                                                                 fileHistory=self._fileHistory
-                                                                 )
-
-        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
-        self._initializePyutTools()
-
-        self._toolboxIds:       ToolboxIdMap     = self._createToolboxIdMap()
-        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
-                                                                    toolboxIds=self._toolboxIds)
-        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=helpMenu)
-        self._menuCreator:     MenuCreator     = MenuCreator(frame=self, pluginManager=self._pluginMgr)
-
-        self._menuCreator.fileMenu  = fileMenu
-        self._menuCreator.editMenu  = editMenu
-        self._menuCreator.toolsMenu = toolsMenu
-        self._menuCreator.helpMenu  = helpMenu
-
-        self._menuCreator.fileMenuHandler  = self._fileMenuHandler
-        self._menuCreator.editMenuHandler  = self._editMenuHandler
-        self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
-        self._menuCreator.helpMenuHandler  = self._helpMenuHandler
-
-        self._menuCreator.toolPlugins   = self._pluginMgr.toolPluginsMap.pluginIdMap
-        self._menuCreator.exportPlugins = self._pluginMgr.outputPluginsMap.pluginIdMap
-        self._menuCreator.importPlugins = self._pluginMgr.inputPluginsMap.pluginIdMap
-        self._menuCreator.toolboxIds    = self._toolboxIds
-
-        return fileMenu, editMenu
 
     def Close(self, force=False):
         """
@@ -243,13 +208,13 @@ class PyutApplicationFrameV2(Frame):
         # Close all files
         self._pyutUIV2.handleUnsavedProjects()
 
-        if self._prefs.overrideProgramExitPosition is False:
+        if self._overrideProgramExitPosition is False:
             # Only save position if we are not auto-saving
             if self._prefs.centerAppOnStartup is False:
                 x, y = self.GetPosition()
                 pos: Position = Position(x=x, y=y)
                 self._prefs.startupPosition = pos
-        if self._prefs.overrideProgramExitSize is False:
+        if self._overrideProgramExitSize is False:
             ourSize: Tuple[int, int] = self.GetSize()
 
             # See issue https://github.com/hasii2011/PyUt/issues/452
@@ -371,6 +336,12 @@ class PyutApplicationFrameV2(Frame):
         cp: CommandProcessor = event.commandProcessor
         cp.SetEditMenu(self._editMenu)
 
+    def _onOverrideProgramExitSize(self, event: OverrideProgramExitSizeEvent):
+        self._overrideProgramExitSize = event.override
+
+    def _onOverrideProgramExitPosition(self, event: OverrideProgramExitPositionEvent):
+        self._overrideProgramExitPosition = event.override
+
     def _onActivate(self, event: ActivateEvent):
         """
         EVT_ACTIVATE Callback; display tips frame.
@@ -451,7 +422,57 @@ class PyutApplicationFrameV2(Frame):
             icon: Icon = Icon(fileName, BITMAP_TYPE_ICO)
             self.SetIcon(icon)
 
-    def __setupKeyboardShortcuts(self):
+    def _initializeEventEngineHandlers(self):
+        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_TITLE, self._onUpdateTitle)
+        self._eventEngine.registerListener(EVENT_UPDATE_APPLICATION_STATUS, self._onUpdateStatus)
+        self._eventEngine.registerListener(EVENT_SELECT_TOOL, self._onSelectTool)
+        self._eventEngine.registerListener(EVENT_UPDATE_RECENT_PROJECTS, self._onUpdateRecentProjects)
+        self._eventEngine.registerListener(EVENT_UPDATE_EDIT_MENU, self._onUpdateEditMenu)
+        self._eventEngine.registerListener(EVENT_ASSOCIATE_EDIT_MENU, self._onAssociateEditMenu)
+        self._eventEngine.registerListener(EVENT_OVERRIDE_PROGRAM_EXIT_SIZE, self._onOverrideProgramExitSize)
+        self._eventEngine.registerListener(EVENT_OVERRIDE_PROGRAM_EXIT_POSITION, self._onOverrideProgramExitPosition)
+
+    def _initializeMenuHandlers(self) -> Tuple[Menu, Menu]:
+        """
+        Returns: a tuple with the file menu and the edit menu
+        """
+
+        fileMenu:  Menu = Menu()
+        editMenu:  Menu = Menu()
+        toolsMenu: Menu = Menu()
+        helpMenu:  Menu = Menu()
+        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
+                                                                 pluginManager=self._pluginMgr,
+                                                                 fileHistory=self._fileHistory
+                                                                 )
+
+        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
+        self._initializePyutTools()
+
+        self._toolboxIds:       ToolboxIdMap     = self._createToolboxIdMap()
+        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
+                                                                    toolboxIds=self._toolboxIds)
+        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=helpMenu)
+        self._menuCreator:     MenuCreator     = MenuCreator(frame=self, pluginManager=self._pluginMgr)
+
+        self._menuCreator.fileMenu  = fileMenu
+        self._menuCreator.editMenu  = editMenu
+        self._menuCreator.toolsMenu = toolsMenu
+        self._menuCreator.helpMenu  = helpMenu
+
+        self._menuCreator.fileMenuHandler  = self._fileMenuHandler
+        self._menuCreator.editMenuHandler  = self._editMenuHandler
+        self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
+        self._menuCreator.helpMenuHandler  = self._helpMenuHandler
+
+        self._menuCreator.toolPlugins   = self._pluginMgr.toolPluginsMap.pluginIdMap
+        self._menuCreator.exportPlugins = self._pluginMgr.outputPluginsMap.pluginIdMap
+        self._menuCreator.importPlugins = self._pluginMgr.inputPluginsMap.pluginIdMap
+        self._menuCreator.toolboxIds    = self._toolboxIds
+
+        return fileMenu, editMenu
+
+    def _setupKeyboardShortcuts(self):
         """
         Initialize the accelerators. These are the keyboard shortcuts
         """
