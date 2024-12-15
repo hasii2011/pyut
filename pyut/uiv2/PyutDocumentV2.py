@@ -17,7 +17,7 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import UmlFrameType
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class PyutDocumentV2(IPyutDocument):

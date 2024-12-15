@@ -93,18 +93,18 @@ from pyut.ui.dialogs.Wrappers import DlgEditActor
 from pyut.ui.dialogs.Wrappers import DlgEditDiagramTitle
 from pyut.ui.dialogs.Wrappers import DlgEditUseCase
 
-from pyut.uiv2.eventengine.EventEngine import GetLollipopInterfacesCallback
-from pyut.uiv2.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
-from pyut.uiv2.eventengine.Events import GetLollipopInterfacesEvent
+from pyut.ui.eventengine.EventEngine import GetLollipopInterfacesCallback
+from pyut.ui.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
+from pyut.ui.eventengine.Events import GetLollipopInterfacesEvent
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventEngine import EventEngine
 
-from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
-from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
-from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
+from pyut.ui.eventengine.Events import ClassNameChangedEvent
+from pyut.ui.eventengine.Events import EVENT_CLASS_NAME_CHANGED
+from pyut.ui.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import UMLDiagramModifiedEvent
 
 from tests.ProjectTestBase import ProjectTestBase
 

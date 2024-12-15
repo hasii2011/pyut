@@ -31,7 +31,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyutplugins.common.ui.preferences.PluginPreferencesPage import PluginPreferencesPage
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class DlgPyutPreferences(SizedDialog):

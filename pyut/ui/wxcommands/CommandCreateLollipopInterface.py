@@ -17,8 +17,8 @@ from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
 
 from pyut.ui.wxcommands.Types import DoableObjectType
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 

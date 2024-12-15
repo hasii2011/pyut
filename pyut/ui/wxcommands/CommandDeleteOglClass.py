@@ -11,9 +11,9 @@ from pyutmodelv2.PyutClass import PyutClass
 from ogl.OglClass import OglClass
 
 from pyut.ui.wxcommands.BaseWxDeleteCommand import BaseWxDeleteCommand
-from pyut.uiv2.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import EventType
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame

@@ -10,8 +10,8 @@ from wx import PyEventBinder
 
 from pyut.ui.wxcommands.CommandModify import CommandModify
 from pyut.ui.wxcommands.CommandModify import Parameters
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class UnitTestClass:

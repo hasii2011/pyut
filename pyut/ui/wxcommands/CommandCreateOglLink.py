@@ -8,8 +8,8 @@ from wx import Yield as wxYield
 from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from pyut.ui.wxcommands.BaseWxLinkCommand import BaseWxLinkCommand
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.wxcommands.Types import DoableObjectType
 

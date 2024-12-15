@@ -19,8 +19,8 @@ from codeallyadvanced.ui.widgets.DimensionsControl import DimensionsControl
 from codeallyadvanced.ui.widgets.PositionControl import PositionControl
 
 from pyut.ui.dialogs.preferencesv2.BasePreferencesPage import BasePreferencesPage
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class PositioningPreferencesPage(BasePreferencesPage):

@@ -9,9 +9,9 @@ from pyutmodelv2.PyutActor import PyutActor
 from ogl.OglActor import OglActor
 
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
-from pyut.uiv2.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import EventType
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class CommandCreateOglActor(BaseWxCreateCommand):

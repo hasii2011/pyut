@@ -7,7 +7,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from deprecated import deprecated
 from wx import EVT_CLOSE
 from wx import EVT_PAINT
 
@@ -43,9 +42,9 @@ from pyut.experimental.GraphicalHandler import GraphicalHandler
 
 from pyut.ui.umlframes.UmlFrameShapeHandler import UmlFrameShapeHandler
 
-from pyut.uiv2.eventengine.Events import AddOglDiagramEvent
-from pyut.uiv2.eventengine.Events import AddPyutDiagramEvent
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import AddOglDiagramEvent
+from pyut.ui.eventengine.Events import AddPyutDiagramEvent
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 A4_FACTOR:    float = 1.41
 

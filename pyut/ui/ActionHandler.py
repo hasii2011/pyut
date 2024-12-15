@@ -11,6 +11,8 @@ from dataclasses import dataclass
 
 from codeallybasic.SingletonV3 import SingletonV3
 
+from codeallyadvanced.ui.AttachmentSide import AttachmentSide
+
 from wx import ID_OK
 from wx import CANCEL
 from wx import CENTRE
@@ -21,8 +23,6 @@ from wx import Point
 from wx import TextEntryDialog
 
 from wx import Yield as wxYield
-
-from codeallyadvanced.ui.AttachmentSide import AttachmentSide
 
 from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
@@ -51,12 +51,12 @@ from pyut.ui.Action import Action
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
-from pyut.uiv2.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
-from pyut.uiv2.eventengine.Events import EVENT_SET_TOOL_ACTION
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.Events import SetToolActionEvent
+from pyut.ui.eventengine.Events import EVENT_SET_TOOL_ACTION
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import SetToolActionEvent
 
 from pyut.PyutUtils import PyutUtils
 

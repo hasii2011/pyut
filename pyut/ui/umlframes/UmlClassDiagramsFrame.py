@@ -21,9 +21,9 @@ from pyut.ui.umlframes.UmlClassDiagramFrameMenuHandler import UmlClassDiagramFra
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
-from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import ClassNameChangedEvent
+from pyut.ui.eventengine.Events import EVENT_CLASS_NAME_CHANGED
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
 

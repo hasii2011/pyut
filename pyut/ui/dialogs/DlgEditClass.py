@@ -34,8 +34,8 @@ from pyut.ui.dialogs.DlgEditField import DlgEditField
 
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class DlgEditClass(DlgEditClassCommon):

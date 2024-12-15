@@ -4,7 +4,7 @@ from typing import Optional
 from wx import Menu
 from wx import Window
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class BaseMenuHandler:

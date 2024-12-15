@@ -20,7 +20,7 @@ from ogl.OglClass import OglClass
 
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class GraphicalHandler:

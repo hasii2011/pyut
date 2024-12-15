@@ -10,9 +10,9 @@ from ogl.OglUseCase import OglUseCase
 
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 
-from pyut.uiv2.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import EventType
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class CommandCreateOglUseCase(BaseWxCreateCommand):

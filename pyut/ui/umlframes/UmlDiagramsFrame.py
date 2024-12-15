@@ -36,10 +36,10 @@ from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
 from pyut.ui.umlframes.UmlFrame import UmlFrame
 
-from pyut.uiv2.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
-from pyut.uiv2.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyutplugins.ExternalTypes import ObjectBoundaries
 

@@ -54,11 +54,11 @@ from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from pyut.uiv2.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
+from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 
-from pyut.uiv2.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import EventType
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 FileNames = NewType('FileNames', List[str])
 

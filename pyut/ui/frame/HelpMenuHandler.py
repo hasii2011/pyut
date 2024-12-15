@@ -19,7 +19,7 @@ from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class HelpMenuHandler(BaseMenuHandler):

@@ -35,9 +35,9 @@ from pyutmodelv2.enumerations.PyutStereotype import PyutStereotype
 
 from ogl.preferences.OglPreferences import OglPreferences
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
-from pyut.uiv2.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import EventType
 
 CommonClassType = Union[PyutClass, PyutInterface]
 

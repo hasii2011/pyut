@@ -49,9 +49,9 @@ from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
 from pyut.uiv2.IPyutDocument import IPyutDocument
 from pyut.uiv2.IPyutProject import IPyutProject
 
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from pyut.uiv2.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 NO_PLUGIN_PROJECT           = cast(PluginProject, None)
 NO_OBJECT_BOUNDARY_CALLBACK = cast(ObjectBoundaryCallback, None)

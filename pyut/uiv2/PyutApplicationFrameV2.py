@@ -75,26 +75,26 @@ from pyut.uiv2.PluginAdapter import PluginAdapter
 from pyut.uiv2.PyutUIV2 import PyutUIV2
 from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
 
-from pyut.uiv2.eventengine.EventEngine import EventEngine
-from pyut.uiv2.eventengine.Events import AssociateEditMenuEvent
-from pyut.uiv2.eventengine.Events import EVENT_ASSOCIATE_EDIT_MENU
-from pyut.uiv2.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_POSITION
-from pyut.uiv2.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_SIZE
-from pyut.uiv2.eventengine.Events import EVENT_SELECT_TOOL
-from pyut.uiv2.eventengine.Events import EVENT_UPDATE_EDIT_MENU
-from pyut.uiv2.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.Events import OverrideProgramExitPositionEvent
-from pyut.uiv2.eventengine.Events import OverrideProgramExitSizeEvent
-from pyut.uiv2.eventengine.Events import SelectToolEvent
-from pyut.uiv2.eventengine.Events import UpdateEditMenuEvent
-from pyut.uiv2.eventengine.Events import UpdateRecentProjectsEvent
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventEngine import EventEngine
+from pyut.ui.eventengine.Events import AssociateEditMenuEvent
+from pyut.ui.eventengine.Events import EVENT_ASSOCIATE_EDIT_MENU
+from pyut.ui.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_POSITION
+from pyut.ui.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_SIZE
+from pyut.ui.eventengine.Events import EVENT_SELECT_TOOL
+from pyut.ui.eventengine.Events import EVENT_UPDATE_EDIT_MENU
+from pyut.ui.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
+from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.Events import OverrideProgramExitPositionEvent
+from pyut.ui.eventengine.Events import OverrideProgramExitSizeEvent
+from pyut.ui.eventengine.Events import SelectToolEvent
+from pyut.ui.eventengine.Events import UpdateEditMenuEvent
+from pyut.ui.eventengine.Events import UpdateRecentProjectsEvent
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
-from pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
-from pyut.uiv2.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
-from pyut.uiv2.eventengine.Events import UpdateApplicationStatusEvent
-from pyut.uiv2.eventengine.Events import UpdateApplicationTitleEvent
+from pyut.ui.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
+from pyut.ui.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
+from pyut.ui.eventengine.Events import UpdateApplicationStatusEvent
+from pyut.ui.eventengine.Events import UpdateApplicationTitleEvent
 
 HACK_ADJUST_EXIT_HEIGHT: int = 16
 
