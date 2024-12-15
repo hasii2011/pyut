@@ -19,8 +19,8 @@ from pyutplugins.ExternalTypes import PluginDocumentTitle
 from pyutplugins.ExternalTypes import PluginDocumentType
 from pyutplugins.ExternalTypes import PluginProject
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.IPyutProject import IPyutProject
 from pyut.ui.Types import UmlFrameType
 
 

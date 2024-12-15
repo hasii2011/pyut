@@ -6,7 +6,7 @@ from abc import abstractmethod
 
 from wx import TreeItemId
 
-from pyut.uiv2.IPyutDocument import PyutDocuments
+from pyut.ui.IPyutDocument import PyutDocuments
 from pyut.ui.Types import Frames
 from pyut.ui.Types import UmlFrameType
 

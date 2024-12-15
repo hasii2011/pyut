@@ -27,7 +27,7 @@ from wx import WindowDestroyEvent
 from wx import PostEvent as wxPostEvent
 from wx import NewIdRef as wxNewIdRef
 
-from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
+from pyut.ui.FileHistoryConfiguration import FileHistoryConfiguration
 
 from pyut.ui.dialogs.DlgEditProjectHistory import DlgEditProjectHistory
 

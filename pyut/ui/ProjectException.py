@@ -1,7 +1,7 @@
 
 from enum import Enum
 
-from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.ui.IPyutProject import IPyutProject
 
 
 class ProjectExceptionType(Enum):

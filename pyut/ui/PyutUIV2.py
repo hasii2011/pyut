@@ -80,20 +80,20 @@ from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.IPyutProject import IPyutProject
 
-from pyut.uiv2.DiagramNotebook import DiagramNotebook
-from pyut.uiv2.LayoutEngine import LayoutEngine
-from pyut.uiv2.PluginProjectCreator import PluginProjectCreator
-from pyut.uiv2.ProjectException import ProjectException
-from pyut.uiv2.ProjectException import ProjectExceptionType
-from pyut.uiv2.ProjectManager import ProjectManager
-from pyut.uiv2.ProjectManager import PyutProjects
-from pyut.uiv2.ProjectTree import ProjectTree
-from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
-from pyut.uiv2.PyutProjectV2 import PyutProjectV2
-from pyut.uiv2.PyutProjectV2 import UmlFrameType
+from pyut.ui.DiagramNotebook import DiagramNotebook
+from pyut.ui.LayoutEngine import LayoutEngine
+from pyut.ui.PluginProjectCreator import PluginProjectCreator
+from pyut.ui.ProjectException import ProjectException
+from pyut.ui.ProjectException import ProjectExceptionType
+from pyut.ui.ProjectManager import ProjectManager
+from pyut.ui.ProjectManager import PyutProjects
+from pyut.ui.ProjectTree import ProjectTree
+from pyut.ui.PyutDocumentV2 import PyutDocumentV2
+from pyut.ui.PyutProjectV2 import PyutProjectV2
+from pyut.ui.PyutProjectV2 import UmlFrameType
 
 from pyut.ui.Types import createDiagramFrame
 

@@ -14,8 +14,8 @@ from wx import MessageDialog
 
 from pyut.enums.DiagramType import DiagramType
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.IPyutProject import UmlFrameType
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.IPyutProject import UmlFrameType
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 

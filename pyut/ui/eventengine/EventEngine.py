@@ -29,7 +29,7 @@ from pyutplugins.ExternalTypes import FrameInformationCallback
 
 from pyut.enums.DiagramType import DiagramType
 
-from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.ui.IPyutProject import IPyutProject
 from pyut.ui.eventengine.Events import AddOglDiagramEvent
 from pyut.ui.eventengine.Events import AddPyutDiagramEvent
 from pyut.ui.eventengine.Events import AddShapeEvent

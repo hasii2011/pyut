@@ -29,7 +29,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 
-from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+from pyut.ui.PyutApplicationFrameV2 import PyutApplicationFrameV2
 
 
 class PyutAppV2(wxApp):
@@ -47,7 +47,7 @@ class PyutAppV2(wxApp):
 
         self.logger: Logger = getLogger(__name__)
 
-        from pyut.uiv2.PyutApplicationFrameV2 import PyutApplicationFrameV2
+        from pyut.ui.PyutApplicationFrameV2 import PyutApplicationFrameV2
 
         self.splash: AdvancedSplash = cast(AdvancedSplash, None)
 

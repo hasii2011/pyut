@@ -46,8 +46,8 @@ from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.wxcommands.CommandCreateOglLink import CommandCreateOglLink
 from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.IPyutProject import IPyutProject
 
 from pyut.ui.eventengine.Events import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine

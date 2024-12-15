@@ -13,15 +13,15 @@ from wx import TreeItemId
 
 from pyut.PyutUtils import PyutUtils
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.IPyutProject import IPyutProject
-from pyut.uiv2.IPyutProject import PyutDocuments
-from pyut.uiv2.IPyutProject import UmlFrameType
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.IPyutProject import IPyutProject
+from pyut.ui.IPyutProject import PyutDocuments
+from pyut.ui.IPyutProject import UmlFrameType
 
 from pyut.ui.Types import Frames
 
 if TYPE_CHECKING:
-    from pyut.uiv2.ProjectTree import ProjectTree
+    from pyut.ui.ProjectTree import ProjectTree
 
 
 class PyutProjectV2(IPyutProject):

@@ -18,8 +18,8 @@ from wx import Window
 from pyut.PyutUtils import PyutUtils
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.PyutProjectV2 import PyutProjectV2
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.PyutProjectV2 import PyutProjectV2
 
 DocumentTreeItemIds = NewType('DocumentTreeItemIds', List[TreeItemId])
 

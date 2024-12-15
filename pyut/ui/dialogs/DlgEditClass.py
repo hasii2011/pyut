@@ -23,12 +23,12 @@ from pyutmodelv2.PyutParameter import PyutParameter
 
 from ogl.OglClass import OglClass
 
-from pyut.uiv2.PyutAdvancedListBox import AdvancedListBoxItems
-from pyut.uiv2.PyutAdvancedListBox import AdvancedListCallbacks
-from pyut.uiv2.PyutAdvancedListBox import CallbackAnswer
-from pyut.uiv2.PyutAdvancedListBox import DownCallbackData
-from pyut.uiv2.PyutAdvancedListBox import PyutAdvancedListBox
-from pyut.uiv2.PyutAdvancedListBox import UpCallbackData
+from pyut.ui.PyutAdvancedListBox import AdvancedListBoxItems
+from pyut.ui.PyutAdvancedListBox import AdvancedListCallbacks
+from pyut.ui.PyutAdvancedListBox import CallbackAnswer
+from pyut.ui.PyutAdvancedListBox import DownCallbackData
+from pyut.ui.PyutAdvancedListBox import PyutAdvancedListBox
+from pyut.ui.PyutAdvancedListBox import UpCallbackData
 from pyut.ui.dialogs.DlgEditClassCommon import DlgEditClassCommon
 from pyut.ui.dialogs.DlgEditField import DlgEditField
 

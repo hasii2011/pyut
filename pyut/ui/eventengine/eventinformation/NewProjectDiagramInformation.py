@@ -5,8 +5,8 @@ from typing import cast
 from dataclasses import dataclass
 
 from pyut.enums.DiagramType import DiagramType
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.IPyutProject import IPyutProject
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.IPyutProject import IPyutProject
 
 NewProjectDiagramCallback = Callable[[IPyutDocument], None]
 

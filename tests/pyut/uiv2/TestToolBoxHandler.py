@@ -4,7 +4,7 @@ from unittest import main as unitTestMain
 
 from codeallyadvanced.ui.UnitTestBaseW import UnitTestBaseW
 
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 
 class TestToolBoxHandler(UnitTestBaseW):

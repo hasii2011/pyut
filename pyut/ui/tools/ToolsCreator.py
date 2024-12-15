@@ -29,7 +29,7 @@ from pyut.ui.tools.Tool import Tool
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
 from pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 TOOLS_CATEGORY: Category = Category('Pyut Tools')
 MENU_CATEGORY:  Category = Category('Pyut Menu')

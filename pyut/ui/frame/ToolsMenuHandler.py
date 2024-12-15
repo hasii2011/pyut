@@ -13,8 +13,8 @@ from pyut.ui.frame.BaseMenuHandler import BaseMenuHandler
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.Tool import Category
 
-from pyut.uiv2.PluginAdapter import PluginAdapter
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.PluginAdapter import PluginAdapter
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 

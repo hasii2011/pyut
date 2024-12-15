@@ -70,10 +70,10 @@ from pyut.PyutConstants import PyutConstants
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 
-from pyut.uiv2.FileHistoryConfiguration import FileHistoryConfiguration
-from pyut.uiv2.PluginAdapter import PluginAdapter
-from pyut.uiv2.PyutUIV2 import PyutUIV2
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.FileHistoryConfiguration import FileHistoryConfiguration
+from pyut.ui.PluginAdapter import PluginAdapter
+from pyut.ui.PyutUIV2 import PyutUIV2
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 from pyut.ui.eventengine.EventEngine import EventEngine
 from pyut.ui.eventengine.Events import AssociateEditMenuEvent

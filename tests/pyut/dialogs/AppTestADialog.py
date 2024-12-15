@@ -66,8 +66,8 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.PyutDocumentV2 import PyutDocumentV2
 
 from pyut.ui.Types import UmlFrameType
 
