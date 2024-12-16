@@ -72,7 +72,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.FileHistoryConfiguration import FileHistoryConfiguration
 from pyut.ui.PluginAdapter import PluginAdapter
-from pyut.ui.PyutUI import PyutUI
+from pyut.ui.main.PyutUI import PyutUI
 from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 from pyut.ui.eventengine.EventEngine import EventEngine

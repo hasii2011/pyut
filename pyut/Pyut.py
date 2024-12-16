@@ -16,7 +16,7 @@ from pyut.PyutConstants import PyutConstants
 from pyut.PyutUtils import PyutUtils
 from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.ui.PyutApp import PyutApp
+from pyut.ui.main.PyutApp import PyutApp
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
