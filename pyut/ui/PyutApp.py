@@ -29,7 +29,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.resources.img.splash.Splash6 import embeddedImage as splashImage
 
-from pyut.ui.PyutApplicationFrameV2 import PyutApplicationFrameV2
+from pyut.ui.PyutApplicationFrame import PyutApplicationFrame
 
 
 class PyutApp(wxApp):
@@ -47,12 +47,12 @@ class PyutApp(wxApp):
 
         self.logger: Logger = getLogger(__name__)
 
-        from pyut.ui.PyutApplicationFrameV2 import PyutApplicationFrameV2
+        from pyut.ui.PyutApplicationFrame import PyutApplicationFrame
 
         self.splash: AdvancedSplash = cast(AdvancedSplash, None)
 
         self._showSplash: bool = showSplash
-        self._frame:      PyutApplicationFrameV2 = cast(PyutApplicationFrameV2, None)
+        self._frame:      PyutApplicationFrame = cast(PyutApplicationFrame, None)
 
         super().__init__(redirect)
 
@@ -61,7 +61,7 @@ class PyutApp(wxApp):
         """
         provider: SimpleHelpProvider = SimpleHelpProvider()
 
-        self._frame = PyutApplicationFrameV2("Pyut UI V2")
+        self._frame = PyutApplicationFrame("Pyut UI V2")
         wxYield()
 
         HelpProvider.Set(provider)
@@ -94,7 +94,7 @@ class PyutApp(wxApp):
         """
         self.logger.info(f'MacOpenFiles: {fileNames=}')
 
-        appFrame:    PyutApplicationFrameV2 = self._frame
+        appFrame:    PyutApplicationFrame = self._frame
         self.logger.info(f'MacOpenFiles: {appFrame=}')
         #
         for fileName in fileNames:
@@ -139,7 +139,7 @@ class PyutApp(wxApp):
     def _handleCommandLineFileNames(self, prefs: PyutPreferences):
 
         loadedAFile: bool                 = False
-        appFrame:    PyutApplicationFrameV2 = self._frame
+        appFrame:    PyutApplicationFrame = self._frame
 
         if prefs.loadLastOpenedProject is True:
             appFrame.loadLastOpenedProject()

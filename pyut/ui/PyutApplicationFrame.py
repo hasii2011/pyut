@@ -99,7 +99,7 @@ from pyut.ui.eventengine.Events import UpdateApplicationTitleEvent
 HACK_ADJUST_EXIT_HEIGHT: int = 16
 
 
-class PyutApplicationFrameV2(Frame):
+class PyutApplicationFrame(Frame):
     """
     PyutApplicationFrame : main pyut frame; contain menus, status bar, and the UML frame
 
