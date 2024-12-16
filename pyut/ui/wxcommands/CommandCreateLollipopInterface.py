@@ -17,7 +17,7 @@ from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
 
 from pyut.ui.wxcommands.Types import DoableObjectType
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
@@ -57,7 +57,7 @@ class CommandCreateLollipopInterface(BaseWxCreateCommand):
         anchorPosition: Tuple[int, int] = attachmentAnchor.GetPosition()
         self.logger.info(f'anchorPosition: {anchorPosition}')
 
-        # set up the callback
+        # set up the eventHandler
         self._oglObjX = anchorPosition[0]
         self._oglObjY = anchorPosition[1]
         self._shape = self._oglInterface

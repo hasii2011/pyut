@@ -6,7 +6,7 @@ from abc import abstractmethod
 
 from wx import PyEventBinder
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 
 
 class IEventEngine(ABC):

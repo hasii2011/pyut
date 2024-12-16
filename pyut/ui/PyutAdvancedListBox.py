@@ -22,7 +22,7 @@ from wx.lib.sized_controls import SizedStaticBox
 
 class CallbackAnswer:
     """
-    A callback returns True if the value in item is to be placed in the listbox
+    A eventHandler returns True if the value in item is to be placed in the listbox
     A value of False indicates that the value of item is undefined
     """
     valid: bool = False
@@ -47,9 +47,9 @@ class DownCallbackData(MoveCallbackData):
     nextItem:    str = ''
 
 
-AddCallback    = Callable[[],    CallbackAnswer]    # Consumer provided callback;  Expects no parameters; Returns a CallbackAnswer
-EditCallback   = Callable[[int], CallbackAnswer]    # Consumer provided callback;  Expects the list box selection #; Returns a CallbackAnswer
-RemoveCallback = Callable[[int], None]              # Consumer provided callback;  Expects the list box selection #; Returns a CallbackAnswer
+AddCallback    = Callable[[],    CallbackAnswer]    # Consumer provided eventHandler;  Expects no parameters; Returns a CallbackAnswer
+EditCallback   = Callable[[int], CallbackAnswer]    # Consumer provided eventHandler;  Expects the list box selection #; Returns a CallbackAnswer
+RemoveCallback = Callable[[int], None]              # Consumer provided eventHandler;  Expects the list box selection #; Returns a CallbackAnswer
 UpCallback     = Callable[[int], UpCallbackData]
 DownCallback   = Callable[[int], DownCallbackData]
 
@@ -77,7 +77,7 @@ class PyutAdvancedListBox(SizedPanel):
         * The data order needs to match the order in the UI
         * This component "calls back" to the component consumer to manipulate the data
         and provide the changes via specific methods with specific type signatures that return
-        callback specific typed data
+        eventHandler specific typed data
 
     """
     def __init__(self, parent: SizedPanel, title: str, callbacks: AdvancedListCallbacks):
@@ -150,12 +150,12 @@ class PyutAdvancedListBox(SizedPanel):
         """
         Called when there is a double click on items list.
         """
-        self.logger.warning(f'Invoke the edit callback')
+        self.logger.warning(f'Invoke the edit eventHandler')
         self._onEdit(event)
 
     # noinspection PyUnusedLocal
     def _onAdd(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the add callback')
+        self.logger.warning(f'Invoke the add eventHandler')
 
         answer: CallbackAnswer = self._callbacks.addCallback()
         if answer.valid is True:
@@ -163,7 +163,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onEdit(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the edit callback')
+        self.logger.warning(f'Invoke the edit eventHandler')
         selection: int = self._itemList.GetSelection()
         answer: CallbackAnswer = self._callbacks.editCallback(selection)
         if answer.valid:
@@ -171,7 +171,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onRemove(self, event: CommandEvent):
-        self.logger.warning(f'Remove from list and invoke the remove callback')
+        self.logger.warning(f'Remove from list and invoke the remove eventHandler')
         selection: int = self._itemList.GetSelection()
         self._callbacks.removeCallback(selection)
         self._itemList.Delete(selection)
@@ -179,7 +179,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onUp(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the up callback, then move item up in list ')
+        self.logger.warning(f'Invoke the up eventHandler, then move item up in list ')
         selection:      int            = self._itemList.GetSelection()
         upCallbackData: UpCallbackData = self._callbacks.upCallback(selection)
 
@@ -191,7 +191,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onDown(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the down callback, then move item down in list')
+        self.logger.warning(f'Invoke the down eventHandler, then move item down in list')
         selection:        int              = self._itemList.GetSelection()
         downCallbackData: DownCallbackData = self._callbacks.downCallback(selection)
 

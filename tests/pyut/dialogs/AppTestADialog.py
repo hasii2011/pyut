@@ -12,6 +12,7 @@ from codeallyadvanced.ui.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from ogl.OglInterface2 import OglInterface2
 from pyutmodelv2.PyutModelTypes import Implementors
+
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -38,7 +39,6 @@ from pyutmodelv2.PyutLink import PyutLink
 from pyutmodelv2.PyutClass import PyutClass
 from pyutmodelv2.PyutInterface import PyutInterface
 from pyutmodelv2.PyutInterface import PyutInterfaces
-
 from pyutmodelv2.PyutField import PyutField
 from pyutmodelv2.PyutField import PyutFields
 from pyutmodelv2.PyutMethod import PyutMethod
@@ -93,17 +93,17 @@ from pyut.ui.dialogs.Wrappers import DlgEditActor
 from pyut.ui.dialogs.Wrappers import DlgEditDiagramTitle
 from pyut.ui.dialogs.Wrappers import DlgEditUseCase
 
-from pyut.ui.eventengine.EventEngine import GetLollipopInterfacesCallback
-from pyut.ui.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
-from pyut.ui.eventengine.Events import GetLollipopInterfacesEvent
+from pyut.ui.eventengine.EventType import EventType
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 from pyut.ui.eventengine.EventEngine import EventEngine
+from pyut.ui.eventengine.EventEngine import GetLollipopInterfacesCallback
 
+from pyut.ui.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
+from pyut.ui.eventengine.Events import GetLollipopInterfacesEvent
 from pyut.ui.eventengine.Events import ClassNameChangedEvent
 from pyut.ui.eventengine.Events import EVENT_CLASS_NAME_CHANGED
 from pyut.ui.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
-from pyut.ui.eventengine.Events import EventType
 from pyut.ui.eventengine.Events import UMLDiagramModifiedEvent
 
 from tests.ProjectTestBase import ProjectTestBase
@@ -519,7 +519,7 @@ class AppTestADialog(App):
             pyutInterface.addImplementor(ClassName(f'Implementor{implementor}'))
             fakeLollipops.append(pyutInterface)
 
-        cb: GetLollipopInterfacesCallback = event.callback
+        cb: GetLollipopInterfacesCallback = event.eventHandler
 
         cb(fakeLollipops)
 

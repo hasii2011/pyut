@@ -8,7 +8,7 @@ from pyutmodelv2.PyutUseCase import PyutUseCase
 
 from ogl.OglUseCase import OglUseCase
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.wxcommands.BaseWxDeleteCommand import BaseWxDeleteCommand

@@ -13,7 +13,7 @@ from ogl.OglLink import OglLink
 from ogl.OglAssociation import OglAssociation
 
 from pyut.ui.wxcommands.BaseWxLinkCommand import BaseWxLinkCommand
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 

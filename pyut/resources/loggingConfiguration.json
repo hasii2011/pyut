@@ -46,6 +46,11 @@
             "level":     "INFO",
             "propagate": "False",
             "handlers":  ["rotatingFileHandler"]
+        },
+        "pyut.ui.eventengine.EventEngine": {
+            "level":     "DEBUG",
+            "propagate": "False",
+            "handlers":  ["consoleHandler"]
         }
     }
 }

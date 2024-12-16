@@ -37,7 +37,7 @@ from ogl.preferences.OglPreferences import OglPreferences
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 
 CommonClassType = Union[PyutClass, PyutInterface]
 

@@ -10,7 +10,7 @@ from wx import Menu
 
 from pyut.ui.menuhandlers.BaseMenuHandler import BaseMenuHandler
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 

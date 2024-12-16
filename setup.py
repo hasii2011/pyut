@@ -39,7 +39,7 @@ setup(
         'pyut.resources.img.splash',
         'pyut.ui',
         'pyut.ui.dialogs', 'pyut.ui.dialogs.preferences', 'pyut.ui.dialogs.textdialogs', 'pyut.ui.dialogs.tips',
-        'pyut.ui.eventengine', 'pyut.ui.eventengine.eventinformation',
+        'pyut.ui.eventengine', 'pyut.ui.eventengine.eventinformation', 'pyut.ui.eventengine.inspector',
         'pyut.ui.main',
         'pyut.ui.menuhandlers',
         'pyut.ui.tools',

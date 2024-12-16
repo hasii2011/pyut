@@ -6,7 +6,7 @@ from wx import Yield as wxYield
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 if TYPE_CHECKING:

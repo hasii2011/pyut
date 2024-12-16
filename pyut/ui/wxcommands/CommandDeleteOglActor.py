@@ -10,7 +10,7 @@ from ogl.OglActor import OglActor
 
 from pyut.ui.wxcommands.BaseWxDeleteCommand import BaseWxDeleteCommand
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 

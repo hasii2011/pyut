@@ -70,7 +70,7 @@ class DebugListControl(ULC.UltimateListCtrl, ListRowHighlighter):
 
         self.logger: Logger = getLogger(__name__)
 
-        loggers = [getLogger()]  # get the root logger
+        loggers = [getLogger()]  # get the root _logger
 
         import logging
         # noinspection PyUnresolvedReferences

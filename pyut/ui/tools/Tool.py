@@ -39,15 +39,15 @@ class Tool:
     """
     actionCallback: Callable = cast(Callable, None)
     """
-    A callback method for doing this tool's actions
+    A eventHandler method for doing this tool's actions
     """
     propertiesCallback: Callable = cast(Callable, None)
     """
-    A callback function for displaying this tool's properties
+    A eventHandler function for displaying this tool's properties
     """
     wxID: WindowIDRef = cast(WindowIDRef, None)
     """
-    A wx unique ID, used for the callback
+    A wx unique ID, used for the eventHandler
     """
     isToggle: bool = False
     """

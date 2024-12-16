@@ -39,7 +39,7 @@ class TestCurrentDirectoryHandler(UnitTestBase):
     # def testGetPreferenceValue(self):
     #
     #     expectedValue: str = self._preferences.diagramsDirectory
-    #     self.logger.info(f'{expectedValue=}')
+    #     self._logger.info(f'{expectedValue=}')
     #
     #     cdh: CurrentDirectoryHandler = CurrentDirectoryHandler()
     #

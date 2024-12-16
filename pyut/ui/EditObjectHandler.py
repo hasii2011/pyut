@@ -57,7 +57,8 @@ from pyut.ui.umlframes.UmlFrame import UmlFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
+
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.preferences.PyutPreferences import PyutPreferences

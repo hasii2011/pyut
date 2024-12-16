@@ -129,7 +129,7 @@ class UmlFrame(UmlFrameShapeHandler):
         # if project is not None:
         #     project.setCodePath(path)
         # else:
-        #     self.logger.info("Passing setCodePath in UmlFrame-setCodePath")
+        #     self._logger.info("Passing setCodePath in UmlFrame-setCodePath")
 
     def displayDiagramProperties(self):
         """

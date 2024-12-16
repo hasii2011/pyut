@@ -75,6 +75,8 @@ from pyut.ui.PluginAdapter import PluginAdapter
 from pyut.ui.main.PyutUI import PyutUI
 from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
+from pyut.ui.eventengine.EventType import EventType
+
 from pyut.ui.eventengine.EventEngine import EventEngine
 from pyut.ui.eventengine.Events import AssociateEditMenuEvent
 from pyut.ui.eventengine.Events import EVENT_ASSOCIATE_EDIT_MENU
@@ -83,7 +85,6 @@ from pyut.ui.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_SIZE
 from pyut.ui.eventengine.Events import EVENT_SELECT_TOOL
 from pyut.ui.eventengine.Events import EVENT_UPDATE_EDIT_MENU
 from pyut.ui.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
-from pyut.ui.eventengine.Events import EventType
 from pyut.ui.eventengine.Events import OverrideProgramExitPositionEvent
 from pyut.ui.eventengine.Events import OverrideProgramExitSizeEvent
 from pyut.ui.eventengine.Events import SelectToolEvent

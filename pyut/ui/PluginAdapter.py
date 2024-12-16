@@ -49,7 +49,7 @@ from pyut.ui.wxcommands.CommandDeleteOglLink import CommandDeleteOglLink
 from pyut.ui.IPyutDocument import IPyutDocument
 from pyut.ui.IPyutProject import IPyutProject
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 from pyut.ui.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
@@ -187,7 +187,7 @@ class PluginAdapter(IPluginAdapter):
 
         objectBoundaries: ObjectBoundaries = activeFrame.objectBoundaries
 
-        assert self._saveCallback != NO_OBJECT_BOUNDARY_CALLBACK, 'Developer forgot to save the callback'
+        assert self._saveCallback != NO_OBJECT_BOUNDARY_CALLBACK, 'Developer forgot to save the eventHandler'
 
         self._saveCallback(objectBoundaries)
 

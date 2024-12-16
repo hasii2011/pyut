@@ -57,6 +57,8 @@ from pyut.ui.wxcommands.Types import DoableObjectType
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
+from pyut.ui.eventengine.EventType import EventType
+
 from pyut.ui.eventengine.Events import EVENT_COPY_SHAPES
 from pyut.ui.eventengine.Events import EVENT_CUT_SHAPES
 from pyut.ui.eventengine.Events import EVENT_PASTE_SHAPES
@@ -66,8 +68,6 @@ from pyut.ui.eventengine.Events import EVENT_UNDO
 from pyut.ui.eventengine.Events import EVENT_CUT_SHAPE
 from pyut.ui.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
 from pyut.ui.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
-
-from pyut.ui.eventengine.Events import EventType
 from pyut.ui.eventengine.Events import CutShapesEvent
 from pyut.ui.eventengine.Events import CopyShapesEvent
 from pyut.ui.eventengine.Events import PasteShapesEvent
@@ -289,7 +289,7 @@ class DiagramNotebook(Notebook):
 
     def _onGetLollipopInterfaces(self, event: GetLollipopInterfacesEvent):
         """
-        Invokes the provided callback with any pyutInterfaces on the diagram.
+        Invokes the provided eventHandler with any pyutInterfaces on the diagram.
         It may return an empty list.
 
         Args:
@@ -308,7 +308,7 @@ class DiagramNotebook(Notebook):
                     if pyutInterface not in pyutInterfaces:
                         pyutInterfaces.append(pyutObject)
 
-        callback: GetLollipopInterfacesCallback = event.callback
+        callback: GetLollipopInterfacesCallback = event.eventHandler
 
         callback(pyutInterfaces)
 

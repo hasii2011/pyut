@@ -97,6 +97,8 @@ from pyut.ui.PyutProject import UmlFrameType
 
 from pyut.ui.Types import createDiagramFrame
 
+from pyut.ui.eventengine.EventType import EventType
+
 from pyut.ui.eventengine.EventEngine import NewNamedProjectCallback
 
 from pyut.ui.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
@@ -125,13 +127,11 @@ from pyut.ui.eventengine.Events import EVENT_SAVE_PROJECT
 from pyut.ui.eventengine.Events import EVENT_SAVE_PROJECT_AS
 from pyut.ui.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from pyut.ui.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
-
 from pyut.ui.eventengine.Events import EditActorEvent
 from pyut.ui.eventengine.Events import EditInterfaceEvent
 from pyut.ui.eventengine.Events import EditNoteEvent
 from pyut.ui.eventengine.Events import EditTextEvent
 from pyut.ui.eventengine.Events import EditUseCaseEvent
-from pyut.ui.eventengine.Events import EventType
 from pyut.ui.eventengine.Events import AddShapeEvent
 from pyut.ui.eventengine.Events import ActiveUmlFrameEvent
 from pyut.ui.eventengine.Events import FrameInformationEvent
@@ -539,7 +539,7 @@ class PyutUI(SplitterWindow):
 
         pyutProject: IPyutProject = self._projectManager.newNamedProject(filename=fqFileName)
 
-        cb: NewNamedProjectCallback = event.callback
+        cb: NewNamedProjectCallback = event.eventHandler
 
         cb(pyutProject)
 
@@ -622,15 +622,15 @@ class PyutUI(SplitterWindow):
         projectInformation.projectModified = self._projectManager.currentProject.modified
         projectInformation.frameZoom       = self._projectManager.currentFrame.currentZoom
 
-        cb = event.callback
+        cb = event.eventHandler
         cb(projectInformation)
 
     def _onGetActiveUmlFrame(self, event: ActiveUmlFrameEvent):
-        cb = event.callback
+        cb = event.eventHandler
         cb(self._projectManager.currentFrame)
 
     def _onActiveProjectInformation(self, event: ActiveProjectInformationEvent):
-        cb: ActiveProjectInformationCallback = event.callback
+        cb: ActiveProjectInformationCallback = event.eventHandler
 
         activeProjectInformation: ActiveProjectInformation = ActiveProjectInformation()
         activeProjectInformation.umlFrame    = self._projectManager.currentFrame
@@ -730,7 +730,7 @@ class PyutUI(SplitterWindow):
             frameSize: FrameSize = FrameSize(width=width, height=height)
             info.frameSize = frameSize
 
-        cb: FrameInformationCallback = event.callback
+        cb: FrameInformationCallback = event.eventHandler
         cb(info)
 
     def _onFrameSize(self, event: FrameSizeEvent):
@@ -745,13 +745,13 @@ class PyutUI(SplitterWindow):
             frameSize.width  = width
             frameSize.height = height
 
-        cb: FrameSizeCallback = event.callback
+        cb: FrameSizeCallback = event.eventHandler
 
         cb(frameSize)
 
     def _pluginRequestCurrentProject(self, event: RequestCurrentProjectEvent):
 
-        cb:                   CurrentProjectCallback = event.callback
+        cb:                   CurrentProjectCallback = event.eventHandler
         pyutProject:          IPyutProject           = self._projectManager.currentProject
         pluginProjectCreator: PluginProjectCreator   = PluginProjectCreator()
         pluginProject:        PluginProject          = pluginProjectCreator.toPluginProject(pyutProject=pyutProject)
@@ -768,7 +768,7 @@ class PyutUI(SplitterWindow):
                     from pyutplugins.ExternalTypes import OglObjectType
                     selectedObjects.append(cast(OglObjectType, obj))
 
-        cb: SelectedOglObjectsCallback = event.callback
+        cb: SelectedOglObjectsCallback = event.eventHandler
 
         cb(selectedObjects)
 

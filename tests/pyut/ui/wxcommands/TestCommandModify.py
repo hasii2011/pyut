@@ -10,7 +10,8 @@ from wx import PyEventBinder
 
 from pyut.ui.wxcommands.CommandModify import CommandModify
 from pyut.ui.wxcommands.CommandModify import Parameters
-from pyut.ui.eventengine.Events import EventType
+
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 

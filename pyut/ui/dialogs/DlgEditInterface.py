@@ -33,7 +33,7 @@ from wx.lib.sized_controls import SizedStaticBox
 from pyutmodelv2.PyutInterface import PyutInterface
 from pyutmodelv2.PyutInterface import PyutInterfaces
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.dialogs.DlgEditClassCommon import DlgEditClassCommon

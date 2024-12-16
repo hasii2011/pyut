@@ -55,7 +55,7 @@ from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProj
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.eventengine.Events import EVENT_SET_TOOL_ACTION
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.Events import SetToolActionEvent
 
 from pyut.PyutUtils import PyutUtils

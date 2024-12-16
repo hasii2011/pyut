@@ -1,11 +1,11 @@
 
 from typing import Any
 from typing import Callable
+from typing import Dict
+from typing import NewType
 
 from logging import Logger
 from logging import getLogger
-from typing import Dict
-from typing import NewType
 
 from wx import CommandEvent
 from wx import PostEvent
@@ -28,6 +28,17 @@ from pyutplugins.ExternalTypes import CurrentProjectCallback
 from pyutplugins.ExternalTypes import FrameInformationCallback
 
 from pyut.enums.DiagramType import DiagramType
+from pyut.preferences.PyutPreferences import PyutPreferences
+
+from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.Events import EVENT_NEW_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_NEW_NAMED_PROJECT
+from pyut.ui.eventengine.Events import EVENT_NEW_PROJECT
+from pyut.ui.eventengine.Events import EVENT_SELECT_ALL_SHAPES
+
+from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
+from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
+from pyut.ui.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 from pyut.ui.IPyutProject import IPyutProject
 from pyut.ui.eventengine.Events import AddOglDiagramEvent
@@ -64,15 +75,9 @@ from pyut.ui.eventengine.Events import UMLDiagramModifiedEvent
 from pyut.ui.eventengine.Events import UndoEvent
 from pyut.ui.eventengine.Events import UpdateEditMenuEvent
 from pyut.ui.eventengine.Events import UpdateRecentProjectsEvent
-
-from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
-from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
-from pyut.ui.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
-
 from pyut.ui.eventengine.Events import EditClassEvent
 from pyut.ui.eventengine.Events import ActiveProjectInformationEvent
 from pyut.ui.eventengine.Events import CutShapeEvent
-from pyut.ui.eventengine.Events import EventType
 from pyut.ui.eventengine.Events import ActiveUmlFrameEvent
 from pyut.ui.eventengine.Events import MiniProjectInformationEvent
 from pyut.ui.eventengine.Events import InsertProjectEvent
@@ -85,7 +90,7 @@ from pyut.ui.eventengine.Events import UpdateApplicationTitleEvent
 from pyut.ui.eventengine.Events import UpdateTreeItemNameEvent
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
-
+from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListener
 
 NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
@@ -107,7 +112,7 @@ APPLICATION_STATUS_MSG_PARAMETER:    str = 'applicationStatusMsg'
 INSERT_PROJECT_FILENAME_PARAMETER:   str = 'projectFilename'
 OPEN_PROJECT_FILENAME_PARAMETER:     str = INSERT_PROJECT_FILENAME_PARAMETER
 NEW_PROJECT_FROM_FILENAME_PARAMETER: str = OPEN_PROJECT_FILENAME_PARAMETER
-CALLBACK_PARAMETER:                  str = 'callback'
+CALLBACK_PARAMETER:                  str = 'eventHandler'
 PYUT_CLASS_PARAMETER:                str = 'pyutClass'
 PYUT_NOTE_PARAMETER:                 str = 'pyutNote'
 PYUT_TEXT_PARAMETER:                 str = 'pyutText'
@@ -124,10 +129,10 @@ NEW_CLASS_NAME_PARAMETER: str = 'newClassName'
 OVERRIDE_PARAMETER:       str = 'override'
 
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
-ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for callback
+ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for eventHandler
 ActiveProjectInformationCallback  = Callable[[ActiveProjectInformation], None]
 NewNamedProjectCallback           = Callable[[IPyutProject], None]
-GetLollipopInterfacesCallback     = Callable[[PyutInterfaces], None]            # Figure out appropriate type for callback
+GetLollipopInterfacesCallback     = Callable[[PyutInterfaces], None]            # Figure out appropriate type for eventHandler
 
 EventEnumToType = NewType('EventEnumToType', Dict[EventType, CommandEvent])
 
@@ -150,6 +155,26 @@ SimpleEvents: EventEnumToType = EventEnumToType({
     EventType.RefreshFrame:       RefreshFrameEvent,
 })
 
+CallerName  = NewType('CallerName',  str)
+ListenerMap = NewType('ListenerMap', Dict[CallerName, RegisteredListener])
+
+# noinspection SpellCheckingInspection
+getframeExpresson = 'sys._getframe({}).f_code.co_name'
+
+IdToTypeMap = NewType('IdToTypeMap', Dict[int, EventType])
+
+IdTypeMap: IdToTypeMap = IdToTypeMap(
+    {
+        EVENT_NEW_PROJECT.typeId:       EventType.NewProject,
+        EVENT_NEW_NAMED_PROJECT.typeId: EventType.NewProjectDiagram,
+        EVENT_NEW_DIAGRAM.typeId:       EventType.NewDiagram,
+
+        EVENT_SELECT_ALL_SHAPES.typeId: EventType.SelectAllShapes
+    }
+)
+
+INSPECTOR_SKIP_DEPTH: int = 3
+
 
 class EventEngine(IEventEngine):
     """
@@ -167,11 +192,17 @@ class EventEngine(IEventEngine):
 
     def __init__(self, listeningWindow: Window):
 
-        self._listeningWindow: Window = listeningWindow
-        self.logger:           Logger = getLogger(__name__)
+        self._listeningWindow: Window          = listeningWindow
+        self._logger:          Logger          = getLogger(__name__)
+        self._preferences:     PyutPreferences = PyutPreferences()
+
+        self._listenerMap: ListenerMap = ListenerMap({})
 
     def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
+
         self._listeningWindow.Bind(pyEventBinder, callback)
+        if self._preferences.debugEventEngine is True:
+            self._makeListenerMapEntry(callback, pyEventBinder)
 
     def sendEvent(self, eventType: EventType, **kwargs):
 
@@ -260,7 +291,7 @@ class EventEngine(IEventEngine):
             event = eventClazz()
             PostEvent(dest=self._listeningWindow, event=event)
         except KeyError:
-            self.logger.error(f'Unhandled event type: {eventType.value}')
+            self._logger.error(f'Unhandled event type: {eventType.value}')
 
     def _sendUpdateTreeItemNameEvent(self, **kwargs):
 
@@ -445,3 +476,34 @@ class EventEngine(IEventEngine):
         value:       bool = kwargs[OVERRIDE_PARAMETER]
         eventToPost: OverrideProgramExitSizeEvent = OverrideProgramExitSizeEvent(override=value)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _makeListenerMapEntry(self, callback: Callable, pyEventBinder: PyEventBinder):
+        """
+
+        Args:
+            callback:
+            pyEventBinder:
+
+        """
+        from pyut.ui.eventengine.inspector.Inspector import Inspector
+
+        cbStr:  str = callback.__qualname__
+        typeId: int = pyEventBinder.typeId
+        self._logger.debug(f'{cbStr=} {typeId=}')
+
+        registeredListener: RegisteredListener = RegisteredListener()
+        registeredListener.eventHandler = cbStr
+
+        # 1 for us, 1 for the constructor, 1 for the caller
+        registeredBy: str = Inspector.getCallerName(skip=INSPECTOR_SKIP_DEPTH)
+        registeredListener.registeredBy = registeredBy
+
+        try:
+            eventType: EventType = IdTypeMap[typeId]
+            registeredListener.eventType = eventType
+        except KeyError:
+            self._logger.error(f'Unknown event type id: {typeId}')
+
+        self._listenerMap[CallerName(registeredBy)] = registeredListener
+
+        self._logger.info(f'{self._listenerMap}')

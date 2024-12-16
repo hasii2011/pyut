@@ -56,7 +56,7 @@ from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 
-from pyut.ui.eventengine.Events import EventType
+from pyut.ui.eventengine.EventType import EventType
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
