@@ -172,7 +172,7 @@ NO_PYUT_DIAGRAM:  IPyutDocument    = cast(IPyutDocument, None)
 NO_MENU:          Menu             = cast(Menu, None)
 
 
-class PyutUIV2(SplitterWindow):
+class PyutUI(SplitterWindow):
 
     def __init__(self, topLevelWindow: Frame, eventEngine: IEventEngine):
 

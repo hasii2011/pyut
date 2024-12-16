@@ -72,7 +72,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.FileHistoryConfiguration import FileHistoryConfiguration
 from pyut.ui.PluginAdapter import PluginAdapter
-from pyut.ui.PyutUIV2 import PyutUIV2
+from pyut.ui.PyutUI import PyutUI
 from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 from pyut.ui.eventengine.EventEngine import EventEngine
@@ -144,7 +144,7 @@ class PyutApplicationFrame(Frame):
         self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
         self._fileHistory: FileHistory   = FileHistory(idBase=ID_FILE1)
 
-        self._pyutUIV2:    PyutUIV2      = PyutUIV2(self, eventEngine=self._eventEngine)
+        self._pyutUI:    PyutUI      = PyutUI(self, eventEngine=self._eventEngine)
 
         # set up the singleton
         self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler(frame=self)
@@ -206,7 +206,7 @@ class PyutApplicationFrame(Frame):
             force:
         """
         # Close all files
-        self._pyutUIV2.handleUnsavedProjects()
+        self._pyutUI.handleUnsavedProjects()
 
         if self._overrideProgramExitPosition is False:
             # Only save position if we are not auto-saving
@@ -223,7 +223,7 @@ class PyutApplicationFrame(Frame):
 
         self._prefs     = cast(PyutPreferences, None)
         self._pluginMgr = cast(PluginManager, None)
-        self._pyutUIV2  = cast(PyutUIV2, None)
+        self._pyutUI  = cast(PyutUI, None)
 
         self.Destroy()
 
@@ -237,7 +237,7 @@ class PyutApplicationFrame(Frame):
     def removeDefaultEmptyProject(self):
 
         self.logger.info(f'Remove the default project')
-        self._pyutUIV2.closeDefaultEmptyProject()
+        self._pyutUI.closeDefaultEmptyProject()
 
     def loadLastOpenedProject(self):
         lastOpenFileName: str = self._fileHistory.GetHistoryFile(0)
