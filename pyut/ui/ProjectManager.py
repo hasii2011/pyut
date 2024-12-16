@@ -49,8 +49,8 @@ from pyut.ui.DiagramNotebook import DiagramNotebook
 from pyut.ui.ProjectException import ProjectException
 from pyut.ui.ProjectException import ProjectExceptionType
 from pyut.ui.ProjectTree import ProjectTree
-from pyut.ui.PyutDocumentV2 import PyutDocumentV2
-from pyut.ui.PyutProjectV2 import PyutProjectV2
+from pyut.ui.PyutDocument import PyutDocument
+from pyut.ui.PyutProject import PyutProject
 
 from ogl.OglClass import OglClass
 from ogl.OglInterface2 import OglInterface2
@@ -224,7 +224,7 @@ class ProjectManager:
             sequenceNumber: int = next(self._defaultProjectNumber)
             fileName = f'{PyutConstants.DEFAULT_PROJECT_NAME}_{sequenceNumber}{PyutConstants.PYUT_EXTENSION}'
 
-        project = PyutProjectV2(fileName, self._projectTree, self._projectTree.projectTreeRoot)
+        project = PyutProject(fileName, self._projectTree, self._projectTree.projectTreeRoot)
 
         return self._manageProject(pyutProject=project)
 
@@ -234,7 +234,7 @@ class ProjectManager:
         Args:
             filename:
         """
-        project: PyutProjectV2 = PyutProjectV2(filename=filename, tree=self._projectTree, treeRoot=self._projectTree.projectTreeRoot)
+        project: PyutProject = PyutProject(filename=filename, tree=self._projectTree, treeRoot=self._projectTree.projectTreeRoot)
 
         return self._manageProject(pyutProject=project)
 
@@ -430,7 +430,7 @@ class ProjectManager:
         oglProject.version  = XML_VERSION           # Do not really need this as oglio sets it appropriately
         documents: PyutDocuments = projectToWrite.documents
         for document in documents:
-            pyutDocument: PyutDocumentV2 = cast(PyutDocumentV2, document)
+            pyutDocument: PyutDocument = cast(PyutDocument, document)
 
             oglDocument:  OglDocument = self._toBasicOglDocument(pyutDocument=pyutDocument)
             diagramFrame: UmlFrame    = pyutDocument.diagramFrame
@@ -493,7 +493,7 @@ class ProjectManager:
         EndBusyCursor()
         return oglProject
 
-    def _manageProject(self, pyutProject: PyutProjectV2):
+    def _manageProject(self, pyutProject: PyutProject):
         """
         Creates the UI elements for the new project and places in the project manager list
         Args:

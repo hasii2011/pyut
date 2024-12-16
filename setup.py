@@ -38,9 +38,9 @@ setup(
         'pyut.resources.img',
         'pyut.resources.img.splash',
         'pyut.ui',
-        'pyut.ui.dialogs', 'pyut.ui.dialogs.preferencesv2', 'pyut.ui.dialogs.textdialogs', 'pyut.ui.dialogs.tips',
+        'pyut.ui.dialogs', 'pyut.ui.dialogs.preferences', 'pyut.ui.dialogs.textdialogs', 'pyut.ui.dialogs.tips',
         'pyut.ui.eventengine', 'pyut.ui.eventengine.eventinformation',
-        'pyut.ui.main'
+        'pyut.ui.main',
         'pyut.ui.menuhandlers',
         'pyut.ui.tools',
         'pyut.ui.umlframes', 'pyut.ui.wxcommands',

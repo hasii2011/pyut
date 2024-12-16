@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from pyut.ui.ProjectTree import ProjectTree
 
 
-class PyutProjectV2(IPyutProject):
+class PyutProject(IPyutProject):
     """
     Project : contain multiple documents
 

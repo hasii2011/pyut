@@ -19,7 +19,7 @@ from pyut.PyutUtils import PyutUtils
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyut.ui.IPyutDocument import IPyutDocument
-from pyut.ui.PyutProjectV2 import PyutProjectV2
+from pyut.ui.PyutProject import PyutProject
 
 DocumentTreeItemIds = NewType('DocumentTreeItemIds', List[TreeItemId])
 
@@ -38,7 +38,7 @@ class ProjectTree(TreeCtrl):
     def projectTreeRoot(self) -> TreeItemId:
         return self._projectTreeRoot
 
-    def addProjectToTree(self, pyutProject: PyutProjectV2) -> TreeItemId:
+    def addProjectToTree(self, pyutProject: PyutProject) -> TreeItemId:
         """
         Add the project to the project tree
         """

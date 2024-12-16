@@ -67,7 +67,7 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyut.ui.IPyutDocument import IPyutDocument
-from pyut.ui.PyutDocumentV2 import PyutDocumentV2
+from pyut.ui.PyutDocument import PyutDocument
 
 from pyut.ui.Types import UmlFrameType
 
@@ -305,9 +305,9 @@ class AppTestADialog(App):
         return pyutActor.name
 
     def _testDlgEditDiagramTitle(self):
-        diagram: IPyutDocument = PyutDocumentV2(diagramFrame=cast(UmlFrameType, None),
-                                                docType=DiagramType.CLASS_DIAGRAM,
-                                                eventEngine=self._eventEngine)
+        diagram: IPyutDocument = PyutDocument(diagramFrame=cast(UmlFrameType, None),
+                                              docType=DiagramType.CLASS_DIAGRAM,
+                                              eventEngine=self._eventEngine)
         diagram.title = 'Basic Diagram Title'
 
         with DlgEditDiagramTitle(self._frame, diagramTitle=diagram.title) as dlg:

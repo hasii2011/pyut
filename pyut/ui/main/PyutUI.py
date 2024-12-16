@@ -91,9 +91,9 @@ from pyut.ui.ProjectException import ProjectExceptionType
 from pyut.ui.ProjectManager import ProjectManager
 from pyut.ui.ProjectManager import PyutProjects
 from pyut.ui.ProjectTree import ProjectTree
-from pyut.ui.PyutDocumentV2 import PyutDocumentV2
-from pyut.ui.PyutProjectV2 import PyutProjectV2
-from pyut.ui.PyutProjectV2 import UmlFrameType
+from pyut.ui.PyutDocument import PyutDocument
+from pyut.ui.PyutProject import PyutProject
+from pyut.ui.PyutProject import UmlFrameType
 
 from pyut.ui.Types import createDiagramFrame
 
@@ -161,7 +161,7 @@ from pyut.ui.eventengine.EventEngine import ActiveProjectInformationCallback
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
-TreeDataType        = Union[PyutProjectV2, PyutDocumentV2]
+TreeDataType        = Union[PyutProject, PyutDocument]
 
 SASH_POSITION:                 int = 160        # TODO make this a preference and remember it
 MAX_NOTEBOOK_PAGE_NAME_LENGTH: int = 12         # TODO make this a preference
@@ -316,7 +316,7 @@ class PyutUI(SplitterWindow):
         umlFrame, defaultDiagramName = createDiagramFrame(parentFrame=self._diagramNotebook,
                                                           diagramType=diagramType,
                                                           eventEngine=self._eventEngine)
-        document: PyutDocumentV2     = PyutDocumentV2(diagramFrame=umlFrame, docType=diagramType, eventEngine=self._eventEngine)
+        document: PyutDocument     = PyutDocument(diagramFrame=umlFrame, docType=diagramType, eventEngine=self._eventEngine)
 
         document.title = defaultDiagramName
 
@@ -823,7 +823,7 @@ class PyutUI(SplitterWindow):
         booBoo: MessageDialog = MessageDialog(parent=None, message=message, caption='Error', style=OK | ICON_ERROR)
         booBoo.ShowModal()
 
-    def _updateProjectManagerWithNewDocument(self, pyutProject: IPyutProject, document: PyutDocumentV2):
+    def _updateProjectManagerWithNewDocument(self, pyutProject: IPyutProject, document: PyutDocument):
         """
 
         Args:
@@ -837,7 +837,7 @@ class PyutUI(SplitterWindow):
         self._projectManager.currentFrame.Refresh()
         wxYield()
 
-    def _addNewDocumentToDiagramNotebook(self, newDocument: PyutDocumentV2):
+    def _addNewDocumentToDiagramNotebook(self, newDocument: PyutDocument):
         """
 
         Args:

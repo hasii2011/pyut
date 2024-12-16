@@ -20,7 +20,7 @@ from pyut.ui.IPyutProject import UmlFrameType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
-class PyutDocumentV2(IPyutDocument):
+class PyutDocument(IPyutDocument):
     """
     Document : Contains a document : frames, properties, ...
     """
