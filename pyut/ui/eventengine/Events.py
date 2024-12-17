@@ -1,9 +1,5 @@
-from typing import Dict
-from typing import NewType
 
 from wx.lib.newevent import NewEvent
-
-from pyut.ui.eventengine.EventType import EventType
 
 #
 # The constructor returns a tuple; The first is the event,  The second is the binder

@@ -31,10 +31,6 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.eventengine.EventType import EventType
-from pyut.ui.eventengine.Events import EVENT_NEW_DIAGRAM
-from pyut.ui.eventengine.Events import EVENT_NEW_NAMED_PROJECT
-from pyut.ui.eventengine.Events import EVENT_NEW_PROJECT
-from pyut.ui.eventengine.Events import EVENT_SELECT_ALL_SHAPES
 
 from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
@@ -91,6 +87,7 @@ from pyut.ui.eventengine.Events import UpdateTreeItemNameEvent
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListener
+from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListeners
 
 NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
@@ -156,22 +153,10 @@ SimpleEvents: EventEnumToType = EventEnumToType({
 })
 
 CallerName  = NewType('CallerName',  str)
-ListenerMap = NewType('ListenerMap', Dict[CallerName, RegisteredListener])
+ListenerMap = NewType('ListenerMap', Dict[CallerName, RegisteredListeners])
 
 # noinspection SpellCheckingInspection
 getframeExpresson = 'sys._getframe({}).f_code.co_name'
-
-IdToTypeMap = NewType('IdToTypeMap', Dict[int, EventType])
-
-IdTypeMap: IdToTypeMap = IdToTypeMap(
-    {
-        EVENT_NEW_PROJECT.typeId:       EventType.NewProject,
-        EVENT_NEW_NAMED_PROJECT.typeId: EventType.NewProjectDiagram,
-        EVENT_NEW_DIAGRAM.typeId:       EventType.NewDiagram,
-
-        EVENT_SELECT_ALL_SHAPES.typeId: EventType.SelectAllShapes
-    }
-)
 
 INSPECTOR_SKIP_DEPTH: int = 3
 
@@ -494,16 +479,20 @@ class EventEngine(IEventEngine):
         registeredListener: RegisteredListener = RegisteredListener()
         registeredListener.eventHandler = cbStr
 
-        # 1 for us, 1 for the constructor, 1 for the caller
+        # 1 for us, 1 for the caller of this method, 1 for the caller
         registeredBy: str = Inspector.getCallerName(skip=INSPECTOR_SKIP_DEPTH)
         registeredListener.registeredBy = registeredBy
 
-        try:
-            eventType: EventType = IdTypeMap[typeId]
-            registeredListener.eventType = eventType
-        except KeyError:
-            self._logger.error(f'Unknown event type id: {typeId}')
+        eventType: EventType = EventType(typeId)
+        registeredListener.eventType = eventType
 
-        self._listenerMap[CallerName(registeredBy)] = registeredListener
+        if registeredBy in self._listenerMap:
+            registeredListeners: RegisteredListeners = self._listenerMap[CallerName(registeredBy)]
+        else:
+            registeredListeners = RegisteredListeners([])
+
+        registeredListeners.append(registeredListener)
+
+        self._listenerMap[CallerName(registeredBy)] = registeredListeners
 
         self._logger.info(f'{self._listenerMap}')

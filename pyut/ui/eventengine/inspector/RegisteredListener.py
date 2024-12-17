@@ -23,7 +23,7 @@ class RegisteredListener:
     """
     eventType:    EventType = EventType.NOT_SET
     registeredBy: str       = ''
-    eventHandler:     str       = ''
+    eventHandler: str       = ''
     callCount:    CallCount = field(default_factory=createCallCountFactor)
 
 

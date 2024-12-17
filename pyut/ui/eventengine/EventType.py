@@ -1,9 +1,63 @@
 
 from enum import Enum
 
+from pyut.ui.eventengine.Events import EVENT_ACTIVE_PROJECT_INFORMATION
+from pyut.ui.eventengine.Events import EVENT_ACTIVE_UML_FRAME
+from pyut.ui.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_ADD_PYUT_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_ADD_SHAPE
+from pyut.ui.eventengine.Events import EVENT_ASSOCIATE_EDIT_MENU
+from pyut.ui.eventengine.Events import EVENT_CLASS_NAME_CHANGED
+from pyut.ui.eventengine.Events import EVENT_CLOSE_PROJECT
+from pyut.ui.eventengine.Events import EVENT_COPY_SHAPES
+from pyut.ui.eventengine.Events import EVENT_CREATE_LINK
+from pyut.ui.eventengine.Events import EVENT_CUT_SHAPE
+from pyut.ui.eventengine.Events import EVENT_CUT_SHAPES
+from pyut.ui.eventengine.Events import EVENT_DELETE_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_DELETE_LINK
+from pyut.ui.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
+from pyut.ui.eventengine.Events import EVENT_EDIT_ACTOR
+from pyut.ui.eventengine.Events import EVENT_EDIT_CLASS
+from pyut.ui.eventengine.Events import EVENT_EDIT_INTERFACE
+from pyut.ui.eventengine.Events import EVENT_EDIT_NOTE
+from pyut.ui.eventengine.Events import EVENT_EDIT_TEXT
+from pyut.ui.eventengine.Events import EVENT_EDIT_USE_CASE
+from pyut.ui.eventengine.Events import EVENT_FRAME_INFORMATION
+from pyut.ui.eventengine.Events import EVENT_FRAME_SIZE
+from pyut.ui.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
+from pyut.ui.eventengine.Events import EVENT_INSERT_PROJECT
+from pyut.ui.eventengine.Events import EVENT_MINI_PROJECT_INFORMATION
+from pyut.ui.eventengine.Events import EVENT_NEW_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_NEW_NAMED_PROJECT
+from pyut.ui.eventengine.Events import EVENT_NEW_PROJECT
+from pyut.ui.eventengine.Events import EVENT_NEW_PROJECT_DIAGRAM
+from pyut.ui.eventengine.Events import EVENT_OPEN_PROJECT
+from pyut.ui.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_POSITION
+from pyut.ui.eventengine.Events import EVENT_OVERRIDE_PROGRAM_EXIT_SIZE
+from pyut.ui.eventengine.Events import EVENT_PASTE_SHAPES
+from pyut.ui.eventengine.Events import EVENT_REDO
+from pyut.ui.eventengine.Events import EVENT_REFRESH_FRAME
+from pyut.ui.eventengine.Events import EVENT_REQUEST_CURRENT_PROJECT
+from pyut.ui.eventengine.Events import EVENT_SAVE_PROJECT
+from pyut.ui.eventengine.Events import EVENT_SAVE_PROJECT_AS
+from pyut.ui.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
+from pyut.ui.eventengine.Events import EVENT_SELECT_ALL_SHAPES
+from pyut.ui.eventengine.Events import EVENT_SELECT_TOOL
+from pyut.ui.eventengine.Events import EVENT_SET_TOOL_ACTION
+from pyut.ui.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.ui.eventengine.Events import EVENT_UNDO
+from pyut.ui.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
+from pyut.ui.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
+from pyut.ui.eventengine.Events import EVENT_UPDATE_EDIT_MENU
+from pyut.ui.eventengine.Events import EVENT_UPDATE_RECENT_PROJECTS
+from pyut.ui.eventengine.Events import EVENT_UPDATE_TREE_ITEM_NAME
+
 
 class EventType(Enum):
     """
+    The value for a specific EventType is going to be the ID of
+    its associated PyEventBinder.
+
     UpdateApplicationTitleEvent
         Updates the application title
         parameters:
@@ -123,56 +177,55 @@ class EventType(Enum):
     event types
     """
 
-    NewProject               = 'NewProject'
-    NewNamedProject          = 'NewNamedProject'
-    NewDiagram               = 'NewDiagram'
-    NewProjectDiagram        = 'NewProjectDiagram'
-    DeleteDiagram            = 'DeleteDiagram'
-    OpenProject              = 'OpenProject'
-    InsertProject            = 'InsertProject'
-    SaveProject              = 'SaveProject'
-    SaveProjectAs            = 'SaveProjectAs'
-    CloseProject             = 'CloseProject'
-    UpdateTreeItemName       = 'UpdateTreeItemName'
-    UpdateApplicationTitle   = 'UpdateApplicationTitle'
-    UpdateApplicationStatus  = 'UpdateApplicationStatus'
-    UpdateRecentProjects     = 'UpdateRecentProjects'
-    UMLDiagramModified       = 'UMLDiagramModified'
-    SelectAllShapes          = 'SelectAllShapes'
-    DeSelectAllShapes        = 'DeSelectAllShapesEvent'
-    AddShape                 = 'AddShapeEvent'
-    CopyShapes               = 'CopyShapes'
-    PasteShapes              = 'PasteShapes'
-    CutShapes                = 'CutShapes'
-    Undo                     = 'Undo'
-    Redo                     = 'Redo'
-    CutShape                 = 'CutShape'
-    AddPyutDiagram           = 'AddPyutDiagram'
-    AddOglDiagram            = 'AddOglDiagram'
-    SelectTool               = 'SelectTool'
-    SetToolAction            = 'SetToolAction'
-    MiniProjectInformation   = 'MiniProjectInformation'
-    ActiveUmlFrame           = 'ActiveUmlFrame'
-    ActiveProjectInformation = 'ActiveProjectInformation'
-    GetLollipopInterfaces    = 'GetLollipopInterfaces'
-    EditClass                = 'EditClass'
-    EditNote                 = 'EditNote'
-    EditText                 = 'EditText'
-    EditActor                = 'EditActor'
-    EditUseCase              = 'EditUseCase'
-    EditInterface            = 'EditInterface'
-    FrameInformation         = 'FrameInformation'
-    FrameSize                = 'FrameSize'
-    SelectedOglObjects       = 'SelectedOglObjects'
-    RefreshFrame             = 'RefreshFrame'
-    UpdateEditMenu           = 'UpdateEditMenu'
-    AssociateEditMenu        = 'AssociateEditMenu'
-    ClassNameChanged         = 'ClassNameChanged'
-    RequestCurrentProject    = 'RequestCurrentProject'
-    DeleteLink               = 'DeleteLink'
-    CreateLink               = 'CreateLink'
+    NewProject                  = EVENT_NEW_PROJECT.typeId
+    NewNamedProject             = EVENT_NEW_NAMED_PROJECT.typeId
+    NewDiagram                  = EVENT_NEW_DIAGRAM.typeId
+    NewProjectDiagram           = EVENT_NEW_PROJECT_DIAGRAM.typeId
+    DeleteDiagram               = EVENT_DELETE_DIAGRAM.typeId
+    OpenProject                 = EVENT_OPEN_PROJECT.typeId
+    InsertProject               = EVENT_INSERT_PROJECT.typeId
+    SaveProject                 = EVENT_SAVE_PROJECT.typeId
+    SaveProjectAs               = EVENT_SAVE_PROJECT_AS.typeId
+    CloseProject                = EVENT_CLOSE_PROJECT.typeId
+    UpdateTreeItemName          = EVENT_UPDATE_TREE_ITEM_NAME.typeId
+    UpdateApplicationTitle      = EVENT_UPDATE_APPLICATION_TITLE.typeId
+    UpdateApplicationStatus     = EVENT_UPDATE_APPLICATION_STATUS.typeId
+    UpdateRecentProjects        = EVENT_UPDATE_RECENT_PROJECTS.typeId
+    UMLDiagramModified          = EVENT_UML_DIAGRAM_MODIFIED.typeId
+    SelectAllShapes             = EVENT_SELECT_ALL_SHAPES.typeId
+    DeSelectAllShapes           = EVENT_DESELECT_ALL_SHAPES.typeId
+    AddShape                    = EVENT_ADD_SHAPE.typeId
+    CopyShapes                  = EVENT_COPY_SHAPES.typeId
+    PasteShapes                 = EVENT_PASTE_SHAPES.typeId
+    CutShapes                   = EVENT_CUT_SHAPES.typeId
+    Undo                        = EVENT_UNDO.typeId
+    Redo                        = EVENT_REDO.typeId
+    CutShape                    = EVENT_CUT_SHAPE.typeId         # TODO:  I do not think this is used anymore
+    AddPyutDiagram              = EVENT_ADD_PYUT_DIAGRAM.typeId
+    AddOglDiagram               = EVENT_ADD_OGL_DIAGRAM.typeId
+    SelectTool                  = EVENT_SELECT_TOOL.typeId
+    SetToolAction               = EVENT_SET_TOOL_ACTION.typeId
+    MiniProjectInformation      = EVENT_MINI_PROJECT_INFORMATION.typeId
+    ActiveUmlFrame              = EVENT_ACTIVE_UML_FRAME.typeId
+    ActiveProjectInformation    = EVENT_ACTIVE_PROJECT_INFORMATION.typeId
+    GetLollipopInterfaces       = EVENT_GET_LOLLIPOP_INTERFACES.typeId
+    EditClass                   = EVENT_EDIT_CLASS.typeId
+    EditNote                    = EVENT_EDIT_NOTE.typeId
+    EditText                    = EVENT_EDIT_TEXT.typeId
+    EditActor                   = EVENT_EDIT_ACTOR.typeId
+    EditUseCase                 = EVENT_EDIT_USE_CASE.typeId
+    EditInterface               = EVENT_EDIT_INTERFACE.typeId
+    FrameInformation            = EVENT_FRAME_INFORMATION.typeId
+    FrameSize                   = EVENT_FRAME_SIZE.typeId
+    SelectedOglObjects          = EVENT_SELECTED_OGL_OBJECTS.typeId
+    RefreshFrame                = EVENT_REFRESH_FRAME.typeId
+    UpdateEditMenu              = EVENT_UPDATE_EDIT_MENU.typeId
+    AssociateEditMenu           = EVENT_ASSOCIATE_EDIT_MENU.typeId
+    ClassNameChanged            = EVENT_CLASS_NAME_CHANGED.typeId
+    RequestCurrentProject       = EVENT_REQUEST_CURRENT_PROJECT.typeId
+    DeleteLink                  = EVENT_DELETE_LINK.typeId
+    CreateLink                  = EVENT_CREATE_LINK.typeId
+    OverrideProgramExitSize     = EVENT_OVERRIDE_PROGRAM_EXIT_SIZE.typeId
+    OverrideProgramExitPosition = EVENT_OVERRIDE_PROGRAM_EXIT_POSITION.typeId
 
-    OverrideProgramExitSize     = 'OverrideProgramExitSize'
-    OverrideProgramExitPosition = 'OverrideProgramExitPosition'
-
-    NOT_SET = 'Not Set'
+    NOT_SET = -6666
