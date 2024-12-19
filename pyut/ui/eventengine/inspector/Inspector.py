@@ -70,3 +70,14 @@ class Inspector:
                 name.append(codeName)  # function or a method
 
             return ".".join(name)
+
+    @classmethod
+    def justClassMethodName(cls, fullyQualifiedName: str) -> str:
+
+        parts: List[str] = fullyQualifiedName.split('.')
+
+        partLen: int = len(parts)
+
+        shortName: str = f'{parts[partLen-2]}.{parts[partLen-1]}'
+
+        return shortName

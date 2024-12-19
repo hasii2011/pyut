@@ -626,7 +626,7 @@ class PyutUI(SplitterWindow):
         cb(projectInformation)
 
     def _onGetActiveUmlFrame(self, event: ActiveUmlFrameEvent):
-        cb = event.eventHandler
+        cb = event.callback
         cb(self._projectManager.currentFrame)
 
     def _onActiveProjectInformation(self, event: ActiveProjectInformationEvent):

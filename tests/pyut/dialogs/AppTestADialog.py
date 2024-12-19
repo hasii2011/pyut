@@ -63,6 +63,7 @@ from ogl.preferences.OglPreferences import OglPreferences
 from pyut.enums.DiagramType import DiagramType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.ui.eventengine.inspector.DlgEventEngineDialog import DlgEventEngineDialog
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
@@ -146,8 +147,8 @@ class AppTestADialog(App):
         self._frame.SetSizer(mainSizer)
         self._frame.Show(True)
 
-        self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED,   callback=self._onClassNameChanged)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED,    callback=self._onDiagramModified)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED,      callback=self._onClassNameChanged)
         self._eventEngine.registerListener(pyEventBinder=EVENT_GET_LOLLIPOP_INTERFACES, callback=self._onGetLollipopInterfaces)
 
         return True
@@ -229,10 +230,19 @@ class AppTestADialog(App):
                 dlgAnswer = self._testDlgEditCode()
             case DialogNamesEnum.DLG_PYUT_DEBUG:
                 dlgAnswer = self._testDlgPyutDebug()
+            case DialogNamesEnum.DLG_DEBUG_EVENT_ENGINE_DIALOG:
+                dlgAnswer = self._testDlgDebugEventDialog()
             case _:
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgDebugEventDialog(self) -> str:
+        dlg: DlgEventEngineDialog = DlgEventEngineDialog(self._frame, self._eventEngine)
+        if dlg.ShowModal() == OK:
+            return 'Ok'
+        else:
+            return 'Cancel'
 
     def testDlgTipsV2(self):
         dlg: DlgTipsV2 = DlgTipsV2(self._frame)

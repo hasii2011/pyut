@@ -7,6 +7,7 @@ from abc import abstractmethod
 from wx import PyEventBinder
 
 from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.inspector.EventEngineDiagnostics import EventEngineDiagnostics
 
 
 class IEventEngine(ABC):
@@ -20,4 +21,9 @@ class IEventEngine(ABC):
 
     @abstractmethod
     def sendEvent(self, eventType: EventType, **kwargs):
+        pass
+
+    @property
+    @abstractmethod
+    def eventEngineDiagnostics(self) -> EventEngineDiagnostics:
         pass

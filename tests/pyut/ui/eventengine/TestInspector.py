@@ -54,8 +54,18 @@ class TestInspector(UnitTestBase):
 
         class2.method2()
 
+        # noinspection SpellCheckingInspection
         expectedCaller: str = 'tests.pyut.ui.eventengine.TestInspector.Class2.method2'
         self.assertEqual(expectedCaller, class2.class1.calledBy, 'Incorrect')
+
+    def testJustClassMethodName(self):
+
+        fullyQualifiedName: str = 'pyut.ui.main.PyutApplicationFrame.PyutApplicationFrame._initialize'
+        expectedShortName:  str = 'PyutApplicationFrame._initialize'
+
+        actualShortName:    str = Inspector.justClassMethodName(fullyQualifiedName)
+
+        self.assertEqual(expectedShortName, actualShortName, 'Not correctly shortened')
 
 
 def suite() -> TestSuite:

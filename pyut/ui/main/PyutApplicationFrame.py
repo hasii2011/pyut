@@ -453,7 +453,7 @@ class PyutApplicationFrame(Frame):
         self._toolboxIds:       ToolboxIdMap     = self._createToolboxIdMap()
         self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
                                                                     toolboxIds=self._toolboxIds)
-        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=helpMenu)
+        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=helpMenu, eventEngine=self._eventEngine)
         self._menuCreator:     MenuCreator     = MenuCreator(frame=self, pluginManager=self._pluginMgr)
 
         self._menuCreator.fileMenu  = fileMenu

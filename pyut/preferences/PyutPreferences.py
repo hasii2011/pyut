@@ -47,6 +47,7 @@ SECTION_FEATURES: ValueDescriptions = ValueDescriptions(
 SECTION_DEBUG: ValueDescriptions = ValueDescriptions(
     {
         KeyName('debugErrorViews'):  ValueDescription(defaultValue='False', deserializer=SecureConversions.secureBoolean),
+        KeyName('debugLoggers'):     ValueDescription(defaultValue='True',  deserializer=SecureConversions.secureBoolean),
         KeyName('debugEventEngine'): ValueDescription(defaultValue='True',  deserializer=SecureConversions.secureBoolean),
     }
 )

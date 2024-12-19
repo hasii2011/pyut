@@ -14,6 +14,7 @@ from pyut import __version__ as pyutVersion
 
 from pyut.ui.dialogs.DlgAbout import DlgAbout
 from pyut.ui.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.ui.eventengine.inspector.DlgEventEngineDialog import DlgEventEngineDialog
 
 from pyut.ui.menuhandlers.BaseMenuHandler import BaseMenuHandler
 
@@ -85,4 +86,14 @@ class HelpMenuHandler(BaseMenuHandler):
             event:
         """
         with DlgPyutDebug(self._parent) as dlg:
+            dlg.ShowModal()
+
+    # noinspection PyUnusedLocal
+    def onDebugEventEngine(self, event: CommandEvent):
+        """
+        Open a dialog to access the Pyut event engine
+        Args:
+            event:
+        """
+        with DlgEventEngineDialog(self._parent, eventEngine=self._eventEngine) as dlg:
             dlg.ShowModal()
