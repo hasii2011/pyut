@@ -10,8 +10,8 @@ from ogl.OglText import OglText
 
 from pyut.ui.wxcommands.BaseWxDeleteCommand import BaseWxDeleteCommand
 
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class CommandDeleteOglText(BaseWxDeleteCommand):

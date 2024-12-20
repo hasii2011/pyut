@@ -12,8 +12,8 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
 
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 if TYPE_CHECKING:
     from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame

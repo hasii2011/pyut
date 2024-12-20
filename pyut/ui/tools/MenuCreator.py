@@ -40,16 +40,16 @@ from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.general.exceptions.UnsupportedOperation import UnsupportedOperation
 
-from pyut.ui.frame.EditMenuHandler import EditMenuHandler
-from pyut.ui.frame.FileMenuHandler import FileMenuHandler
-from pyut.ui.frame.HelpMenuHandler import HelpMenuHandler
-from pyut.ui.frame.ToolsMenuHandler import ToolsMenuHandler
+from pyut.ui.menuhandlers.EditMenuHandler import EditMenuHandler
+from pyut.ui.menuhandlers.FileMenuHandler import FileMenuHandler
+from pyut.ui.menuhandlers.HelpMenuHandler import HelpMenuHandler
+from pyut.ui.menuhandlers.ToolsMenuHandler import ToolsMenuHandler
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from pyut.ui.tools.SharedTypes import ToolboxIdMap
 from pyut.ui.tools.ToolboxTypes import CategoryNames
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 
 class MenuCreator:
@@ -58,17 +58,17 @@ class MenuCreator:
 
         self._containingFrame: Frame = frame
 
-        self.logger:    Logger          = getLogger(__name__)
-        self._prefs:    PyutPreferences = PyutPreferences()
-        self.plugMgr:   PluginManager   = pluginManager
+        self.logger:       Logger          = getLogger(__name__)
+        self._preferences: PyutPreferences = PyutPreferences()
+        self.plugMgr:      PluginManager   = pluginManager
 
         self._plugins:    PluginIDMap   = PluginIDMap({})     # To store the plugins and their activation IDs
         self._toolboxIds: ToolboxIdMap = ToolboxIdMap({})  # Dictionary id --> toolbox
 
-        self._fileMenu:  Menu = cast(Menu, None)
-        self._editMenu:  Menu = cast(Menu, None)
+        self._fileMenu: Menu = cast(Menu, None)
+        self._editMenu: Menu = cast(Menu, None)
         self._toolMenu: Menu = cast(Menu, None)
-        self._helpMenu:  Menu = cast(Menu, None)
+        self._helpMenu: Menu = cast(Menu, None)
 
         self._toolPlugins:   PluginIDMap = cast(PluginIDMap, None)
         self._exportPlugins: PluginIDMap = cast(PluginIDMap, None)
@@ -275,7 +275,7 @@ class MenuCreator:
 
         mnuEdit = self._initializeAddDiagramSubMenu(mnuEdit)
 
-        if self._prefs.debugErrorViews is True:
+        if self._preferences.debugErrorViews is True:
             mnuEdit.AppendSeparator()
             # noinspection PyUnusedLocal
             mnuEdit = self._initializeErrorViewSubMenu(mnuEdit)
@@ -288,9 +288,12 @@ class MenuCreator:
         mnuHelp.Append(ID_ABOUT)
         mnuHelp.AppendSeparator()
         mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_VERSION, "Check for newer versions", "Check if a newer version of Pyut exists")
-        mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_WEB, "&Web site", "Open PyUt web site")
+        mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_WEB, "&Web site", "Open Pyut web site")
         mnuHelp.AppendSeparator()
-        mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_DEBUG, "&Debug", "Open IPython shell")
+        if self._preferences.debugLoggers is True:
+            mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_DEBUG, "&Debug", "Open Debug Loggers")
+        if self._preferences.debugEventEngine is True:
+            mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_DEBUG_EVENT_ENGINE, "Debug &Event Engine", "Open Debug Loggers")
 
     def _initializeErrorViewSubMenu(self, mnuEdit: Menu) -> Menu:
 
@@ -425,7 +428,7 @@ class MenuCreator:
 
         containingFrame.Bind(EVT_MENU, editMenuHandler.onSelectAll, id=ID_SELECTALL)
 
-        if self._prefs.debugErrorViews is True:
+        if self._preferences.debugErrorViews is True:
             from pyut.experimental.DebugErrorViews import DebugErrorViews
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugGraphicErrorView, id=SharedIdentifiers.ID_MENU_GRAPHIC_ERROR_VIEW)
             containingFrame.Bind(EVT_MENU, DebugErrorViews.debugTextErrorView,    id=SharedIdentifiers.ID_MENU_TEXT_ERROR_VIEW)
@@ -433,10 +436,11 @@ class MenuCreator:
 
     def _bindHelpMenuHandlers(self, containingFrame: Frame, helpMenuHandler: HelpMenuHandler):
 
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,       id=ID_ABOUT)
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion, id=SharedIdentifiers.ID_MENU_HELP_VERSION)
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb, id=SharedIdentifiers.ID_MENU_HELP_WEB)
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug, id=SharedIdentifiers.ID_MENU_HELP_DEBUG)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,            id=ID_ABOUT)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion,      id=SharedIdentifiers.ID_MENU_HELP_VERSION)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,          id=SharedIdentifiers.ID_MENU_HELP_WEB)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,            id=SharedIdentifiers.ID_MENU_HELP_DEBUG)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebugEventEngine, id= SharedIdentifiers.ID_MENU_HELP_DEBUG_EVENT_ENGINE)
 
     def __makeSubMenuEntry(self, subMenu: Menu, wxId: int, formatName: str, callback: Callable) -> Menu:
 

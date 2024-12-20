@@ -21,15 +21,15 @@ from wx import ToolBar
 from wx import WindowIDRef
 from wx import Frame
 
-from pyut.ui.frame.EditMenuHandler import EditMenuHandler
-from pyut.ui.frame.FileMenuHandler import FileMenuHandler
+from pyut.ui.menuhandlers.EditMenuHandler import EditMenuHandler
+from pyut.ui.menuhandlers.FileMenuHandler import FileMenuHandler
 
 from pyut.ui.tools.Tool import Category
 from pyut.ui.tools.Tool import Tool
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
 from pyut.ui.tools.ToolIconOwner import ToolIconOwner
 
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 TOOLS_CATEGORY: Category = Category('Pyut Tools')
 MENU_CATEGORY:  Category = Category('Pyut Menu')

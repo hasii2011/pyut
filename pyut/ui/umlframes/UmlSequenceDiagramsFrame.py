@@ -7,7 +7,7 @@ from pyutmodelv2.PyutSDMessage import PyutSDMessage
 from ogl.sd.OglSDInstance import OglSDInstance
 from ogl.sd.OglSDMessage import OglSDMessage
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class UmlSequenceDiagramsFrame(UmlDiagramsFrame):

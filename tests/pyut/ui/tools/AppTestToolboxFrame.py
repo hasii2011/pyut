@@ -25,7 +25,7 @@ from pyut.ui.tools.ToolsCreator import TOOLS_CATEGORY
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers as SID
 
-from pyut.uiv2.ToolBoxHandler import ToolBoxHandler
+from pyut.ui.ToolBoxHandler import ToolBoxHandler
 
 from tests.ProjectTestBase import ProjectTestBase
 

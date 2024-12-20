@@ -9,8 +9,8 @@ from logging import getLogger
 from wx import Command
 
 from pyut.general.Globals import apply
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 Parameters = NewType('Parameters', List[Any])

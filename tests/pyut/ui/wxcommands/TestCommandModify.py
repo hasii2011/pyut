@@ -1,5 +1,7 @@
 
 from typing import Callable
+from typing import cast
+
 from unittest import TestSuite
 from unittest import main as unitTestMain
 
@@ -8,10 +10,12 @@ from codeallybasic.UnitTestBase import UnitTestBase
 from wx import CommandProcessor
 from wx import PyEventBinder
 
+from pyut.ui.eventengine.inspector.EventEngineDiagnostics import EventEngineDiagnostics
 from pyut.ui.wxcommands.CommandModify import CommandModify
 from pyut.ui.wxcommands.CommandModify import Parameters
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+
+from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class UnitTestClass:
@@ -61,6 +65,10 @@ class DummyEventEngine(IEventEngine):
 
     def sendEvent(self, eventType: EventType, **kwargs):
         pass
+
+    @property
+    def eventEngineDiagnostics(self) -> EventEngineDiagnostics:
+        return cast(EventEngineDiagnostics, None)
 
 
 class TestCommandModify(UnitTestBase):

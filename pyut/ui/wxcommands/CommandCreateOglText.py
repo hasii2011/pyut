@@ -13,8 +13,8 @@ from ogl.preferences.OglPreferences import OglPreferences
 from pyut.ui.wxcommands.BaseWxCreateCommand import BaseWxCreateCommand
 from pyut.ui.wxcommands.Types import DoableObjectType
 
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventType import EventType
+from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 
 class CommandCreateOglText(BaseWxCreateCommand):

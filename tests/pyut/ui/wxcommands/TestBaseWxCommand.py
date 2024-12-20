@@ -19,7 +19,7 @@ from pyut.ui.umlframes.UmlFrame import UmlObjects
 
 from pyut.ui.wxcommands.BaseWxCommand import BaseWxCommand
 
-from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.ui.eventengine.EventEngine import EventEngine
 
 
 def idGenerator():

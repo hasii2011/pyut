@@ -12,6 +12,7 @@ from codeallyadvanced.ui.AttachmentSide import AttachmentSide
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
 from ogl.OglInterface2 import OglInterface2
 from pyutmodelv2.PyutModelTypes import Implementors
+
 from wx import ALIGN_TOP
 from wx import ALL
 from wx import CB_READONLY
@@ -38,7 +39,6 @@ from pyutmodelv2.PyutLink import PyutLink
 from pyutmodelv2.PyutClass import PyutClass
 from pyutmodelv2.PyutInterface import PyutInterface
 from pyutmodelv2.PyutInterface import PyutInterfaces
-
 from pyutmodelv2.PyutField import PyutField
 from pyutmodelv2.PyutField import PyutFields
 from pyutmodelv2.PyutMethod import PyutMethod
@@ -63,48 +63,49 @@ from ogl.preferences.OglPreferences import OglPreferences
 from pyut.enums.DiagramType import DiagramType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.ui.eventengine.inspector.DlgEventEngineDialog import DlgEventEngineDialog
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
-from pyut.uiv2.IPyutDocument import IPyutDocument
-from pyut.uiv2.PyutDocumentV2 import PyutDocumentV2
+from pyut.ui.IPyutDocument import IPyutDocument
+from pyut.ui.PyutDocument import PyutDocument
 
 from pyut.ui.Types import UmlFrameType
 
-from pyut.uiv2.dialogs.preferencesv2.DlgPyutPreferences import DlgPyutPreferences
+from pyut.ui.dialogs.preferences.DlgPyutPreferences import DlgPyutPreferences
 
-from pyut.uiv2.dialogs.DlgEditClass import DlgEditClass
-from pyut.uiv2.dialogs.DlgEditCode import DlgEditCode
-from pyut.uiv2.dialogs.DlgEditDescription import DlgEditDescription
-from pyut.uiv2.dialogs.DlgEditField import DlgEditField
-from pyut.uiv2.dialogs.DlgEditInterface import DlgEditInterface
-from pyut.uiv2.dialogs.DlgEditLink import DlgEditLink
-from pyut.uiv2.dialogs.DlgEditMethod import DlgEditMethod
-from pyut.uiv2.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
-from pyut.uiv2.dialogs.DlgEditParameter import DlgEditParameter
-from pyut.uiv2.dialogs.DlgEditStereotype import DlgEditStereotype
-from pyut.uiv2.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.ui.dialogs.DlgEditClass import DlgEditClass
+from pyut.ui.dialogs.DlgEditCode import DlgEditCode
+from pyut.ui.dialogs.DlgEditDescription import DlgEditDescription
+from pyut.ui.dialogs.DlgEditField import DlgEditField
+from pyut.ui.dialogs.DlgEditInterface import DlgEditInterface
+from pyut.ui.dialogs.DlgEditLink import DlgEditLink
+from pyut.ui.dialogs.DlgEditMethod import DlgEditMethod
+from pyut.ui.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
+from pyut.ui.dialogs.DlgEditParameter import DlgEditParameter
+from pyut.ui.dialogs.DlgEditStereotype import DlgEditStereotype
+from pyut.ui.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.ui.dialogs.tips.DlgTipsV2 import DlgTipsV2
 
-from pyut.uiv2.dialogs.textdialogs.DlgEditNote import DlgEditNote
-from pyut.uiv2.dialogs.textdialogs.DlgEditText import DlgEditText
+from pyut.ui.dialogs.textdialogs.DlgEditNote import DlgEditNote
+from pyut.ui.dialogs.textdialogs.DlgEditText import DlgEditText
 
-from pyut.uiv2.dialogs.Wrappers import DlgEditActor
-from pyut.uiv2.dialogs.Wrappers import DlgEditDiagramTitle
-from pyut.uiv2.dialogs.Wrappers import DlgEditUseCase
+from pyut.ui.dialogs.Wrappers import DlgEditActor
+from pyut.ui.dialogs.Wrappers import DlgEditDiagramTitle
+from pyut.ui.dialogs.Wrappers import DlgEditUseCase
 
-from pyut.uiv2.dialogs.tips.DlgTipsV2 import DlgTipsV2
-from pyut.uiv2.eventengine.EventEngine import GetLollipopInterfacesCallback
-from pyut.uiv2.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
-from pyut.uiv2.eventengine.Events import GetLollipopInterfacesEvent
+from pyut.ui.eventengine.EventType import EventType
 
-from pyut.uiv2.eventengine.IEventEngine import IEventEngine
-from pyut.uiv2.eventengine.EventEngine import EventEngine
+from pyut.ui.eventengine.IEventEngine import IEventEngine
+from pyut.ui.eventengine.EventEngine import EventEngine
+from pyut.ui.eventengine.EventEngine import GetLollipopInterfacesCallback
 
-from pyut.uiv2.eventengine.Events import ClassNameChangedEvent
-from pyut.uiv2.eventengine.Events import EVENT_CLASS_NAME_CHANGED
-from pyut.uiv2.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
-from pyut.uiv2.eventengine.Events import EventType
-from pyut.uiv2.eventengine.Events import UMLDiagramModifiedEvent
+from pyut.ui.eventengine.Events import EVENT_GET_LOLLIPOP_INTERFACES
+from pyut.ui.eventengine.Events import GetLollipopInterfacesEvent
+from pyut.ui.eventengine.Events import ClassNameChangedEvent
+from pyut.ui.eventengine.Events import EVENT_CLASS_NAME_CHANGED
+from pyut.ui.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
+from pyut.ui.eventengine.Events import UMLDiagramModifiedEvent
 
 from tests.ProjectTestBase import ProjectTestBase
 
@@ -146,8 +147,8 @@ class AppTestADialog(App):
         self._frame.SetSizer(mainSizer)
         self._frame.Show(True)
 
-        self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED, callback=self._onDiagramModified)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED,   callback=self._onClassNameChanged)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_UML_DIAGRAM_MODIFIED,    callback=self._onDiagramModified)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_CLASS_NAME_CHANGED,      callback=self._onClassNameChanged)
         self._eventEngine.registerListener(pyEventBinder=EVENT_GET_LOLLIPOP_INTERFACES, callback=self._onGetLollipopInterfaces)
 
         return True
@@ -229,10 +230,19 @@ class AppTestADialog(App):
                 dlgAnswer = self._testDlgEditCode()
             case DialogNamesEnum.DLG_PYUT_DEBUG:
                 dlgAnswer = self._testDlgPyutDebug()
+            case DialogNamesEnum.DLG_DEBUG_EVENT_ENGINE_DIALOG:
+                dlgAnswer = self._testDlgDebugEventDialog()
             case _:
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgDebugEventDialog(self) -> str:
+        dlg: DlgEventEngineDialog = DlgEventEngineDialog(self._frame, self._eventEngine)
+        if dlg.ShowModal() == OK:
+            return 'Ok'
+        else:
+            return 'Cancel'
 
     def testDlgTipsV2(self):
         dlg: DlgTipsV2 = DlgTipsV2(self._frame)
@@ -305,9 +315,9 @@ class AppTestADialog(App):
         return pyutActor.name
 
     def _testDlgEditDiagramTitle(self):
-        diagram: IPyutDocument = PyutDocumentV2(diagramFrame=cast(UmlFrameType, None),
-                                                docType=DiagramType.CLASS_DIAGRAM,
-                                                eventEngine=self._eventEngine)
+        diagram: IPyutDocument = PyutDocument(diagramFrame=cast(UmlFrameType, None),
+                                              docType=DiagramType.CLASS_DIAGRAM,
+                                              eventEngine=self._eventEngine)
         diagram.title = 'Basic Diagram Title'
 
         with DlgEditDiagramTitle(self._frame, diagramTitle=diagram.title) as dlg:
@@ -519,7 +529,7 @@ class AppTestADialog(App):
             pyutInterface.addImplementor(ClassName(f'Implementor{implementor}'))
             fakeLollipops.append(pyutInterface)
 
-        cb: GetLollipopInterfacesCallback = event.callback
+        cb: GetLollipopInterfacesCallback = event.eventHandler
 
         cb(fakeLollipops)
 
