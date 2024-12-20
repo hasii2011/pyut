@@ -77,7 +77,7 @@ class EventType(Enum):
         Creates a new project in the project manager and the appropriate UI elements
         parameter:
             projectFilename:  The fully qualified filename
-            eventHandler:         The eventHandler to return the IPyutProject object
+            callback:         The callback to return the IPyutProject object
 
     InsertProjectEvent
         parameter:
@@ -136,23 +136,23 @@ class EventType(Enum):
     MiniProjectInformationEvent:
         Used to get some project data;
         parameters
-            eventHandler – Callback that is invoked with a parameter of type MiniProjectInformation
+            callback - Callback that is invoked with a parameter of type MiniProjectInformation
 
     ActiveUmlFrameEvent
         Used to retrieve the currently active frame
         parameters:
-            eventHandler - Callback this is invoked with a parameter of type UmlDiagramsFrame
+            callback - Callback this is invoked with a parameter of type UmlDiagramsFrame
 
     ActiveProjectInformationEvent
         Used to get information on the active project so that the UML Object edit dialogs
         can do their job
         parameters:
-            eventHandler - Callback that is invoked with a parameter of type ActiveProjectInformation
+            callback - Callback that is invoked with a parameter of type ActiveProjectInformation
 
     FrameInformationEvent
         Use by the plugin adaptor to provide low level to plugins that need item
         parameters:
-            eventHandler - Callback this is invoked with a parameter of type FrameInformation
+            callback - Callback this is invoked with a parameter of type FrameInformation
 
     UpdateEditMenuEvent
         Used to update the Edit menu Undo/redo menu items.  This involves using the
@@ -170,7 +170,7 @@ class EventType(Enum):
         model
         parameters:
             oldClassName - the old class name
-            newClassName – the new class name
+            newClassName - the new class name
 
     Events with no parameters get stuffed into the enumeration as instances, so they can be used
     event engine simple send method;  To simplify enumeration creation I create instances for all

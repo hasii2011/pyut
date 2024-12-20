@@ -539,7 +539,7 @@ class PyutUI(SplitterWindow):
 
         pyutProject: IPyutProject = self._projectManager.newNamedProject(filename=fqFileName)
 
-        cb: NewNamedProjectCallback = event.eventHandler
+        cb: NewNamedProjectCallback = event.callback
 
         cb(pyutProject)
 
@@ -730,7 +730,7 @@ class PyutUI(SplitterWindow):
             frameSize: FrameSize = FrameSize(width=width, height=height)
             info.frameSize = frameSize
 
-        cb: FrameInformationCallback = event.eventHandler
+        cb: FrameInformationCallback = event.callback
         cb(info)
 
     def _onFrameSize(self, event: FrameSizeEvent):
@@ -751,7 +751,7 @@ class PyutUI(SplitterWindow):
 
     def _pluginRequestCurrentProject(self, event: RequestCurrentProjectEvent):
 
-        cb:                   CurrentProjectCallback = event.eventHandler
+        cb:                   CurrentProjectCallback = event.callback
         pyutProject:          IPyutProject           = self._projectManager.currentProject
         pluginProjectCreator: PluginProjectCreator   = PluginProjectCreator()
         pluginProject:        PluginProject          = pluginProjectCreator.toPluginProject(pyutProject=pyutProject)
@@ -768,7 +768,7 @@ class PyutUI(SplitterWindow):
                     from pyutplugins.ExternalTypes import OglObjectType
                     selectedObjects.append(cast(OglObjectType, obj))
 
-        cb: SelectedOglObjectsCallback = event.eventHandler
+        cb: SelectedOglObjectsCallback = event.callback
 
         cb(selectedObjects)
 
