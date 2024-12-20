@@ -28,15 +28,19 @@ from pyutplugins.ExternalTypes import CurrentProjectCallback
 from pyutplugins.ExternalTypes import FrameInformationCallback
 
 from pyut.enums.DiagramType import DiagramType
-from pyut.preferences.PyutPreferences import PyutPreferences
 
-from pyut.ui.eventengine.EventType import EventType
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
 from pyut.ui.eventengine.eventinformation.NewProjectDiagramInformation import NewProjectDiagramInformation
 
 from pyut.ui.IPyutProject import IPyutProject
+
+from pyut.ui.eventengine.EventEngineDebugger import EventEngineDebugger
+
+from pyut.ui.eventengine.EventType import EventType
+
 from pyut.ui.eventengine.Events import AddOglDiagramEvent
 from pyut.ui.eventengine.Events import AddPyutDiagramEvent
 from pyut.ui.eventengine.Events import AddShapeEvent
@@ -87,11 +91,6 @@ from pyut.ui.eventengine.Events import UpdateTreeItemNameEvent
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 from pyut.ui.eventengine.inspector.EventEngineDiagnostics import EventEngineDiagnostics
-from pyut.ui.eventengine.inspector.RegisteredListener import EventHandler
-from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredBy
-from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListener
-from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListenerMap
-from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListeners
 
 NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
@@ -156,8 +155,6 @@ SimpleEvents: EventEnumToType = EventEnumToType({
     EventType.RefreshFrame:       RefreshFrameEvent,
 })
 
-INSPECTOR_SKIP_DEPTH: int = 3
-
 
 class EventEngine(IEventEngine):
     """
@@ -179,22 +176,22 @@ class EventEngine(IEventEngine):
         self._logger:          Logger          = getLogger(__name__)
         self._preferences:     PyutPreferences = PyutPreferences()
 
-        self._eventEngineDiagnostics: EventEngineDiagnostics = EventEngineDiagnostics()
+        self._eventEngineDebugger:    EventEngineDebugger    = EventEngineDebugger()
 
     @property
     def eventEngineDiagnostics(self) -> EventEngineDiagnostics:
-        return self._eventEngineDiagnostics
+        return self._eventEngineDebugger.eventEngineDiagnostics
 
     def registerListener(self, pyEventBinder: PyEventBinder, callback: Callable):
 
         self._listeningWindow.Bind(pyEventBinder, callback)
         if self._preferences.debugEventEngine is True:
-            self._makeListenerEntry(callback, pyEventBinder)
+            self._eventEngineDebugger.makeListenerEntry(callback, pyEventBinder)
 
     def sendEvent(self, eventType: EventType, **kwargs):
 
         if self._preferences.debugEventEngine is True:
-            self._updateListenerStatistics(eventType=eventType)
+            self._eventEngineDebugger.updateListenerStatistics(eventType=eventType)
 
         match eventType:
 
@@ -466,44 +463,3 @@ class EventEngine(IEventEngine):
         value:       bool = kwargs[OVERRIDE_PARAMETER]
         eventToPost: OverrideProgramExitSizeEvent = OverrideProgramExitSizeEvent(override=value)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
-
-    def _makeListenerEntry(self, callback: Callable, pyEventBinder: PyEventBinder):
-        """
-
-        Args:
-            callback:
-            pyEventBinder:
-
-        """
-        from pyut.ui.eventengine.inspector.Inspector import Inspector
-
-        cbStr:  str = callback.__qualname__
-        typeId: int = pyEventBinder.typeId
-        # self._logger.debug(f'{cbStr=} {typeId=}')
-        eventType: EventType = EventType(typeId)
-
-        registeredListener: RegisteredListener = RegisteredListener()
-        registeredListener.eventHandler = EventHandler(cbStr)
-        registeredListener.eventType = eventType
-
-        # 1 for us, 1 for the caller of this method, 1 for the caller
-        registeredBy: RegisteredBy = RegisteredBy(Inspector.getCallerName(skip=INSPECTOR_SKIP_DEPTH))
-
-        registeredListenerMap: RegisteredListenerMap = self._eventEngineDiagnostics.registeredListenersMap
-
-        self._logger.debug(f'{registeredBy=}')
-
-        if registeredBy in registeredListenerMap:
-            registeredListeners: RegisteredListeners = registeredListenerMap[registeredBy]
-        else:
-            registeredListeners = RegisteredListeners([])
-
-        registeredListeners.append(registeredListener)
-        registeredListenerMap[registeredBy] = registeredListeners
-
-        self._eventEngineDiagnostics.registeredListenersMap = registeredListenerMap
-
-        # self._logger.debug(f'{self._eventEngineDiagnostics}')
-
-    def _updateListenerStatistics(self, eventType: EventType):
-        pass

@@ -32,6 +32,8 @@ from wx.lib.sized_controls import SizedPanel
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 from pyut.ui.eventengine.inspector.EventEngineDiagnostics import EventEngineDiagnostics
+from pyut.ui.eventengine.inspector.EventSender import EventSenders
+from pyut.ui.eventengine.inspector.EventSender import EventSendersMap
 from pyut.ui.eventengine.inspector.Inspector import Inspector
 from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListener
 from pyut.ui.eventengine.inspector.RegisteredListener import RegisteredListenerMap
@@ -41,6 +43,7 @@ DIALOG_WIDTH:                int = 950
 DIALOG_HEIGHT:               int = 600
 EVENT_TYPE_COLUMN_WIDTH:     int = 250
 EVENT_HANDLER_COLUMN_WIDTH:  int = 200
+SENDER_COLUMN_WIDTH:         int = 200
 
 
 class DlgEventEngineDialog(SizedDialog):
@@ -95,19 +98,31 @@ class DlgEventEngineDialog(SizedDialog):
 
     def _populateTree(self):
 
-        self._tree.AddColumn('Event Type',    width=EVENT_TYPE_COLUMN_WIDTH)
+        self._tree.AddColumn('',              width=EVENT_TYPE_COLUMN_WIDTH)
         self._tree.AddColumn('Event Handler', width=EVENT_HANDLER_COLUMN_WIDTH)
+        self._tree.AddColumn('Sender Name',   width=SENDER_COLUMN_WIDTH)
         self._tree.AddColumn('Call Count')
         self._tree.SetMainColumn(0)
 
         self._tree.root = self._tree.AddRoot("Event Engine")
+
+        listenerItem: TreeListItem = self._tree.AppendItem(self._tree.root, 'Listeners')
+        senderItem:   TreeListItem = self._tree.AppendItem(self._tree.root, 'Senders')
+        self._createListenerSubTree(listenerItem=listenerItem)
+        self._createSenderSubTree(senderItem=senderItem)
+
+        # self._tree.ExpandAllChildren(self._tree.root)
+        self._tree.Toggle(self._tree.root)
+
+    def _createListenerSubTree(self, listenerItem: TreeListItem):
+
         diagnostics:            EventEngineDiagnostics = self._eventEngine.eventEngineDiagnostics
         registeredListenersMap: RegisteredListenerMap  = diagnostics.registeredListenersMap
         for registeredBy in registeredListenersMap:
 
             trimmedName: str = Inspector.justClassMethodName(registeredBy)
 
-            item:                TreeListItem        = self._tree.AppendItem(self._tree.root, trimmedName)
+            item:                TreeListItem        = self._tree.AppendItem(listenerItem, trimmedName)
             registeredListeners: RegisteredListeners = registeredListenersMap[registeredBy]
             self.logger.debug(f'{item=}')
             for listener in registeredListeners:
@@ -115,5 +130,19 @@ class DlgEventEngineDialog(SizedDialog):
                 regItem:            TreeListItem       = self._tree.AppendItem(item, registeredListener.eventType.name)
                 self._tree.SetItemText(regItem, registeredListener.eventHandler, 1)
 
-        # self._tree.ExpandAllChildren(self._tree.root)
-        self._tree.Toggle(self._tree.root)
+        self._tree.Toggle(listenerItem)
+
+    def _createSenderSubTree(self, senderItem: TreeListItem):
+
+        diagnostics:     EventEngineDiagnostics = self._eventEngine.eventEngineDiagnostics
+        eventSendersMap: EventSendersMap        = diagnostics.eventSendersMap
+
+        for eventType in eventSendersMap:
+            item:         TreeListItem = self._tree.AppendItem(senderItem, eventType.name)
+            eventSenders: EventSenders = eventSendersMap[eventType]
+
+            for eventSender in eventSenders:
+                trimmedName: str = Inspector.justClassMethodName(eventSender.senderName)
+
+                self._tree.SetItemText(item, trimmedName, 2)
+                self._tree.SetItemText(item, str(eventSender.callCount), 3)

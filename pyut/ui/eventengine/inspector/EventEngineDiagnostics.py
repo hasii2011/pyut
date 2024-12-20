@@ -13,4 +13,4 @@ from pyut.ui.eventengine.inspector.RegisteredListener import createRegisteredLis
 @dataclass
 class EventEngineDiagnostics:
     registeredListenersMap: RegisteredListenerMap = field(default_factory=createRegisteredListenersMapFactory)
-    eventSenders:           EventSendersMap       = field(default_factory=createEventSendersFactory)
+    eventSendersMap:        EventSendersMap       = field(default_factory=createEventSendersFactory)
