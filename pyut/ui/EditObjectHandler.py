@@ -36,6 +36,7 @@ from ogl.OglActor import OglActor
 from ogl.OglAssociation import OglAssociation
 from ogl.OglInterface import OglInterface
 from ogl.OglInterface2 import OglInterface2
+from ogl.OglNoteLink import OglNoteLink
 from ogl.OglObject import OglObject
 
 from pyut.ui.wxcommands.CommandModify import CommandModify
@@ -119,7 +120,7 @@ class EditObjectHandler:
                 self._editSDInstanceName(umlFrame, diagramShape)
             case OglSDMessage() as diagramShape:
                 self._editSDMessage(umlFrame, diagramShape)
-            case OglInheritance() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape() | TextShape():
+            case OglInheritance() | OglNoteLink() | OglInterface() | AnchorPoint() | ControlPoint() | SizerShape() | TextShape():
                 pass    # Nothing to edit on inheritance or interface relationships
             case _:
                 self.logger.error(f'Unknown shape')

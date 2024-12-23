@@ -20,6 +20,7 @@ See [documentation](https://github.com/hasii2011/PyUt/wiki)
 
 _Some Updates_
 
+* Improved UML sequence diagram creation
 * Mermaid Support
 * Better support for importing Python code
 * Better support for orthogonal lines
@@ -57,7 +58,7 @@ This project uses [buildlackey](https://github.com/hasii2011/buildlackey) for da
 
 ___
 
-Updated and modified by <a href="mailto:email@humberto.a.sanchez.ii@gmail.com?subject=Hello Humberto">Humberto A. Sanchez II</a>  (C) 2023
+Updated and modified by <a href="mailto:email@humberto.a.sanchez.ii@gmail.com?subject=Hello Humberto">Humberto A. Sanchez II</a>  (C) 2025
 
 ---
 
