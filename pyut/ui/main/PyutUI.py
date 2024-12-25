@@ -258,10 +258,9 @@ class PyutUI(SplitterWindow):
 
     def closeDefaultEmptyProject(self):
 
-        self.logger.info(f'Remove the default project')
-
         defaultProject: IPyutProject = self._projectManager.getProject(PyutConstants.DEFAULT_PROJECT_NAME)
         if defaultProject is not None:
+            self.logger.info(f'Removing the default project')
             self._closeProject(projectToClose=defaultProject)
 
     def showFrame(self, frame: UmlDiagramsFrame):
