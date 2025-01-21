@@ -57,7 +57,7 @@ setup(
     long_description='A UML Diagrammer with plugin support and reverse engineering capabilities.',
     options=dict(py2app=dict(
         plist=dict(
-            NSRequiresAquaSystemAppearance='True',
+            NSRequiresAquaSystemAppearance='False',
             CFBundleGetInfoString='Edits Pyut UML Files',
             CFBundleIdentifier='pyut',
             CFBundleShortVersionString=__version__,
@@ -80,9 +80,9 @@ setup(
         'codeallybasic>=1.8.5',
         'codeallyadvanced>=1.3.3',
         'pyutmodelv2>=2.2.0',
-        'ogl>=3.6.2',
+        'ogl>=3.6.3',
         'oglio>=2.3.4',
-        'pyutplugins>=3.2.1',
+        'pyutplugins>=3.2.3',
         'semantic-version==2.10.0',
         'PyGithub==2.4.0',
         'wxPython==4.2.2',

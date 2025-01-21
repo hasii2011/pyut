@@ -36,11 +36,11 @@ jobs:
             pip install codeallybasic==1.8.5
             pip install codeallyadvanced==1.3.3
             pip install pyutmodelv2==2.2.2  
-            pip install ogl==3.6.2
+            pip install ogl==3.6.3
             pip install oglio==2.3.4
-            pip install pyutplugins==3.2.1
+            pip install pyutplugins==3.2.3
             pip install html-testRunner==1.2.1
-            pip install buildlackey==1.7.0
+            pip install buildlackey==1.8.1
       - run:
             name: run tests
             command: | 

@@ -9,8 +9,7 @@ PyGithub==2.4.0
 Deprecated==1.2.14
 
 py2app==0.28.8
-buildlackey==1.8.0
-# versionoverlord==1.4.0
+buildlackey==1.8.1
 
 html-testRunner~=1.2.1
 mypy==1.14.0
@@ -23,6 +22,6 @@ semantic-version==2.10.0
 codeallybasic==1.8.5
 codeallyadvanced==1.3.3
 pyutmodelv2==2.2.2
-ogl==3.6.2
+ogl==3.6.3
 oglio==2.3.4
-pyutplugins==3.2.1
+pyutplugins==3.2.3

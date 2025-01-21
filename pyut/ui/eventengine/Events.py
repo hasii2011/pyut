@@ -42,6 +42,7 @@ MiniProjectInformationEvent,   EVENT_MINI_PROJECT_INFORMATION   = NewEvent()
 ActiveUmlFrameEvent,           EVENT_ACTIVE_UML_FRAME           = NewEvent()
 ActiveProjectInformationEvent, EVENT_ACTIVE_PROJECT_INFORMATION = NewEvent()
 GetLollipopInterfacesEvent,    EVENT_GET_LOLLIPOP_INTERFACES    = NewEvent()
+DarkModeChangedEvent,          EVENT_DARK_MODE_CHANGED          = NewEvent()
 
 OverrideProgramExitSizeEvent,     EVENT_OVERRIDE_PROGRAM_EXIT_SIZE     = NewEvent()
 OverrideProgramExitPositionEvent, EVENT_OVERRIDE_PROGRAM_EXIT_POSITION = NewEvent()

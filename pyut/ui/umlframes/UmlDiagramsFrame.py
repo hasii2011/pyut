@@ -7,6 +7,7 @@ from logging import getLogger
 
 from sys import maxsize
 
+from miniogl.MiniOglColorEnum import MiniOglColorEnum
 from wx import EVT_CHAR
 from wx import WXK_BACK
 from wx import WXK_DELETE
@@ -34,6 +35,10 @@ from ogl.events.OglEvents import CreateLollipopInterfaceEvent
 
 from ogl.events.ShapeSelectedEventData import ShapeSelectedEventData
 
+from ogl.preferences.OglPreferences import OglPreferences
+
+from pyut.ui.eventengine.Events import DarkModeChangedEvent
+from pyut.ui.eventengine.Events import EVENT_DARK_MODE_CHANGED
 from pyut.ui.umlframes.UmlFrame import UmlFrame
 
 from pyut.ui.eventengine.Events import EVENT_ADD_OGL_DIAGRAM
@@ -77,8 +82,9 @@ class UmlDiagramsFrame(UmlFrame):
 
         super().__init__(parent, eventEngine=eventEngine)
 
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM,        callback=self._onAddPyutDiagram)
-        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,         callback=self._onAddOglDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_PYUT_DIAGRAM,  callback=self._onAddPyutDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_ADD_OGL_DIAGRAM,   callback=self._onAddOglDiagram)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_DARK_MODE_CHANGED, callback=self._onDarkModeChanged)
 
         self._oglEventEngine.registerListener(EVT_SHAPE_SELECTED,            self._onShapeSelected)
         self._oglEventEngine.registerListener(EVT_CUT_OGL_CLASS,             self._onCutOglClassShape)
@@ -227,6 +233,17 @@ class UmlDiagramsFrame(UmlFrame):
         self.umlDiagramFrameLogger.info(f'{attachmentPoint=} {implementor=}')
 
         self._actionHandler.createLollipopInterface(self, implementor=implementor, attachmentAnchor=attachmentPoint)
+
+    def _onDarkModeChanged(self, event: DarkModeChangedEvent):
+        oglPreferences: OglPreferences = OglPreferences()
+        darkMode:       bool           = event.darkMode
+
+        if darkMode is True:
+            self.SetBackgroundColour(MiniOglColorEnum.toWxColor(oglPreferences.darkModeBackGroundColor))
+        else:
+            self.SetBackgroundColour(MiniOglColorEnum.toWxColor(oglPreferences.backGroundColor))
+
+        self.Refresh()
 
     def _toggleSpline(self):
 

@@ -15,6 +15,7 @@ from wx import ACCEL_CTRL
 from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
+from wx import EVT_SYS_COLOUR_CHANGED
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import FRAME_TOOL_WINDOW
 from wx import EVT_WINDOW_DESTROY
@@ -35,6 +36,9 @@ from wx import Size
 from wx import Icon
 from wx import AcceleratorTable
 from wx import Menu
+from wx import SysColourChangedEvent
+from wx import SystemAppearance
+from wx import SystemSettings
 from wx import ToolBar
 from wx import WindowDestroyEvent
 
@@ -198,6 +202,8 @@ class PyutApplicationFrame(Frame):
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
         self.Bind(EVT_ACTIVATE,       self._onActivate)
         self.Bind(EVT_CLOSE,          self.Close)
+
+        self.Bind(EVT_SYS_COLOUR_CHANGED, self._onColourChanged)
 
     def Close(self, force=False):
         """
@@ -480,3 +486,13 @@ class PyutApplicationFrame(Frame):
         acc = self._createAcceleratorTable()
         accel_table = AcceleratorTable(acc)
         self.SetAcceleratorTable(accel_table)
+
+    def _onColourChanged(self, event: SysColourChangedEvent):
+        self.logger.info(f'System Color Changed {event=}')
+
+        systemAppearance: SystemAppearance = SystemSettings.GetAppearance()
+        darkMode:         bool             = systemAppearance.IsDark()
+
+        self.logger.info(f'{darkMode=}')
+
+        self._eventEngine.sendEvent(eventType=EventType.DarkModeChanged, darkMode=darkMode)

@@ -6,6 +6,7 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
+from pyutplugins.PluginManager import PluginDetails
 from wx import BOTH
 from wx import FD_MULTIPLE
 from wx import FD_OPEN
@@ -249,28 +250,26 @@ class FileMenuHandler(BaseMenuHandler):
     def onImport(self, event: CommandEvent):
         """
         """
-        wxId: int = event.GetId()
-        self.logger.info(f'Import: {wxId=}')
+        wxId:          int           = event.GetId()
+        pluginDetails: PluginDetails = self._pluginManager.doImport(wxId=wxId)
 
-        self._pluginManager.doImport(wxId=wxId)
+        self.logger.info(f'Import {pluginDetails=}')
 
     def onExport(self, event: CommandEvent):
         """
         """
-        wxId: int = event.GetId()
-        self.logger.info(f'Import: {wxId=}')
-        self._pluginManager.doExport(wxId=wxId)
+        wxId:          int           = event.GetId()
+        pluginDetails: PluginDetails = self._pluginManager.doExport(wxId=wxId)
+        self.logger.info(f'Import {pluginDetails=}')
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):
 
-        self.logger.debug(f"Before dialog show")
-
         with DlgPyutPreferences(self._parent, eventEngine=self._eventEngine) as dlg:
             if dlg.ShowModal() == ID_OK:
-                self.logger.debug(f'Waiting for answer')
+                self.logger.info(f'Got answer')
             else:
-                self.logger.debug(f'Cancelled')
+                self.logger.info(f'Cancelled')
 
     # noinspection PyUnusedLocal
     def onPrintSetup(self, event: CommandEvent):

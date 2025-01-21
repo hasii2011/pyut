@@ -30,6 +30,7 @@ from pyutplugins.ExternalTypes import FrameInformationCallback
 from pyut.enums.DiagramType import DiagramType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.ui.eventengine.Events import DarkModeChangedEvent
 
 from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
@@ -127,6 +128,7 @@ NEW_PROJECT_DIAGRAM_INFORMATION_PARAMETER: str = 'newProjectDiagramInformation'
 OLD_CLASS_NAME_PARAMETER: str = 'oldClassName'
 NEW_CLASS_NAME_PARAMETER: str = 'newClassName'
 OVERRIDE_PARAMETER:       str = 'override'
+DARK_MODE_PARAMETER:      str = 'darkMode'
 
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for eventHandler
@@ -260,6 +262,9 @@ class EventEngine(IEventEngine):
 
             case EventType.OverrideProgramExitSize:
                 self._sendOverrideProgramExitSizeEvent(**kwargs)
+
+            case EventType.DarkModeChanged:
+                self._sendDarkModChangedEvent(**kwargs)
 
             case EventType.GetLollipopInterfaces:
                 self._sendGetLollipopInterfacesEvent(**kwargs)
@@ -462,4 +467,9 @@ class EventEngine(IEventEngine):
     def _sendOverrideProgramExitSizeEvent(self, **kwargs):
         value:       bool = kwargs[OVERRIDE_PARAMETER]
         eventToPost: OverrideProgramExitSizeEvent = OverrideProgramExitSizeEvent(override=value)
+        PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendDarkModChangedEvent(self, **kwargs):
+        value:       bool                 = kwargs[DARK_MODE_PARAMETER]
+        eventToPost: DarkModeChangedEvent = DarkModeChangedEvent(darkMode=value)
         PostEvent(dest=self._listeningWindow, event=eventToPost)

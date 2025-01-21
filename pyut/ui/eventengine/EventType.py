@@ -13,6 +13,7 @@ from pyut.ui.eventengine.Events import EVENT_COPY_SHAPES
 from pyut.ui.eventengine.Events import EVENT_CREATE_LINK
 from pyut.ui.eventengine.Events import EVENT_CUT_SHAPE
 from pyut.ui.eventengine.Events import EVENT_CUT_SHAPES
+from pyut.ui.eventengine.Events import EVENT_DARK_MODE_CHANGED
 from pyut.ui.eventengine.Events import EVENT_DELETE_DIAGRAM
 from pyut.ui.eventengine.Events import EVENT_DELETE_LINK
 from pyut.ui.eventengine.Events import EVENT_DESELECT_ALL_SHAPES
@@ -225,6 +226,8 @@ class EventType(Enum):
     RequestCurrentProject       = EVENT_REQUEST_CURRENT_PROJECT.typeId
     DeleteLink                  = EVENT_DELETE_LINK.typeId
     CreateLink                  = EVENT_CREATE_LINK.typeId
+    DarkModeChanged             = EVENT_DARK_MODE_CHANGED.typeId
+
     OverrideProgramExitSize     = EVENT_OVERRIDE_PROGRAM_EXIT_SIZE.typeId
     OverrideProgramExitPosition = EVENT_OVERRIDE_PROGRAM_EXIT_POSITION.typeId
 
