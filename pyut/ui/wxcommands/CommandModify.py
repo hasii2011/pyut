@@ -8,7 +8,8 @@ from logging import getLogger
 
 from wx import Command
 
-from pyut.general.Globals import apply
+from codeallybasic.Common import apply
+
 from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 

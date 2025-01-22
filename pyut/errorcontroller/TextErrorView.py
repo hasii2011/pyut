@@ -4,8 +4,6 @@ from logging import getLogger
 
 from pyut.errorcontroller.IErrorView import IErrorView
 
-from pyut.general.Globals import _
-
 
 class TextErrorView(IErrorView):
     """
@@ -32,7 +30,7 @@ class TextErrorView(IErrorView):
         from pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
 
         if title is None:
-            title = _("An error occurred...")
+            title = 'An error occurred...'
         errMsg: str = ErrorManager.getErrorInfo()
 
         self.logger.error(f"FATAL ERROR: {title} {errMsg} - parent {parent}")

@@ -11,9 +11,6 @@ from wx import OK
 
 from pyut.errorcontroller.IErrorView import IErrorView
 
-# noinspection PyProtectedMember
-from pyut.general.Globals import _
-
 
 class GraphicErrorView(IErrorView):
     """
@@ -40,7 +37,7 @@ class GraphicErrorView(IErrorView):
         from pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
 
         if title is None:
-            title = _("An error occurred...")
+            title = 'An error occurred...'
 
         errMsg: str = msg + "\n\n"
         errorInfo: str = ErrorManager.getErrorInfo()
@@ -56,7 +53,7 @@ class GraphicErrorView(IErrorView):
     def newWarning(self, msg, title=None, parent=None):
 
         if title is None:
-            title = _("WARNING...")
+            title = 'WARNING...'
         try:
             dlg = MessageDialog(parent, msg, title, OK | ICON_EXCLAMATION | CENTRE)
             dlg.ShowModal()
@@ -67,7 +64,7 @@ class GraphicErrorView(IErrorView):
     def newInformation(self, msg, title=None, parent=None):
 
         if title is None:
-            title = _("WARNING...")
+            title = 'WARNING...'
         try:
             dlg = MessageDialog(parent, msg, title, OK | ICON_INFORMATION | CENTRE)
             dlg.ShowModal()
