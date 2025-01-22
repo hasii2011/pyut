@@ -244,6 +244,7 @@ class UmlDiagramsFrame(UmlFrame):
             self.SetBackgroundColour(MiniOglColorEnum.toWxColor(oglPreferences.backGroundColor))
 
         self.Refresh()
+        event.Skip(skip=True)   # Let other frames change their color
 
     def _toggleSpline(self):
 
