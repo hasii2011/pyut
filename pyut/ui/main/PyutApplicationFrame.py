@@ -16,6 +16,8 @@ from wx import BITMAP_TYPE_ICO
 from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_SYS_COLOUR_CHANGED
+
+from wx import FH_PATH_SHOW_NEVER
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import FRAME_TOOL_WINDOW
 from wx import EVT_WINDOW_DESTROY
@@ -150,6 +152,8 @@ class PyutApplicationFrame(Frame):
         self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
         self._fileHistory: FileHistory   = FileHistory(idBase=ID_FILE1)
 
+        self._fileHistory.SetMenuPathStyle(style=FH_PATH_SHOW_NEVER)    # TODO  Make this a preference
+
         self._pyutUI:    PyutUI      = PyutUI(self, eventEngine=self._eventEngine)
 
         # set up the singleton
@@ -222,12 +226,14 @@ class PyutApplicationFrame(Frame):
                 x, y = self.GetPosition()
                 pos: Position = Position(x=x, y=y)
                 self._prefs.startupPosition = pos
+                self.logger.info(f'Set new startup position: {pos}')
         if self._overrideProgramExitSize is False:
             ourSize: Tuple[int, int] = self.GetSize()
 
             # See issue https://github.com/hasii2011/PyUt/issues/452
             # I need to check this on a larger monitor;
             self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1] - HACK_ADJUST_EXIT_HEIGHT)
+            self.logger.info(f'Set new startup size: {ourSize}')
 
         self._prefs     = cast(PyutPreferences, None)
         self._pluginMgr = cast(PluginManager, None)

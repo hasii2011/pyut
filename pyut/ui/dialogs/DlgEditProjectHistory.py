@@ -84,6 +84,7 @@ class DlgEditProjectHistory(BaseEditDialog):
         # through the list
         for idx in idxOfItemsToRemove:
             idxToRemove: int = idx - iteration
+            self.logger.info(f'Removing file history entry {self._fileHistory.GetHistoryFile(idxToRemove)}')
             self._fileHistory.RemoveFileFromHistory(idxToRemove)
             iteration += 1
         super()._onOk(event)

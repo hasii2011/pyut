@@ -4,8 +4,6 @@ from typing import cast
 from logging import Logger
 from logging import getLogger
 
-from deprecated import deprecated
-
 from wx import ICON_ERROR
 from wx import OK
 
@@ -36,7 +34,7 @@ class PyutDocument(IPyutDocument):
         self._diagramFrame: UmlFrameType = diagramFrame
 
         super().__init__()
-        self.logger: Logger   = getLogger(__name__)
+        self.logger: Logger = getLogger(__name__)
 
         self._diagramType:    DiagramType  = docType                 # This document's diagram type
         self._eventEngine:    IEventEngine = eventEngine
@@ -75,16 +73,7 @@ class PyutDocument(IPyutDocument):
     @property
     def diagramType(self) -> DiagramType:
         """
-        Returns:
-                The document type
-        """
-        return self._diagramType
-
-    @deprecated(reason='Use .diagramType property')
-    def getType(self) -> DiagramType:
-        """
-        Returns:
-                The document type
+        Returns: The document type
         """
         return self._diagramType
 

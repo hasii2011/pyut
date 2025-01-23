@@ -260,7 +260,7 @@ class FileMenuHandler(BaseMenuHandler):
         """
         wxId:          int           = event.GetId()
         pluginDetails: PluginDetails = self._pluginManager.doExport(wxId=wxId)
-        self.logger.info(f'Export {pluginDetails=}')
+        self.logger.info(f'Export    {pluginDetails=}')
 
     # noinspection PyUnusedLocal
     def onPyutPreferences(self, event: CommandEvent):

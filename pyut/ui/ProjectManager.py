@@ -253,11 +253,11 @@ class ProjectManager:
 
         if projectToSave.filename is None or PyutConstants.DEFAULT_PROJECT_NAME in projectToSave.filename:
             self.saveProjectAs(projectToSave=projectToSave)
-            return
+
         else:
             self._writeProject(projectToWrite=projectToSave)
-
             projectToSave.modified = False
+            self.logger.info(f'{projectToSave.filename} saved.')
 
     def openProject(self, filename: str) -> Tuple[OglProject, IPyutProject]:
         """
@@ -340,6 +340,7 @@ class ProjectManager:
             dlg.Destroy()
             return
 
+        oldName: str = projectToSave.filename
         projectToSave.filename = fDialog.GetPath()
         self._writeProject(projectToWrite=projectToSave)
         self.updateProjectTreeText(pyutProject=projectToSave)
@@ -347,6 +348,7 @@ class ProjectManager:
         currentDirectoryHandler.currentDirectory = fDialog.GetPath()
 
         projectToSave.modified = False
+        self.logger.info(f'Project {oldName} saved as {projectToSave.filename}')
 
     def isProjectLoaded(self, filename: str) -> bool:
         """

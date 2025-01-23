@@ -65,4 +65,6 @@ class CommandDeleteOglClass(BaseWxDeleteCommand):
         self._objectToDelete = OglClass(self._pyutClass, w=self._oglObjWidth, h=self._oglObjHeight)        # create new
 
         self._addOglClassToFrame(umlFrame=umlFrame, oglClass=self._objectToDelete, x=self._oglObjX, y=self._oglObjY)
+
+        self.logger.info(f'Undo delete of {self._objectToDelete}')
         umlFrame.Refresh()

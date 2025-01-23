@@ -49,8 +49,6 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
             self._pyutLink = oglAssociation.pyutObject
 
     def Do(self) -> bool:
-        self.logger.info(f'Delete: {self._link}')
-
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbDoDeleteLink)
         wxYield()
 
@@ -60,7 +58,7 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
 
         self._link = self._createLink()
 
-        self.logger.info(f'Undo Delete: {self._link}')
+        self.logger.info(f'Undo Delete: {self._link.__repr__()}')
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbPlaceLink)
         wxYield()

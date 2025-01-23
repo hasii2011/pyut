@@ -331,6 +331,8 @@ class PyutUI(SplitterWindow):
 
         cp: CommandProcessor = umlFrame.commandProcessor
         self._eventEngine.sendEvent(EventType.AssociateEditMenu, commandProcessor=cp)
+
+        self.logger.info(f'New diagram created: `{document.title}` type: `{document.diagramType}`')
         return document
 
     def _getProjectFromFrame(self, frame: UmlDiagramsFrame) -> IPyutProject:
@@ -476,8 +478,8 @@ class PyutUI(SplitterWindow):
 
         currentDocument: IPyutDocument    = self._projectManager.currentDocument
         currentFrame:    UmlDiagramsFrame = self._projectManager.currentFrame
-        # dlgEditDocument: DlgEditDocument = DlgEditDocument(parent=currentFrame, dialogIdentifier=ID_ANY, document=currentDocument)
-        # dlgEditDocument.Destroy()
+        oldDiagramName:  str              = currentDocument.title
+
         with TextEntryDialog(currentFrame, "Edit Diagram Title", "Diagram Title", currentDocument.title, OK | CANCEL | CENTRE) as dlg:
             if dlg.ShowModal() == ID_OK:
                 currentDocument.title = dlg.GetValue()
@@ -486,6 +488,7 @@ class PyutUI(SplitterWindow):
         notebookCurrentPageNumber: int = self._diagramNotebook.GetSelection()
         self._diagramNotebook.SetPageText(page=notebookCurrentPageNumber, text=currentDocument.title)
         self._projectManager.updateDocumentName(pyutDocument=currentDocument)
+        self.logger.info(f'Diagram named changed from `{oldDiagramName}` to `{currentDocument.title}`')
 
     # noinspection PyUnusedLocal
     def _onDeleteDiagram(self, event: CommandEvent):
@@ -532,6 +535,7 @@ class PyutUI(SplitterWindow):
         self._projectManager.currentProject  = pyutProject
         self._projectManager.currentFrame    = NO_DIAGRAM_FRAME
         self._projectManager.currentDocument = NO_PYUT_DIAGRAM
+        self.logger.info(f'Create new project')
 
     def _onNewNamedProject(self, event: NewNamedProjectEvent):
         fqFileName: str = event.projectFilename
@@ -541,6 +545,7 @@ class PyutUI(SplitterWindow):
         cb: NewNamedProjectCallback = event.callback
 
         cb(pyutProject)
+        self.logger.info(f'Opened new named project {fqFileName}')
 
     def _onOpenProject(self, event: OpenProjectEvent):
 
