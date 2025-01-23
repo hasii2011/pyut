@@ -3,7 +3,9 @@ from typing import TYPE_CHECKING
 from typing import Tuple
 from typing import cast
 
-from ogl.OglActor import OglActor
+from logging import Logger
+from logging import getLogger
+
 from wx import Command
 from wx import Point
 
@@ -16,11 +18,11 @@ from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 from miniogl.AnchorPoint import AnchorPoint
 from miniogl.LineShape import ControlPoints
 from miniogl.ControlPoint import ControlPoint
-
 from miniogl.models.ShapeModel import ShapeModel
 
 from ogl.OglClass import OglClass
 from ogl.OglLink import OglLink
+from ogl.OglActor import OglActor
 from ogl.OglAssociation import OglAssociation
 
 from ogl.sd.OglSDInstance import OglSDInstance
@@ -46,6 +48,7 @@ class BaseWxLinkCommand(Command):
 
         super().__init__(canUndo=True, name=self._name)
 
+        self._linkLogger:     Logger         = getLogger(__name__)
         self._eventEngine:    IEventEngine   = eventEngine
 
         self._srcOglObject: DoableObjectType = cast(DoableObjectType, None)
@@ -96,6 +99,7 @@ class BaseWxLinkCommand(Command):
                 oglAssociation.destinationCardinality.Detach()
 
         link.Detach()
+        self._linkLogger.info(f'{link.__repr__()} deleted')
         umlFrame.Refresh()
 
     def _cbPlaceLink(self, frame: 'UmlDiagramsFrame'):

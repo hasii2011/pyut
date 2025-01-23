@@ -54,7 +54,7 @@ class ToolboxOwner:
 
         if tool.category not in self._toolCategories:
             self._toolCategories[tool.category] = Tools([tool])
-            self.logger.info(f'Creating tool category: {tool.category}')
+            self.logger.debug(f'Creating tool category: {tool.category}')
         else:
             self._toolCategories[tool.category].append(tool)
 

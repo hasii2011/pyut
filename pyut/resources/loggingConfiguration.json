@@ -14,7 +14,7 @@
             "datefmt" : "%H:%M:%S"
         },
         "bestFormat": {
-            "format": "%(asctime)s.%(msecs)03d %(levelname)-6s %(name)-15s %(message)s",
+            "format": "%(asctime)s.%(msecs)03d %(levelname)-6s %(name)-15s - %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S"
         }
     },

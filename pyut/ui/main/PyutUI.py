@@ -260,7 +260,7 @@ class PyutUI(SplitterWindow):
 
         defaultProject: IPyutProject = self._projectManager.getProject(PyutConstants.DEFAULT_PROJECT_NAME)
         if defaultProject is not None:
-            self.logger.info(f'Removing the default project')
+            self.logger.debug(f'Removing the default project')
             self._closeProject(projectToClose=defaultProject)
 
     def showFrame(self, frame: UmlDiagramsFrame):
@@ -911,4 +911,5 @@ class PyutUI(SplitterWindow):
         else:
             self._projectManager.currentProject = cast(IPyutProject, None)
 
+        self.logger.info(f'{projectToClose.projectName} closed')
         self._updateApplicationTitle()

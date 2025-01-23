@@ -354,7 +354,7 @@ class DiagramNotebook(Notebook):
                     umlFrame.Refresh()
                 else:
                     submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
-                    self.logger.warning(f'{submitStatus=}')
+                    self.logger.debug(f'{submitStatus=}')
 
             self._eventEngine.sendEvent(EventType.UMLDiagramModified)   # will also cause title to be updated
         else:

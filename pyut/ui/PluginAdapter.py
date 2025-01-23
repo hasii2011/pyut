@@ -199,7 +199,7 @@ class PluginAdapter(IPluginAdapter):
         commandProcessor: CommandProcessor = activeFrame.commandProcessor
         cmd:              Command          = CommandDeleteOglLink(oglLink=self._oglLink, eventEngine=self._eventEngine)
         submitStatus:      bool            = commandProcessor.Submit(command=cmd, storeIt=True)
-        self.logger.warning(f'{submitStatus=}')
+        self.logger.debug(f'{submitStatus=}')
 
         self._oglLink = NO_OGL_LINK
         self.refreshFrame()

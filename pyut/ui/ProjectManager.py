@@ -132,7 +132,7 @@ class ProjectManager:
 
         assert newProject in self._projects or newProject is None or newProject.projectName == PyutConstants.DEFAULT_PROJECT_NAME, ''
         if newProject is None:
-            self.logger.warning(f'Project set to None')
+            self.logger.debug(f'Project set to None')
         self._currentProject = newProject
 
     @property
@@ -303,6 +303,7 @@ class ProjectManager:
         self.updateProjectTreeText(pyutProject=project)
         wxYield()
 
+        self.logger.info(f'Project {project.projectName} opened')
         return oglProject, project
 
     def saveProjectAs(self, projectToSave: IPyutProject):
@@ -478,7 +479,7 @@ class ProjectManager:
 
         Returns:    Returns an OglProject
         """
-        self.logger.info(f'loadFromFilename: {filename=}')
+        self.logger.debug(f'loadFromFilename: {filename=}')
         BeginBusyCursor()
 
         reader: Reader = Reader()

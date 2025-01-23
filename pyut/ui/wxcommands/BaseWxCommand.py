@@ -37,11 +37,12 @@ class BaseWxCommand(Command):
         * Delete Ogl objects from a diagram frame
         * Add Ogl Class behavior
     """
-    clsLogger: Logger = getLogger(__name__)
 
     def __init__(self, canUndo: bool, name: str):
 
         super().__init__(canUndo=canUndo, name=name)
+
+        self._baseLogger:     Logger          = getLogger(__name__)
         self._preferences:    PyutPreferences = PyutPreferences()
         self._oglPreferences: OglPreferences  = OglPreferences()
 
@@ -64,9 +65,10 @@ class BaseWxCommand(Command):
                     pyutLinkedObject: PyutLinkedObject = potentialObject.pyutObject
 
                     if pyutClass in pyutLinkedObject.parents:
-                        self.clsLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
+                        self._baseLogger.warning(f'Removing {pyutClass=} from {pyutLinkedObject=}')
                         pyutLinkedObject.parents.remove(cast(PyutLinkedObject, pyutClass))
                     potentialObject.Detach()
+                    self._baseLogger.info(f'{potentialObject} deleted')
                     umlFrame.Refresh()
 
     def _addOglClassToFrame(self, umlFrame: 'UmlDiagramsFrame', oglClass: OglClass, x: int, y: int):

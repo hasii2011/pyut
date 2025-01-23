@@ -50,6 +50,7 @@ from codeallybasic.SecureConversions import SecureConversions
 
 from pyutplugins.PluginManager import PluginManager
 
+from pyut import START_STOP_MARKER
 from pyut import __version__ as pyutVersion
 
 from pyut.ui.Action import Action
@@ -230,8 +231,10 @@ class PyutApplicationFrame(Frame):
 
         self._prefs     = cast(PyutPreferences, None)
         self._pluginMgr = cast(PluginManager, None)
-        self._pyutUI  = cast(PyutUI, None)
+        self._pyutUI    = cast(PyutUI, None)
 
+        self.logger.info(f'Pyut execution complete')
+        self.logger.info(START_STOP_MARKER)
         self.Destroy()
 
     def loadByFilename(self, filename):
@@ -243,7 +246,7 @@ class PyutApplicationFrame(Frame):
 
     def removeDefaultEmptyProject(self):
 
-        self.logger.info(f'Remove the default project')
+        self.logger.debug(f'Remove the default project')
         self._pyutUI.closeDefaultEmptyProject()
 
     def loadLastOpenedProject(self):
@@ -364,7 +367,7 @@ class PyutApplicationFrame(Frame):
             # Display tips frame
             self._tipAlreadyDisplayed = True
             prefs: PyutPreferences = PyutPreferences()
-            self.logger.info(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
+            self.logger.debug(f'Show tips on startup: {self._prefs.showTipsOnStartup=}')
             if prefs.showTipsOnStartup is True:
                 # noinspection PyUnusedLocal
                 tipsFrame: DlgTipsV2 = DlgTipsV2(self)

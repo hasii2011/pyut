@@ -2,6 +2,7 @@
 from logging import Logger
 from logging import getLogger
 
+from pyutplugins.PluginManager import PluginDetails
 from wx import CommandEvent
 from wx import Menu
 
@@ -39,9 +40,10 @@ class ToolsMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        wxId: int = event.GetId()
-        self.logger.debug(f'{wxId=}')
-        self._pluginManager.doToolAction(wxId=wxId)
+        wxId:          int           = event.GetId()
+        pluginDetails: PluginDetails = self._pluginManager.doToolAction(wxId=wxId)
+
+        self.logger.info(f'Import {pluginDetails=}')
 
     def onToolboxMenuClick(self, event: CommandEvent):
 

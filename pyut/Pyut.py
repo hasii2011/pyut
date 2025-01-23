@@ -10,10 +10,13 @@ from os import environ
 
 from sys import argv
 
+from pyut import START_STOP_MARKER
 from pyut import __version__ as pyutVersion
 
 from pyut.PyutConstants import PyutConstants
+
 from pyut.PyutUtils import PyutUtils
+
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 from pyut.ui.main.PyutApp import PyutApp
@@ -38,7 +41,7 @@ class Pyut:
         self._handleCommandLineArguments()
 
         optimize: str | None = environ.get(f'{PyutConstants.PYTHON_OPTIMIZE}')
-        self.logger.info(f'{PyutConstants.PYTHON_OPTIMIZE}=`{optimize}`')
+        self.logger.debug(f'{PyutConstants.PYTHON_OPTIMIZE}=`{optimize}`')
 
     @property
     def cmdLineArgsHandled(self) -> bool:
@@ -65,6 +68,7 @@ class Pyut:
 
         pyut._displaySystemMetrics()
 
+        self.logger.info(f'Pyut startup complete.')
         app.MainLoop()
 
     def _displayIntroduction(self):
@@ -115,9 +119,9 @@ class Pyut:
 
         # noinspection PyUnreachableCode
         if __debug__:
-            self.logger.info("Assertions are turned on")
+            self.logger.debug("Assertions are turned on")
         else:
-            self.logger.info("Assertions are turned off")
+            self.logger.debug("Assertions are turned off")
 
     def _handleCommandLineArguments(self):
         """
@@ -140,7 +144,7 @@ class Pyut:
             self.cmdLineArgsHandled = True
             return
         else:
-            self.logger.info(f'If these are files;  Will be loaded by PyutApp startup')
+            self.logger.debug(f'If these are files, the will be loaded by PyutApp startup')
         self.cmdLineArgsHandled = False
 
 
@@ -149,6 +153,8 @@ if __name__ == "__main__":
     print(f'Starting Pyut')
 
     pyut: Pyut = Pyut()
+    pyut.logger.info(START_STOP_MARKER)
+    pyut.logger.info(f'Pyut Version {pyutVersion} starting')
 
     # Launch pyut
     if pyut.cmdLineArgsHandled is False:
