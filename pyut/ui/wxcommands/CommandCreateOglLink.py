@@ -44,7 +44,6 @@ class CommandCreateOglLink(BaseWxLinkCommand):
 
     def Do(self) -> bool:
         self._link = self._createLink()
-        self.logger.info(f'Create: {self._link}')
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbPlaceLink)
         return True

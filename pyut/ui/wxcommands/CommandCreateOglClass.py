@@ -95,7 +95,7 @@ class CommandCreateOglClass(BaseWxCreateCommand):
         from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
         umlFrame: UmlDiagramsFrame = frame
-        self.logger.info(f'{umlFrame=}')
+        self.logger.debug(f'{umlFrame=}')
         oglClass:  OglClass  = cast(OglClass, self._shape)
 
         self._addOglClassToFrame(umlFrame=umlFrame, oglClass=oglClass, x=self._oglObjX, y=self._oglObjY)

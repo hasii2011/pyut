@@ -137,6 +137,8 @@ class BaseWxLinkCommand(Command):
 
         umlFrame.Refresh()
 
+        self._linkLogger.info(f'Create: {self._link}')
+
     def _createLink(self) -> OglLink:
         """
 

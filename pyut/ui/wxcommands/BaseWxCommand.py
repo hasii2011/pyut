@@ -82,6 +82,8 @@ class BaseWxCommand(Command):
         if self._preferences.autoResizeShapesOnEdit is True:
             oglClass.autoResize()
 
+        self._baseLogger.info(f'Created {oglClass}')
+
     def _isSameObject(self, objectToRemove: DoableObjectType, potentialObject: DoableObjectType) -> bool:
         """
         This probably could be done by updating the OglObject with the __equ__ dunder method.

@@ -35,11 +35,12 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
     This class implements the .GetName method for all subclasses
     This class implements the basic command methods.
     """
-    clsLogger: Logger = getLogger(__name__)
 
     def __init__(self, canUndo: bool, name: str, eventEngine: IEventEngine, x: int, y: int):
 
         super().__init__(canUndo=canUndo, name=name)
+
+        self._baseWxCreateLogger: Logger = getLogger(__name__)
 
         self._oglObjX:     int = x
         self._oglObjY:     int = y
@@ -111,8 +112,10 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
         from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
         umlFrame: UmlDiagramsFrame = frame
-        self.clsLogger.info(f'{umlFrame=}')
+        self._baseWxCreateLogger.debug(f'{umlFrame=}')
 
         umlFrame.addShape(self._shape, self._oglObjX, self._oglObjY, withModelUpdate=True)
 
         umlFrame.Refresh()
+
+        self._baseWxCreateLogger.info(f'Created {self._shape}')

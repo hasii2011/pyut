@@ -285,7 +285,7 @@ class ActionHandler(metaclass=SingletonV3):
         if cmd is not None:
             self._resetToActionSelector()
             submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
-            self.logger.info(f'Create command submission status: {submitStatus}')
+            self.logger.debug(f'Create command submission status: {submitStatus}')
 
         return handlerStatus
 

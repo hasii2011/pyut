@@ -80,7 +80,7 @@ setup(
         'codeallybasic>=1.9.0',
         'codeallyadvanced>=1.3.3',
         'pyutmodelv2>=2.2.0',
-        'ogl>=3.6.3',
+        'ogl>=3.6.4',
         'oglio>=2.3.4',
         'pyutplugins>=3.2.3',
         'semantic-version==2.10.0',
