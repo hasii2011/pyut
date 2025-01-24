@@ -50,9 +50,11 @@ class CommandModify(Command):
         if self.methodIsProperty is True:
             assert len(self._newParameters) == 1, 'Properties can only have a single parameter'
             setattr(self._object, self._methodName, self._newParameters[0])
+            self.logger.info(f'Updating property: {self._methodName} -- {self._newParameters[0]}')
         else:
             method = getattr(self._object, self._methodName)
             apply(method, self._newParameters)
+            self.logger.info(f'Calling method: {self._methodName} -- {self._newParameters}')
 
         return True
 

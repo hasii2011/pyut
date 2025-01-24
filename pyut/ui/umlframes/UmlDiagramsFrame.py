@@ -179,7 +179,7 @@ class UmlDiagramsFrame(UmlFrame):
             case UmlDiagramsFrame.KEY_CODE_UP:
                 self._moveSelectedShapeUp()
             case _:
-                self.logger.warning(f'Key code not supported: {c}')
+                self.umlDiagramFrameLogger.warning(f'Key code not supported: {c}')
                 event.Skip()
 
     def _onCutShape(self):
@@ -251,7 +251,7 @@ class UmlDiagramsFrame(UmlFrame):
         from ogl.OglLink import OglLink
 
         selected = self.selectedShapes
-        self.logger.info(f'Selected Shape: {selected}')
+        self.umlDiagramFrameLogger.info(f'Selected Shape: {selected}')
         for shape in selected:
             if isinstance(shape, OglLink):
                 shape.spline = (not shape.spline)

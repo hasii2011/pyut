@@ -78,7 +78,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
 
         oldClassName: ClassName = ClassName(event.oldClassName)
         newClassName: ClassName = ClassName(event.newClassName)
-        self.logger.warning(f'{oldClassName=} {newClassName=}')
+        self.localLogger.info(f'{oldClassName=} {newClassName=}')
 
         umlObjects: UmlObjects = self.umlObjects
 

@@ -88,7 +88,7 @@ class EditObjectHandler:
 
     def _cbGetActiveUmlFrame(self, umlFrame: UmlDiagramsFrame):
 
-        self.logger.info(f'{umlFrame=}')
+        self.logger.debug(f'{umlFrame=}')
 
         self._doEditObject(x=self._x, y=self._y, umlFrame=umlFrame)
 

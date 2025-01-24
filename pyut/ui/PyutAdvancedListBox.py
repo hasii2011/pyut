@@ -143,19 +143,19 @@ class PyutAdvancedListBox(SizedPanel):
         Called when click on items list.
         """
         self._fixButtons()
-        self.logger.warning('Fix the buttons')
+        self.logger.debug('Fix the buttons')
 
     # noinspection PyUnusedLocal
     def _onListDoubleClick(self, event: CommandEvent):
         """
         Called when there is a double click on items list.
         """
-        self.logger.warning(f'Invoke the edit eventHandler')
+        self.logger.debug(f'Invoke the edit eventHandler')
         self._onEdit(event)
 
     # noinspection PyUnusedLocal
     def _onAdd(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the add eventHandler')
+        self.logger.debug(f'Invoke the add eventHandler')
 
         answer: CallbackAnswer = self._callbacks.addCallback()
         if answer.valid is True:
@@ -163,7 +163,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onEdit(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the edit eventHandler')
+        self.logger.debug(f'Invoke the edit eventHandler')
         selection: int = self._itemList.GetSelection()
         answer: CallbackAnswer = self._callbacks.editCallback(selection)
         if answer.valid:
@@ -171,7 +171,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onRemove(self, event: CommandEvent):
-        self.logger.warning(f'Remove from list and invoke the remove eventHandler')
+        self.logger.debug(f'Remove from list and invoke the remove eventHandler')
         selection: int = self._itemList.GetSelection()
         self._callbacks.removeCallback(selection)
         self._itemList.Delete(selection)
@@ -179,7 +179,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onUp(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the up eventHandler, then move item up in list ')
+        self.logger.debug(f'Invoke the up eventHandler, then move item up in list ')
         selection:      int            = self._itemList.GetSelection()
         upCallbackData: UpCallbackData = self._callbacks.upCallback(selection)
 
@@ -191,7 +191,7 @@ class PyutAdvancedListBox(SizedPanel):
 
     # noinspection PyUnusedLocal
     def _onDown(self, event: CommandEvent):
-        self.logger.warning(f'Invoke the down eventHandler, then move item down in list')
+        self.logger.debug(f'Invoke the down eventHandler, then move item down in list')
         selection:        int              = self._itemList.GetSelection()
         downCallbackData: DownCallbackData = self._callbacks.downCallback(selection)
 
