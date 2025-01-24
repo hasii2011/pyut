@@ -1,4 +1,5 @@
-
+from logging import Logger
+from logging import getLogger
 from typing import TYPE_CHECKING
 
 from wx import Yield as wxYield
@@ -19,8 +20,9 @@ class BaseWxDeleteCommand(BaseWxCommand):
 
         self._name: str = name
 
-        self._objectToDelete: DoableObjectType = doableObject
-        self._eventEngine:    IEventEngine     = eventEngine
+        self._bWxDeleteLogger: Logger           = getLogger(__name__)
+        self._objectToDelete:  DoableObjectType = doableObject
+        self._eventEngine:     IEventEngine     = eventEngine
 
         super().__init__(canUndo=True, name=self._name)
 
@@ -47,7 +49,7 @@ class BaseWxDeleteCommand(BaseWxCommand):
         """
         Override this member method to execute the appropriate action when called.
         """
-        self._objectToDelete.Detach()
+
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbGetActiveUmlFrameForDelete)
 
         wxYield()
@@ -56,6 +58,9 @@ class BaseWxDeleteCommand(BaseWxCommand):
     def _cbGetActiveUmlFrameForDelete(self, frame: 'UmlDiagramsFrame'):
 
         from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
+
+        self._bWxDeleteLogger.info(f'{self._objectToDelete} deleted')
+        self._objectToDelete.Detach()
 
         umlFrame: UmlDiagramsFrame = frame
         umlFrame.Refresh()

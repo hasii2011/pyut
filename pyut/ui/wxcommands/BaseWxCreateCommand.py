@@ -98,6 +98,7 @@ class BaseWxCreateCommand(BaseWxCommand, metaclass=MyMetaBaseWxCommand):
 
         umlFrame: UmlDiagramsFrame = frame
 
+        self._baseWxCreateLogger.info(f'Undo create {self._shape}')
         self._shape.Detach()
         umlFrame.Refresh()
 
