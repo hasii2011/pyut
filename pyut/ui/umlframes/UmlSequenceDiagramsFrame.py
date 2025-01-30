@@ -1,4 +1,7 @@
 
+from logging import Logger
+from logging import getLogger
+
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 
 from pyutmodelv2.PyutSDInstance import PyutSDInstance
@@ -34,6 +37,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         """
         super().__init__(parent, eventEngine=eventEngine)   # type: ignore
 
+        self._seqLogger: Logger = getLogger(__name__)
         self._cdfDebugId: int = UmlSequenceDiagramsFrame.cdfDebugId
 
         UmlSequenceDiagramsFrame.cdfDebugId += 1
@@ -51,6 +55,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         oglSDInstance:  OglSDInstance  = OglSDInstance(pyutSDInstance=pyutSDInstance)
         self.addShape(oglSDInstance, x, oglSDInstance.GetPosition()[1])
 
+        self._seqLogger.info(f'Created {oglSDInstance}')
         return oglSDInstance
 
     def createNewLink(self, src, dst, srcPos=None, dstPos=None):
@@ -77,6 +82,8 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
         self._diagram.AddShape(oglLink)
 
         self.Refresh()
+
+        self._seqLogger.info(f'Created {oglLink}')
 
         return oglLink
 

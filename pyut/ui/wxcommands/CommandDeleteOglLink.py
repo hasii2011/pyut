@@ -26,7 +26,7 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
 
         super().__init__(partialName='Delete', linkType=self._linkType, eventEngine=eventEngine)
 
-        self.logger: Logger = getLogger(__name__)
+        self._delLinkLogger: Logger = getLogger(__name__)
 
         self._srcOglObject = oglLink.sourceShape
         self._dstOglObject = oglLink.destinationShape
@@ -58,7 +58,7 @@ class CommandDeleteOglLink(BaseWxLinkCommand):
 
         self._link = self._createLink()
 
-        self.logger.info(f'Undo Delete: {self._link.__repr__()}')
+        self._delLinkLogger.info(f'Undo Delete: {self._link.__repr__()}')
 
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._cbPlaceLink)
         wxYield()
