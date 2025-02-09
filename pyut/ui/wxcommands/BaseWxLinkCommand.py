@@ -156,6 +156,16 @@ class BaseWxLinkCommand(Command):
             srcSdInstance: OglSDInstance = cast(OglSDInstance, self._srcOglObject)
             dstSdInstance: OglSDInstance = cast(OglSDInstance, self._dstOglObject)
             oglLink = self._createSDMessage(src=srcSdInstance, dest=dstSdInstance, srcPos=srcPos, destPos=dstPos)
+        elif isinstance(self._srcOglObject, OglActor) and isinstance(self._dstOglObject, OglSDInstance):
+            # Special case for sequence diagram
+            oglActor:   OglActor      = cast(OglActor, self._srcOglObject)
+            sdInstance: OglSDInstance = cast(OglSDInstance, self._dstOglObject)
+            pyutLink:   PyutLink      = PyutLink(name="", linkType=linkType, source=oglActor.pyutObject, destination=sdInstance.pyutSDInstance)
+
+            oglLinkFactory = getOglLinkFactory()
+
+            oglLink = oglLinkFactory.getOglLink(srcShape=oglActor, pyutLink=pyutLink, destShape=sdInstance, linkType=linkType)
+
         else:
             oglLink = self._createAssociationLink()
 

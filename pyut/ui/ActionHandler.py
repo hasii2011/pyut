@@ -402,6 +402,8 @@ class ActionHandler(metaclass=SingletonV3):
         result: ValidationResult = ValidationResult()
         if self._currentAction == Action.DESTINATION_ASSOCIATION_LINK and isinstance(oglObject, OglUseCase):
             pass
+        elif self._currentAction == Action.DESTINATION_ASSOCIATION_LINK and isinstance(oglObject, OglSDInstance):
+            pass
         elif self._currentAction in UML_RELATIONSHIP_LINK_ACTIONS:
             if not isinstance(oglObject, OglClass):
                 result.isValid      = False
