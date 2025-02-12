@@ -66,19 +66,18 @@ FileNames = NewType('FileNames', List[str])
 
 class FileMenuHandler(BaseMenuHandler):
 
-    def __init__(self, fileMenu: Menu, eventEngine: IEventEngine, pluginManager: PluginManager, fileHistory: FileHistory):
+    def __init__(self, fileMenu: Menu, eventEngine: IEventEngine, pluginManager: PluginManager):
         """
 
         Args:
             fileMenu:       The file menu
             eventEngine:    The event engine
             pluginManager:  Plugin manager to get IDs from
-            fileHistory:    File History to load and update to and from
         """
         super().__init__(menu=fileMenu, eventEngine=eventEngine)
 
         self._pluginManager: PluginManager = pluginManager
-        self._fileHistory:   FileHistory   = fileHistory
+        self._fileHistory:   FileHistory   = cast(FileHistory, None)    # Must be injected
 
         self.logger:       Logger          = getLogger(__name__)
         self._preferences: PyutPreferences = PyutPreferences()
@@ -107,6 +106,12 @@ class FileMenuHandler(BaseMenuHandler):
     @importPlugins.setter
     def importPlugins(self, importPlugins: PluginIDMap):
         self._importPlugins = importPlugins
+
+    def _setFileHistory(self, fileHistory: FileHistory):
+        self._fileHistory = fileHistory
+
+    # noinspection PyTypeChecker
+    fileHistory = property(fget=None, fset=_setFileHistory)
 
     def loadFiles(self, fileNames: FileNames):
         """

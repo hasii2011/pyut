@@ -104,7 +104,10 @@ from pyut.ui.eventengine.Events import EVENT_UPDATE_APPLICATION_TITLE
 from pyut.ui.eventengine.Events import UpdateApplicationStatusEvent
 from pyut.ui.eventengine.Events import UpdateApplicationTitleEvent
 
-HACK_ADJUST_EXIT_HEIGHT: int = 16
+FILE_HISTORY_BASE_FILENAME: str = 'pyutRecentFiles.ini'
+VENDOR_NAME:                str = 'ElGatoMalo'
+APPLICATION_NAME:           str = 'pyutV3'
+HACK_ADJUST_EXIT_HEIGHT:    int = 16
 
 
 class PyutApplicationFrame(Frame):
@@ -126,21 +129,7 @@ class PyutApplicationFrame(Frame):
         """
         self._prefs: PyutPreferences = PyutPreferences()
         appSize:     Size            = Size(self._prefs.startupSize.width, self._prefs.startupSize.height)
-
-        appModeStr: Optional[str] = osGetEnv(PyutConstants.APP_MODE)
-        if appModeStr is None:
-            appMode: bool = False
-        else:
-            appMode = SecureConversions.secureBoolean(appModeStr)
-
-        # wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
-        # in production mode use FRAME_TOOL_WINDOW
-        # Still the behavior in 4.2.2
-        #
-        frameStyle: int = DEFAULT_FRAME_STYLE | FRAME_FLOAT_ON_PARENT
-        if appMode is True:
-            frameStyle = frameStyle | FRAME_TOOL_WINDOW
-
+        frameStyle:  int             = self._getFrameStyle()
         super().__init__(parent=None, id=ID_ANY, title=title, size=appSize, style=frameStyle)
 
         self.logger: Logger = getLogger(__name__)
@@ -148,39 +137,26 @@ class PyutApplicationFrame(Frame):
 
         self.CreateStatusBar()
 
-        self._eventEngine: IEventEngine  = EventEngine(listeningWindow=self)
-        self._pluginMgr:   PluginManager = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
-        self._fileHistory: FileHistory   = FileHistory(idBase=ID_FILE1)
+        self._fileMenuHandler:  FileMenuHandler  = cast(FileMenuHandler,  None)
+        self._editMenuHandler:  EditMenuHandler  = cast(EditMenuHandler,  None)
+        self._toolsMenuHandler: ToolsMenuHandler = cast(ToolsMenuHandler, None)
+        self._helpMenuHandler:  HelpMenuHandler  = cast(HelpMenuHandler,  None)
 
-        self._fileHistory.SetMenuPathStyle(style=FH_PATH_SHOW_NEVER)    # TODO  Make this a preference
-
-        self._pyutUI:    PyutUI      = PyutUI(self, eventEngine=self._eventEngine)
-
-        # set up the singleton
+        self._eventEngine:    IEventEngine   = EventEngine(listeningWindow=self)
+        self._pluginMgr:      PluginManager  = PluginManager(pluginAdapter=PluginAdapter(eventEngine=self._eventEngine))
+        self._pyutUI:         PyutUI         = PyutUI(self, eventEngine=self._eventEngine)
         self._toolBoxHandler: ToolBoxHandler = ToolBoxHandler(frame=self)
-
-        self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')
 
         fileMenu, editMenu = self._initializeMenuHandlers()
 
-        self._menuCreator.initializeMenus()
-
-        fileHistoryConfiguration: FileHistoryConfiguration = FileHistoryConfiguration(appName='pyutV3',
-                                                                                      vendorName='ElGatoMalo',
-                                                                                      localFilename='pyutRecentFiles.ini')
-
-        self._fileHistory.UseMenu(fileMenu)
-        self._fileHistory.Load(fileHistoryConfiguration)
+        self._fileHistory: FileHistory = self._setupFileHistory(fileMenu=fileMenu)
+        self._fileMenuHandler.fileHistory = self._fileHistory
 
         self._setupKeyboardShortcuts()
 
         self._eventEngine.sendEvent(EventType.NewProject)
         wxYield()       # A hacky way to get the above to act like a method call
-        if self._prefs.centerAppOnStartup is True:
-            self.Center(BOTH)  # Center on the screen
-        else:
-            appPosition: Position = self._prefs.startupPosition
-            self.SetPosition(pt=Point(x=appPosition.x, y=appPosition.y))
+        self._setApplicationPosition()
 
         # Initialize the tips frame
         self._tipAlreadyDisplayed: bool = False
@@ -203,6 +179,8 @@ class PyutApplicationFrame(Frame):
         of application logic prevails;  The preferences dialog sends this class an
         event; To change the value
         """
+
+        self._eventEngine.sendEvent(EventType.UpdateApplicationStatus, applicationStatusMsg='')
 
         self.Bind(EVT_WINDOW_DESTROY, self._cleanupFileHistory)
         self.Bind(EVT_ACTIVATE,       self._onActivate)
@@ -379,6 +357,61 @@ class PyutApplicationFrame(Frame):
                 tipsFrame: DlgTipsV2 = DlgTipsV2(self)
                 tipsFrame.Show(show=True)
 
+    def _getFrameStyle(self) -> int:
+        """
+        wxPython 4.2.0 update:  using FRAME_TOOL_WINDOW causes the title to be above the toolbar
+        in production mode use FRAME_TOOL_WINDOW
+
+        Still the behavior in 4.2.2
+
+        Returns:  An appropriate frame style
+        """
+        appModeStr: Optional[str] = osGetEnv(PyutConstants.APP_MODE)
+        if appModeStr is None:
+            appMode: bool = False
+        else:
+            appMode = SecureConversions.secureBoolean(appModeStr)
+
+        frameStyle: int = DEFAULT_FRAME_STYLE | FRAME_FLOAT_ON_PARENT
+        if appMode is True:
+            frameStyle = frameStyle | FRAME_TOOL_WINDOW
+
+        return frameStyle
+
+    def _setupFileHistory(self, fileMenu: Menu) -> FileHistory:
+        """
+        The file is at ~/Library/Preferences/pyutRecentFiles.ini
+        Args:
+            fileMenu: The file menu object
+
+        Returns:  A FileHistory object
+        """
+
+        fileHistory:    FileHistory    = FileHistory(idBase=ID_FILE1)
+
+        fileHistory.SetMenuPathStyle(style=FH_PATH_SHOW_NEVER)    # TODO  Make this a preference
+
+        fileHistoryConfiguration: FileHistoryConfiguration = FileHistoryConfiguration(appName=APPLICATION_NAME,
+                                                                                      vendorName=VENDOR_NAME,
+                                                                                      localFilename=FILE_HISTORY_BASE_FILENAME)
+
+        fileHistory.UseMenu(fileMenu)
+        fileHistory.Load(fileHistoryConfiguration)
+
+        self.logger.info(f'{fileHistoryConfiguration.GetPath()=}')
+
+        return fileHistory
+
+    def _setApplicationPosition(self):
+        """
+        Observe preferences how to set the application position
+        """
+        if self._prefs.centerAppOnStartup is True:
+            self.Center(BOTH)  # Center on the screen
+        else:
+            appPosition: Position = self._prefs.startupPosition
+            self.SetPosition(pt=Point(x=appPosition.x, y=appPosition.y))
+
     def _initializePyutTools(self):
         """
         Initialize the toolboxes and the toolbar
@@ -457,34 +490,36 @@ class PyutApplicationFrame(Frame):
         editMenu:  Menu = Menu()
         toolsMenu: Menu = Menu()
         helpMenu:  Menu = Menu()
-        self._fileMenuHandler: FileMenuHandler = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine,
-                                                                 pluginManager=self._pluginMgr,
-                                                                 fileHistory=self._fileHistory
-                                                                 )
-
-        self._editMenuHandler: EditMenuHandler = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
+        self._fileMenuHandler = FileMenuHandler(fileMenu=fileMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr)
+        self._editMenuHandler = EditMenuHandler(editMenu=editMenu, eventEngine=self._eventEngine)
         self._initializePyutTools()
 
-        self._toolboxIds:       ToolboxIdMap     = self._createToolboxIdMap()
-        self._toolsMenuHandler: ToolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu, eventEngine=self._eventEngine, pluginManager=self._pluginMgr,
-                                                                    toolboxIds=self._toolboxIds)
-        self._helpMenuHandler: HelpMenuHandler = HelpMenuHandler(helpMenu=helpMenu, eventEngine=self._eventEngine)
-        self._menuCreator:     MenuCreator     = MenuCreator(frame=self, pluginManager=self._pluginMgr)
+        self._toolboxIds: ToolboxIdMap     = self._createToolboxIdMap()
+        self._toolsMenuHandler = ToolsMenuHandler(toolsMenu=toolsMenu,
+                                                  eventEngine=self._eventEngine,
+                                                  pluginManager=self._pluginMgr,
+                                                  toolboxIds=self._toolboxIds
+                                                  )
+        self._helpMenuHandler = HelpMenuHandler(helpMenu=helpMenu, eventEngine=self._eventEngine)
 
-        self._menuCreator.fileMenu  = fileMenu
-        self._menuCreator.editMenu  = editMenu
-        self._menuCreator.toolsMenu = toolsMenu
-        self._menuCreator.helpMenu  = helpMenu
+        menuCreator = MenuCreator(frame=self, pluginManager=self._pluginMgr)
 
-        self._menuCreator.fileMenuHandler  = self._fileMenuHandler
-        self._menuCreator.editMenuHandler  = self._editMenuHandler
-        self._menuCreator.toolsMenuHandler = self._toolsMenuHandler
-        self._menuCreator.helpMenuHandler  = self._helpMenuHandler
+        menuCreator.fileMenu  = fileMenu
+        menuCreator.editMenu  = editMenu
+        menuCreator.toolsMenu = toolsMenu
+        menuCreator.helpMenu  = helpMenu
 
-        self._menuCreator.toolPlugins   = self._pluginMgr.toolPluginsMap.pluginIdMap
-        self._menuCreator.exportPlugins = self._pluginMgr.outputPluginsMap.pluginIdMap
-        self._menuCreator.importPlugins = self._pluginMgr.inputPluginsMap.pluginIdMap
-        self._menuCreator.toolboxIds    = self._toolboxIds
+        menuCreator.fileMenuHandler  = self._fileMenuHandler
+        menuCreator.editMenuHandler  = self._editMenuHandler
+        menuCreator.toolsMenuHandler = self._toolsMenuHandler
+        menuCreator.helpMenuHandler  = self._helpMenuHandler
+
+        menuCreator.toolPlugins   = self._pluginMgr.toolPluginsMap.pluginIdMap
+        menuCreator.exportPlugins = self._pluginMgr.outputPluginsMap.pluginIdMap
+        menuCreator.importPlugins = self._pluginMgr.inputPluginsMap.pluginIdMap
+        menuCreator.toolboxIds    = self._toolboxIds
+
+        menuCreator.initializeMenus()
 
         return fileMenu, editMenu
 
