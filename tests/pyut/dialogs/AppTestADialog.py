@@ -120,6 +120,8 @@ class AppTestADialog(App):
 
     def __init__(self, redirect: bool):
 
+        ProjectTestBase.setUpLogging()
+
         self.logger:          Logger          = getLogger(__name__)
         self._preferences:    PyutPreferences = PyutPreferences()
         self._oglPreferences: OglPreferences  = OglPreferences()
@@ -131,8 +133,6 @@ class AppTestADialog(App):
         super().__init__(redirect)
 
     def OnInit(self):
-
-        ProjectTestBase.setUpLogging()
 
         self._frame = DialogFrame()
         self._eventEngine = EventEngine(listeningWindow=self._frame)

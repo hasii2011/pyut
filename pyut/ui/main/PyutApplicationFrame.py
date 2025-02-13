@@ -17,7 +17,7 @@ from wx import BOTH
 from wx import DEFAULT_FRAME_STYLE
 from wx import EVT_SYS_COLOUR_CHANGED
 
-from wx import FH_PATH_SHOW_NEVER
+
 from wx import FRAME_FLOAT_ON_PARENT
 from wx import FRAME_TOOL_WINDOW
 from wx import EVT_WINDOW_DESTROY
@@ -54,6 +54,7 @@ from pyutplugins.PluginManager import PluginManager
 
 from pyut import START_STOP_MARKER
 from pyut import __version__ as pyutVersion
+from pyut.preferences.FileHistoryPreference import FileHistoryPreference
 
 from pyut.ui.Action import Action
 
@@ -386,10 +387,9 @@ class PyutApplicationFrame(Frame):
 
         Returns:  A FileHistory object
         """
-
-        fileHistory:    FileHistory    = FileHistory(idBase=ID_FILE1)
-
-        fileHistory.SetMenuPathStyle(style=FH_PATH_SHOW_NEVER)    # TODO  Make this a preference
+        fileHistory: FileHistory = FileHistory(idBase=ID_FILE1)
+        fhStyle:     int | None  = FileHistoryPreference.toWxMenuPathStyle(self._prefs.fileHistoryDisplay)
+        fileHistory.SetMenuPathStyle(style=fhStyle)    # TODO  Make this a preference
 
         fileHistoryConfiguration: FileHistoryConfiguration = FileHistoryConfiguration(appName=APPLICATION_NAME,
                                                                                       vendorName=VENDOR_NAME,

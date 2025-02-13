@@ -17,10 +17,13 @@ from codeallybasic.SecureConversions import SecureConversions
 from codeallybasic.SingletonV3 import SingletonV3
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+from pyut.preferences.FileHistoryPreference import FileHistoryPreference
 
 DEFAULT_STARTUP_SIZE:     str = Dimensions(1024, 768).__str__()
 DEFAULT_STARTUP_POSITION: str = Position(5, 5).__str__()
 DEFAULT_TB_ICON_SIZE:     str = ToolBarIconSize.SIZE_32.value
+
+DEFAULT_FILE_HISTORY_DISPLAY: str = FileHistoryPreference.SHOW_NEVER.value
 
 SECTION_GENERAL: ValueDescriptions = ValueDescriptions(
     {
@@ -35,7 +38,8 @@ SECTION_GENERAL: ValueDescriptions = ValueDescriptions(
         KeyName('diagramsDirectory'):       ValueDescription(defaultValue=''),     # will be rationally set by CurrentDirectoryHandler
         KeyName('startupSize'):             ValueDescription(defaultValue=DEFAULT_STARTUP_SIZE,     deserializer=Dimensions.deSerialize),
         KeyName('startupPosition'):         ValueDescription(defaultValue=DEFAULT_STARTUP_POSITION, deserializer=Position.deSerialize),
-        KeyName('toolBarIconSize'):         ValueDescription(defaultValue=DEFAULT_TB_ICON_SIZE,     deserializer=ToolBarIconSize.deSerialize, enumUseValue=True, ),
+        KeyName('toolBarIconSize'):         ValueDescription(defaultValue=DEFAULT_TB_ICON_SIZE,         deserializer=ToolBarIconSize.deSerialize, enumUseValue=True),
+        KeyName('fileHistoryDisplay'):      ValueDescription(defaultValue=DEFAULT_FILE_HISTORY_DISPLAY, deserializer=FileHistoryPreference, enumUseValue=True),
     }
 )
 

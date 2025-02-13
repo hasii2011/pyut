@@ -4,6 +4,7 @@ from unittest import main as unitTestMain
 from codeallybasic.UnitTestBase import UnitTestBase
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
+from pyut.preferences.FileHistoryPreference import FileHistoryPreference
 from pyut.preferences.PyutPreferences import PyutPreferences
 
 
@@ -93,6 +94,20 @@ class TestPyutPreferences(UnitTestBase):
         self._preferences.debugErrorViews = saveValue   # restore possible blowup
 
         self.assertEqual(expectedValue, actualValue, 'Looks like boolean value not set correctly')
+
+    def testFileHistoryPreference(self):
+
+        prefs: PyutPreferences = self._preferences
+
+        saveValue:     FileHistoryPreference = prefs.fileHistoryDisplay
+        expectedValue: FileHistoryPreference = FileHistoryPreference.SHOW_ALWAYS
+
+        prefs.fileHistoryDisplay = expectedValue
+        actualValue:   FileHistoryPreference = prefs.fileHistoryDisplay
+
+        self.assertEqual(expectedValue, actualValue, 'Looks like file history value not set correctly')
+
+        prefs.fileHistoryDisplay = saveValue
 
 
 def suite() -> TestSuite:
