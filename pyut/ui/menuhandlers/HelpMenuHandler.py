@@ -41,7 +41,7 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        with DlgAbout(self._parent, f"About Pyut {pyutVersion}") as dlg:
+        with DlgAbout(self._parent) as dlg:
             dlg.ShowModal()
 
     # noinspection PyUnusedLocal

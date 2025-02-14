@@ -108,7 +108,7 @@ from pyut.ui.eventengine.Events import UpdateApplicationTitleEvent
 FILE_HISTORY_BASE_FILENAME: str = 'pyutRecentFiles.ini'
 VENDOR_NAME:                str = 'ElGatoMalo'
 APPLICATION_NAME:           str = 'pyutV3'
-HACK_ADJUST_EXIT_HEIGHT:    int = 16
+HACK_ADJUST_EXIT_HEIGHT:    int = 52
 
 
 class PyutApplicationFrame(Frame):
