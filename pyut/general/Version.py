@@ -39,7 +39,7 @@ class Version(metaclass=SingletonV3):
 
     def __init__(self):
 
-        self.logger:       Logger             = getLogger(__name__)
+        self.logger: Logger = getLogger(__name__)
 
     @property
     def platform(self) -> str:

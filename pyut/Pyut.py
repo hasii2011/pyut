@@ -12,12 +12,12 @@ from sys import argv
 
 from pyut import START_STOP_MARKER
 from pyut import __version__ as pyutVersion
-
 from pyut.PyutConstants import PyutConstants
 
-from pyut.PyutUtils import PyutUtils
+from pyut.general.Version import Version
+from pyut.general.PyutSystemMetrics import PyutSystemMetrics
 
-from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.PyutUtils import PyutUtils
 
 from pyut.ui.main.PyutApp import PyutApp
 
@@ -78,44 +78,37 @@ class Pyut:
         self._displayVersionInformation()
 
     def _displayVersionInformation(self):
-        import wx
-        import sys
         import platform
 
-        from ogl import __version__ as oglVersion
-        # noinspection PyPackageRequirements
-        from untanglepyut import __version__ as untanglePyutVersion
-        from oglio import __version__ as oglioVersion
-        from pyutplugins import __version__ as pluginVersion
-
+        version: Version = Version()
         print("Versions: ")
-        print(f"PyUt:     {pyutVersion}")
-        print(f'Platform: {platform.platform()}')
+        print(f"Pyut:     {version.applicationVersion}")
+        print(f'Platform: {version.platform}')
         print(f'    System:       {platform.system()}')
         print(f'    Version:      {platform.version()}')
         print(f'    Release:      {platform.release()}')
 
-        print(f'WxPython: {wx.__version__}')
+        print(f'WxPython: {version.wxPythonVersion}')
         print(f'')
         print(f'Pyut Packages')
-        print(f'    Ogl:             {oglVersion}')
-        print(f'    Untangle Pyut:   {untanglePyutVersion}')
-        print(f'    OglIO:           {oglioVersion}')
-        print(f'    Plugin Platform: {pluginVersion}')
+        print(f'    Ogl:             {version.oglVersion}')
+        print(f'    Untangle Pyut:   {version.untanglePyutVersion}')
+        print(f'    OglIO:           {version.oglioVersion}')
+        print(f'    Plugin Platform: {version.pyutPluginsVersion}')
 
         print(f'')
-        print(f'Python:   {sys.version.split(" ")[0]}')
+        print(f'Python:   {version.pythonVersion}')
 
     def _displaySystemMetrics(self):
-        from wx import ScreenDC
-        from wx import DisplaySize
+
         from wx import Size
 
-        size: Size = ScreenDC().GetPPI()
+        metrics: PyutSystemMetrics = PyutSystemMetrics()
+        size:    Size              = metrics.screenResolution
         print('')
-        print(f'Display Size: {DisplaySize()}')
+        print(f'Display Size: {metrics.displaySize}')
         print(f'x-DPI: {size.GetWidth()} y-DPI: {size.GetHeight()}')
-        print(f'toolBarIconSize: {PyutPreferences().toolBarIconSize.value}')
+        print(f'toolBarIconSize: {metrics.toolBarIconSize}')
 
         # noinspection PyUnreachableCode
         if __debug__:
