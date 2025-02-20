@@ -12,7 +12,6 @@ APP = ['pyut/Pyut.py']
 DATA_FILES = [('pyut/resources', ['pyut/resources/loggingConfiguration.json']),
               ('pyut/resources', ['pyut/resources/Kilroy-Pyut.txt']),
               ('pyut/resources', ['pyut/resources/Help.txt']),
-              ('pyut/resources', ['pyut/resources/Kudos.txt']),
               ('pyut/resources', ['pyut/resources/tips.txt']),
               ('pyut/resources/img', ['pyut/resources/img/pyut.ico']),
               ]
