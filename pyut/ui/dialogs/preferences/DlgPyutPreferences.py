@@ -61,7 +61,7 @@ class DlgPyutPreferences(SizedDialog):
         self._eventEngine: IEventEngine = eventEngine
 
         style:   int  = DEFAULT_DIALOG_STYLE | RESIZE_BORDER
-        dlgSize: Size = Size(460, 500)
+        dlgSize: Size = Size(460, 575)
         super().__init__(parent, ID_ANY, "Pyut Preferences", size=dlgSize, style=style)
         self.logger:  Logger          = getLogger(__name__)
         self.__prefs: PyutPreferences = PyutPreferences()

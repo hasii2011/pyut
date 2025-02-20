@@ -1,4 +1,4 @@
-
+from pathlib import Path
 from typing import List
 from typing import cast
 
@@ -7,31 +7,28 @@ from logging import getLogger
 
 from dataclasses import dataclass
 
-from wx import DD_DEFAULT_STYLE
 from wx import EVT_BUTTON
 from wx import EVT_CHECKBOX
 from wx import EVT_RADIOBOX
 from wx import EVT_SPINCTRL
 from wx import ID_ANY
-from wx import ID_OK
 from wx import RA_SPECIFY_COLS
 
 from wx import Button
 from wx import CheckBox
 from wx import CommandEvent
-from wx import DirDialog
 from wx import RadioBox
 from wx import SpinCtrl
 from wx import SpinEvent
-from wx import TextCtrl
 from wx import Window
 
 from wx import NewIdRef as wxNewIdRef
 
-from wx.lib.buttons import GenBitmapButton
 
 from wx.lib.sized_controls import SizedPanel
 from wx.lib.sized_controls import SizedStaticBox
+
+from codeallyadvanced.ui.widgets.DirectorySelector import DirectorySelector
 
 from pyut.preferences.FileHistoryPreference import FileHistoryPreference
 from pyut.preferences.PyutPreferences import PyutPreferences
@@ -40,7 +37,7 @@ from pyut.ui.dialogs.preferences.BasePreferencesPage import BasePreferencesPage
 
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 
-from pyut.resources.img import folder as ImgFolder
+# from pyut.resources.img import folder as ImgFolder
 
 
 @dataclass
@@ -72,11 +69,10 @@ class GeneralPreferencesPage(BasePreferencesPage):
         self.logger:  Logger = getLogger(__name__)
         self._change: bool   = False
 
-        self._btnResetTips:          Button          = cast(Button, None)
-        self._textDiagramsDirectory: TextCtrl        = cast(TextCtrl, None)
-        self._selectButton:          GenBitmapButton = cast(GenBitmapButton, None)
-        self._virtualWindowWidth:    SpinCtrl        = cast(SpinCtrl, None)
-        self._fileHistoryPathPref:   RadioBox        = cast(RadioBox, None)
+        self._btnResetTips:        Button            = cast(Button, None)
+        self._virtualWindowWidth:  SpinCtrl          = cast(SpinCtrl, None)
+        self._fileHistoryPathPref: RadioBox          = cast(RadioBox, None)
+        self._directorySelector:   DirectorySelector = cast(DirectorySelector, None)
 
         p: PyutPreferences = self._preferences
         self._controlData = [
@@ -97,6 +93,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
         self._btnResetTips = Button(sizedPanel, ID_ANY, 'Reset Tips')
 
         self._layoutVWandFHPanel(parentPanel=sizedPanel)
+
         self._layoutDiagramsDirectory(sizedPanel)
 
         self._setControlValues()
@@ -104,7 +101,6 @@ class GeneralPreferencesPage(BasePreferencesPage):
         sizedPanel.Bind(EVT_SPINCTRL, self._onVirtualWindowWidthChanged,  self._virtualWindowWidth)
         sizedPanel.Bind(EVT_RADIOBOX, self._onFileHistoryPathPrefChanged, self._fileHistoryPathPref)
         sizedPanel.Bind(EVT_BUTTON,   self._onResetTips,                  self._btnResetTips)
-        sizedPanel.Bind(EVT_BUTTON,   self._onSelectDiagramsDirectory,    self._selectButton)
 
         self._fixPanelSize(panel=self)
 
@@ -120,30 +116,13 @@ class GeneralPreferencesPage(BasePreferencesPage):
         """
         trueFalsePanel: SizedStaticBox = SizedStaticBox(parentPanel, label='')
         trueFalsePanel.SetSizerType('Vertical')
-        trueFalsePanel.SetSizerProps(expand=True, proportion=6)
+        trueFalsePanel.SetSizerProps(expand=True, proportion=3)
 
         for cd in self._controlData:
             control: ControlData = cast(ControlData, cd)
             control.instanceVar = CheckBox(trueFalsePanel, id=control.wxId, label=control.label)
             control.instanceVar.SetValue(control.initialValue)
             parentPanel.Bind(EVT_CHECKBOX, self._onTrueFalsePreferenceChanged, control.instanceVar)
-
-    def _layoutDiagramsDirectory(self, sizedPanel: SizedPanel):
-        directoryPanel: SizedStaticBox = SizedStaticBox(sizedPanel, label='Diagrams Directory')
-
-        directoryPanel.SetSizerType('horizontal')
-        directoryPanel.SetSizerProps(expand=True, proportion=2)
-
-        textCtrl: TextCtrl = TextCtrl(directoryPanel)
-        textCtrl.SetSizerProps(expand=False, proportion=5)
-
-        selectButton: GenBitmapButton = GenBitmapButton(directoryPanel, ID_ANY, ImgFolder.embeddedImage.GetBitmap())
-        selectButton.SetSizerProps(expand=False, proportion=1)
-
-        textCtrl.SetEditable(False)
-
-        self._textDiagramsDirectory = textCtrl
-        self._selectButton          = selectButton
 
     def _layoutVWandFHPanel(self, parentPanel: SizedPanel):
         """
@@ -159,6 +138,14 @@ class GeneralPreferencesPage(BasePreferencesPage):
 
         self._layoutVirtualWindowWidthControl(parentPanel=hPanel)
         self._layoutFileHistoryPreferenceControl(parentPanel=hPanel)
+
+    def _layoutDiagramsDirectory(self, sizedPanel: SizedPanel):
+
+        dsPanel: SizedStaticBox = SizedStaticBox(sizedPanel, label='Diagrams Directory ')
+        dsPanel.SetSizerProps(expand=True, proportion=1)
+
+        self._directorySelector = DirectorySelector(parent=dsPanel, pathChangedCallback=self._pathChangedCallback)
+        self._directorySelector.SetSizerProps(expand=True, proportion=1)
 
     def _layoutVirtualWindowWidthControl(self, parentPanel: SizedPanel):
 
@@ -191,7 +178,7 @@ class GeneralPreferencesPage(BasePreferencesPage):
         """
 
         """
-        self._textDiagramsDirectory.SetValue(self._preferences.diagramsDirectory)
+        self._directorySelector.directoryPath = self._preferences.diagramsDirectory
         self._virtualWindowWidth.SetValue(self._preferences.virtualWindowWidth)
 
         chosen: str = self._preferences.fileHistoryDisplay.value
@@ -230,14 +217,6 @@ class GeneralPreferencesPage(BasePreferencesPage):
     def _onResetTips(self, event: CommandEvent):
         self._preferences.currentTip = 0
 
-    # noinspection PyUnusedLocal
-    def _onSelectDiagramsDirectory(self, event: CommandEvent):
-
-        with DirDialog(None, 'Choose the Diagrams Directory', style=DD_DEFAULT_STYLE) as dlg:
-            if dlg.ShowModal() == ID_OK:
-                self._preferences.diagramsDirectory = dlg.GetPath()
-                self._textDiagramsDirectory.SetValue(self._preferences.diagramsDirectory)
-
     def _onFileHistoryPathPrefChanged(self, event: CommandEvent):
 
         newValue: str = event.GetString()
@@ -249,6 +228,9 @@ class GeneralPreferencesPage(BasePreferencesPage):
     def _onVirtualWindowWidthChanged(self, event: SpinEvent):
 
         self._preferences.virtualWindowWidth = self._virtualWindowWidth.GetValue()
+
+    def _pathChangedCallback(self, newPath: Path):
+        self._preferences.diagramsDirectory = str(newPath)
 
     def _isLargeIconSize(self) -> bool:
         if self._preferences.toolBarIconSize == ToolBarIconSize.SIZE_32:
