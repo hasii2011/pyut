@@ -63,6 +63,7 @@ from ogl.preferences.OglPreferences import OglPreferences
 from pyut.enums.DiagramType import DiagramType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
+from pyut.ui.dialogs.logcontrol.DlgLogControl import DlgLogControl
 from pyut.ui.eventengine.inspector.DlgEventEngineDialog import DlgEventEngineDialog
 
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -232,10 +233,19 @@ class AppTestADialog(App):
                 dlgAnswer = self._testDlgPyutDebug()
             case DialogNamesEnum.DLG_DEBUG_EVENT_ENGINE_DIALOG:
                 dlgAnswer = self._testDlgDebugEventDialog()
+            case DialogNamesEnum.DLG_LOG_CONTROL:
+                dlgAnswer = self._testDlgLogControl()
             case _:
                 self.logger.error(f'Unknown dialog')
 
         self.logger.warning(f'{dlgAnswer=}')
+
+    def _testDlgLogControl(self) -> str:
+        with DlgLogControl() as dlg:
+            if dlg.ShowModal() == OK:
+                return 'Ok'
+            else:
+                return 'Cancel'
 
     def _testDlgDebugEventDialog(self) -> str:
         dlg: DlgEventEngineDialog = DlgEventEngineDialog(self._frame, self._eventEngine)

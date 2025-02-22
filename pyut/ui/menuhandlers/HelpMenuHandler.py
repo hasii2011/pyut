@@ -13,7 +13,7 @@ from semantic_version import Version as SemanticVersion
 from pyut import __version__ as pyutVersion
 
 from pyut.ui.dialogs.DlgAbout import DlgAbout
-from pyut.ui.dialogs.DlgPyutDebug import DlgPyutDebug
+from pyut.ui.dialogs.logcontrol.DlgLogControl import DlgLogControl
 from pyut.ui.eventengine.inspector.DlgEventEngineDialog import DlgEventEngineDialog
 
 from pyut.ui.menuhandlers.BaseMenuHandler import BaseMenuHandler
@@ -85,7 +85,7 @@ class HelpMenuHandler(BaseMenuHandler):
         Args:
             event:
         """
-        with DlgPyutDebug(self._parent) as dlg:
+        with DlgLogControl(self._parent) as dlg:
             dlg.ShowModal()
 
     # noinspection PyUnusedLocal

@@ -290,8 +290,8 @@ class MenuCreator:
         mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_VERSION, "Check for newer versions", "Check if a newer version of Pyut exists")
         mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_WEB, "&Web site", "Open Pyut web site")
         mnuHelp.AppendSeparator()
-        if self._preferences.debugLoggers is True:
-            mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_DEBUG, "&Debug", "Open Debug Loggers")
+        if self._preferences.displayLoggingControl is True:
+            mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_LOGGING_CONTROL, "&Logging Control", "Open Logging Control Dialog")
         if self._preferences.debugEventEngine is True:
             mnuHelp.Append(SharedIdentifiers.ID_MENU_HELP_DEBUG_EVENT_ENGINE, "Debug &Event Engine", "Open Debug Loggers")
 
@@ -439,7 +439,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onAbout,            id=ID_ABOUT)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion,      id=SharedIdentifiers.ID_MENU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,          id=SharedIdentifiers.ID_MENU_HELP_WEB)
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug,            id=SharedIdentifiers.ID_MENU_HELP_DEBUG)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug, id=SharedIdentifiers.ID_MENU_HELP_LOGGING_CONTROL)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebugEventEngine, id= SharedIdentifiers.ID_MENU_HELP_DEBUG_EVENT_ENGINE)
 
     def __makeSubMenuEntry(self, subMenu: Menu, wxId: int, formatName: str, callback: Callable) -> Menu:

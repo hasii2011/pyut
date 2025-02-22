@@ -442,8 +442,8 @@ class PyutApplicationFrame(Frame):
             (ACCEL_CTRL,     ord('u'),   SharedIdentifiers.ID_MENU_FILE_NEW_USECASE_DIAGRAM),
             (ACCEL_CTRL,     ord('p'),   SharedIdentifiers.ID_MENU_FILE_PRINT),
             (ACCEL_CTRL,     ord('P'),   SharedIdentifiers.ID_MENU_FILE_PRINT),
-            (ACCEL_CTRL,     ord('d'),   SharedIdentifiers.ID_MENU_HELP_DEBUG),
-            (ACCEL_CTRL,     ord('D'),   SharedIdentifiers.ID_MENU_HELP_DEBUG),
+            (ACCEL_CTRL,     ord('d'),   SharedIdentifiers.ID_MENU_HELP_LOGGING_CONTROL),
+            (ACCEL_CTRL,     ord('D'),   SharedIdentifiers.ID_MENU_HELP_LOGGING_CONTROL),
             ]
         acc = []
         for el in lst:

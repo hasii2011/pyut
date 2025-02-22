@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "disable_existing_loggers": "False",
+    "disable_existing_loggers": false,
     "formatters": {
         "simple": {
             "format": "%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s"
@@ -20,23 +20,23 @@
         "root": {
             "level": "WARNING",
             "handlers": ["consoleHandler"],
-            "propagate": "False"
+            "propagate": false
         },
         "__main__": {
             "level": "WARNING",
-            "propagate": "False"
+            "propagate": false
         },
         "pyut": {
             "level":     "WARNING",
-            "propagate": "False"
+            "propagate": true
         },
         "tests": {
             "level": "WARNING",
-            "propagate": "False"
+            "propagate": false
         },
-        "pyut.uiv2.dialogs": {
+        "pyut.ui.dialogs": {
             "level":     "INFO",
-            "propagate": "False"
+            "propagate": false
         }
     }
 }

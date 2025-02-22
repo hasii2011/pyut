@@ -1,4 +1,6 @@
 
+from typing import List
+
 from logging import Logger
 from logging import getLogger
 
@@ -25,6 +27,18 @@ DEFAULT_TB_ICON_SIZE:     str = ToolBarIconSize.SIZE_32.value
 
 DEFAULT_FILE_HISTORY_DISPLAY: str = FileHistoryPreference.SHOW_NEVER.value
 
+DEFAULT_TRACKED_LOGGERS: List[str] = [
+    'pyut',
+    'pyutplugins',
+    'ogl',
+    'miniogl',
+    'untanglepyut',
+    'oglio',
+    'pyutmodel',
+    'codeallybasic',
+    'codeallyadvanced',
+]
+
 SECTION_GENERAL: ValueDescriptions = ValueDescriptions(
     {
         KeyName('virtualWindowWidth'):      ValueDescription(defaultValue='16000',  deserializer=SecureConversions.secureInteger),
@@ -39,19 +53,20 @@ SECTION_GENERAL: ValueDescriptions = ValueDescriptions(
         KeyName('startupSize'):             ValueDescription(defaultValue=DEFAULT_STARTUP_SIZE,     deserializer=Dimensions.deSerialize),
         KeyName('startupPosition'):         ValueDescription(defaultValue=DEFAULT_STARTUP_POSITION, deserializer=Position.deSerialize),
         KeyName('toolBarIconSize'):         ValueDescription(defaultValue=DEFAULT_TB_ICON_SIZE,         deserializer=ToolBarIconSize.deSerialize, enumUseValue=True),
-        KeyName('fileHistoryDisplay'):      ValueDescription(defaultValue=DEFAULT_FILE_HISTORY_DISPLAY, deserializer=FileHistoryPreference, enumUseValue=True),
+        KeyName('fileHistoryDisplay'):      ValueDescription(defaultValue=DEFAULT_FILE_HISTORY_DISPLAY, deserializer=FileHistoryPreference,       enumUseValue=True),
     }
 )
 
 SECTION_FEATURES: ValueDescriptions = ValueDescriptions(
     {
+        KeyName('displayLoggingControl'): ValueDescription(defaultValue='True', deserializer=SecureConversions.secureBoolean),
+        KeyName('trackedLoggers'):        ValueDescription(defaultValue=DEFAULT_TRACKED_LOGGERS, isStringList=True),
     }
 )
 
 SECTION_DEBUG: ValueDescriptions = ValueDescriptions(
     {
         KeyName('debugErrorViews'):  ValueDescription(defaultValue='False', deserializer=SecureConversions.secureBoolean),
-        KeyName('debugLoggers'):     ValueDescription(defaultValue='True',  deserializer=SecureConversions.secureBoolean),
         KeyName('debugEventEngine'): ValueDescription(defaultValue='True',  deserializer=SecureConversions.secureBoolean),
     }
 )
