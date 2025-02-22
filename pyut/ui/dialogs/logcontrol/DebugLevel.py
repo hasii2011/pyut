@@ -11,23 +11,33 @@ from enum import Enum
 
 class DebugLevel(Enum):
     """
-    A wrapper enumeration around Python log levels
+    A wrapper enumeration around Python log levels; The
+    value is the Pythong logging level
     """
 
-    NOT_SET = 'NOTSET'
-    ERROR   = 'ERROR'
-    WARNING = 'WARNING'
-    INFO    = 'INFO'
-    DEBUG   = 'DEBUG'
-    FATAL   = 'FATAL'
+    NOTSET  = NOTSET
+    ERROR   = ERROR
+    WARNING = WARNING
+    INFO    = INFO
+    DEBUG   = DEBUG
+    FATAL   = FATAL
 
     @classmethod
     def toEnum(cls, pythonLevel: int) -> 'DebugLevel':
+        """
+        This is needed when we retrieve the actual logger.  Need the
+        enumeration so we can treat it as a
+        Args:
+            pythonLevel:
+
+        Returns:
+
+        """
         import logging
 
         match pythonLevel:
             case logging.NOTSET:
-                return DebugLevel.NOT_SET
+                return DebugLevel.NOTSET
             case logging.ERROR:
                 return DebugLevel.ERROR
             case logging.WARNING:
@@ -39,23 +49,4 @@ class DebugLevel(Enum):
             case logging.FATAL:
                 return DebugLevel.FATAL
             case _:
-                return DebugLevel.NOT_SET
-
-    @classmethod
-    def toPythonLevel(cls, debugLevel: 'DebugLevel') -> int | None:
-
-        match debugLevel:
-            case DebugLevel.NOT_SET:
-                return NOTSET
-            case DebugLevel.ERROR:
-                return ERROR
-            case DebugLevel.WARNING:
-                return WARNING
-            case DebugLevel.INFO:
-                return INFO
-            case DebugLevel.DEBUG:
-                return DEBUG
-            case DebugLevel.FATAL:
-                return FATAL
-            case _:
-                assert False, 'Developer error, unknown enumeration value'
+                return DebugLevel.NOTSET

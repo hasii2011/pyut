@@ -85,7 +85,7 @@ from pyut.ui.dialogs.DlgEditMethod import DlgEditMethod
 from pyut.ui.dialogs.DlgEditMethodModifiers import DlgEditMethodModifiers
 from pyut.ui.dialogs.DlgEditParameter import DlgEditParameter
 from pyut.ui.dialogs.DlgEditStereotype import DlgEditStereotype
-from pyut.ui.dialogs.DlgPyutDebug import DlgPyutDebug
+
 from pyut.ui.dialogs.tips.DlgTipsV2 import DlgTipsV2
 
 from pyut.ui.dialogs.textdialogs.DlgEditNote import DlgEditNote
@@ -229,8 +229,6 @@ class AppTestADialog(App):
                 dlgAnswer = self._testDlgEditMethod()
             case DialogNamesEnum.DLG_EDIT_CODE:
                 dlgAnswer = self._testDlgEditCode()
-            case DialogNamesEnum.DLG_PYUT_DEBUG:
-                dlgAnswer = self._testDlgPyutDebug()
             case DialogNamesEnum.DLG_DEBUG_EVENT_ENGINE_DIALOG:
                 dlgAnswer = self._testDlgDebugEventDialog()
             case DialogNamesEnum.DLG_LOG_CONTROL:
@@ -241,7 +239,7 @@ class AppTestADialog(App):
         self.logger.warning(f'{dlgAnswer=}')
 
     def _testDlgLogControl(self) -> str:
-        with DlgLogControl() as dlg:
+        with DlgLogControl(self._frame) as dlg:
             if dlg.ShowModal() == OK:
                 return 'Ok'
             else:
@@ -509,13 +507,6 @@ class AppTestADialog(App):
                 return f'Retrieved data: {dlg.sourceCode}'
             else:
                 return f'Cancelled'
-
-    def _testDlgPyutDebug(self):
-        with DlgPyutDebug(self._frame) as dlg:
-            if dlg.ShowModal() == ID_OK:
-                return "Good"
-            else:
-                return 'Cancelled'
 
     # noinspection PyUnusedLocal
     def _onDiagramModified(self, event: UMLDiagramModifiedEvent):

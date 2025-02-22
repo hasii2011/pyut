@@ -1,3 +1,4 @@
+
 from typing import Any
 from typing import cast
 from typing import Dict
@@ -17,6 +18,8 @@ from wx import DEFAULT_DIALOG_STYLE
 from wx import DefaultPosition
 from wx import DefaultSize
 from wx import EVT_BUTTON
+from wx import EVT_CHECKBOX
+from wx import EVT_CHOICE
 from wx import EVT_CLOSE
 from wx import EVT_LISTBOX
 from wx import ID_ANY
@@ -59,7 +62,7 @@ class DlgLogControl(SizedDialog):
 
         self._loggerSelector:   ListBox         = cast(ListBox, None)
         self._levelChoice:      Choice          = cast(Choice, None)
-        self._loggerEnabled:    CheckBox        = cast(CheckBox, None)
+        self._loggerDisabled:   CheckBox        = cast(CheckBox, None)
         self._loggerPropagated: CheckBox        = cast(CheckBox, None)
 
         mainPanel: SizedPanel = self.GetContentsPane()
@@ -69,11 +72,20 @@ class DlgLogControl(SizedDialog):
         self._layoutDialog(mainPanel=mainPanel)
         self.SetButtonSizer(self.CreateStdDialogButtonSizer(OK))
 
+        self._selectedLogger: Logger = cast(Logger, None)
+
         self.Bind(EVT_BUTTON, self._onOk,    id=ID_OK)
         self.Bind(EVT_BUTTON, self._onClose, id=ID_CANCEL)
         self.Bind(EVT_CLOSE,  self._onClose)
 
-        self.Bind(EVT_LISTBOX, self._onLoggerSelected, self._loggerSelector)
+        self.Bind(EVT_LISTBOX,  self._onLoggerSelected,    self._loggerSelector)
+        self.Bind(EVT_CHOICE,   self._onLevelChanged,      self._levelChoice)
+        self.Bind(EVT_CHECKBOX, self._onDisabledChanged,   self._loggerDisabled)
+        self.Bind(EVT_CHECKBOX, self._onPropagatedChanged, self._loggerPropagated)
+
+        self._levelChoice.Enabled      = False
+        self._loggerDisabled.Enabled    = False
+        self._loggerPropagated.Enabled = False
         #
         # a little trick to make sure that you can't resize the dialog to
         # less screen space than the controls need
@@ -105,14 +117,14 @@ class DlgLogControl(SizedDialog):
         formPanel.SetSizerType('form')
         formPanel.SetSizerProps(expand=True, proportion=1)
 
-        levelNames: LevelNames = LevelNames([debugLevel.value for debugLevel in DebugLevel])
+        levelNames: LevelNames = LevelNames([debugLevel.name for debugLevel in DebugLevel])
 
         StaticText(formPanel, ID_ANY, 'Level:', style=CAPTION)
         self._levelChoice = Choice(formPanel, ID_ANY, (100, 50), choices=levelNames)
         self._levelChoice.SetSelection(NOT_FOUND)
 
         StaticText(formPanel, ID_ANY, 'Disabled:', style=CAPTION)
-        self._loggerEnabled = CheckBox(formPanel, ID_ANY, "", DefaultPosition, DefaultSize)
+        self._loggerDisabled = CheckBox(formPanel, ID_ANY, "", DefaultPosition, DefaultSize)
 
         StaticText(formPanel, ID_ANY, 'Propagate:', style=CAPTION)
         self._loggerPropagated = CheckBox(formPanel, ID_ANY, "", DefaultPosition, DefaultSize)
@@ -163,24 +175,30 @@ class DlgLogControl(SizedDialog):
 
     def _onLoggerSelected(self, event: CommandEvent):
 
-        self.logger.warning(f'{event.GetSelection()=} {event.GetString()=}')
-
         loggerName:  str    = event.GetString()
         logger:      Logger = self._loggerMap[loggerName]
-        loggerLevel: int    = logger.getEffectiveLevel()
-        self.logger.warning(f'{loggerLevel=}')
 
-        levelName: str = DebugLevel.toEnum(loggerLevel).value
-        idx:       int = self._levelChoice.FindString(levelName, caseSensitive=False)
-        self._levelChoice.SetSelection(idx)
+        self._setLoggerLevelChoice(logger)
 
-        # noinspection PyTypeChecker
         loggerDisabled: bool = self._bugWorkAround(name=f'{loggerName}.loggerDisabled', value=logger.disabled)
-        self._loggerEnabled.SetValue(loggerDisabled)
+        self._loggerDisabled.SetValue(loggerDisabled)
 
         loggerPropagated: bool = self._bugWorkAround(name=f'{loggerName}.loggerPropagated', value=logger.propagate)
         self.logger.info(f'{loggerPropagated=}')
         self._loggerPropagated.SetValue(loggerPropagated)
+
+        self._selectedLogger = logger
+        self._enableControls()
+
+    def _onLevelChanged(self, event: CommandEvent):
+
+        levelName: str = event.GetString()
+        self.logger.info(f'{levelName=}')
+
+        # noinspection PyTypeChecker
+        debugLevel: DebugLevel = DebugLevel[levelName]  # DebugLevel(leveName) does not work,  Hmm
+
+        self._selectedLogger.level = debugLevel.value
 
     # noinspection PyUnusedLocal
     def _onOk(self, event: CommandEvent):
@@ -194,6 +212,29 @@ class DlgLogControl(SizedDialog):
         """
         self.EndModal(CANCEL)
 
+    def _onDisabledChanged(self, event: CommandEvent):
+        self._selectedLogger.disabled = self._getCheckBoxValue(event=event)
+
+    def _onPropagatedChanged(self, event: CommandEvent):
+        self._selectedLogger.propagate = self._getCheckBoxValue(event=event)
+
+    def _setLoggerLevelChoice(self, logger: Logger):
+        """
+        Transform the Python logger level to an enumeration and retrieve the name
+        of the enumeration. The enumeration matches the strings we set in the
+        level ListBox.  Then make that one the selected one in the ListBox
+        Args:
+            logger:  The selected logger
+        """
+
+        loggerLevel: int = logger.getEffectiveLevel()
+        self.logger.warning(f'{loggerLevel=}')
+
+        levelName: str = DebugLevel.toEnum(loggerLevel).name
+        idx:       int = self._levelChoice.FindString(levelName, caseSensitive=False)
+
+        self._levelChoice.SetSelection(idx)
+
     def _bugWorkAround(self, name: str, value: Any) -> bool:
         """
         Sometimes for some loggers boolean we get a string;  It is the ones that we put in
@@ -206,6 +247,9 @@ class DlgLogControl(SizedDialog):
         "propagate": false,
 
         Big bug in all of my configuration files
+
+        TODO: Remove this after I fix my configuration files
+
         Args:
             value:
 
@@ -216,3 +260,17 @@ class DlgLogControl(SizedDialog):
             return SecureConversions.secureBoolean(value)
         else:
             return value
+
+    def _getCheckBoxValue(self, event: CommandEvent) -> bool:
+
+        cb:    CheckBox = event.GetEventObject()
+        value: bool     = cb.GetValue()
+
+        return value
+
+    def _enableControls(self):
+
+        if self._levelChoice.Enabled is False:
+            self._levelChoice.Enabled      = True
+            self._loggerDisabled.Enabled    = True
+            self._loggerPropagated.Enabled = True
