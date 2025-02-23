@@ -189,12 +189,10 @@ class PyutApplicationFrame(Frame):
 
         self.Bind(EVT_SYS_COLOUR_CHANGED, self._onColourChanged)
 
-    def Close(self, force=False):
+    def Close(self, force: bool = False):
         """
         Closing handler overload. Save files and ask for confirmation.
 
-        Args:
-            force:
         """
         # Close all files
         self._pyutUI.handleUnsavedProjects()
@@ -213,10 +211,6 @@ class PyutApplicationFrame(Frame):
             # I need to check this on a larger monitor;
             self._prefs.startupSize = Dimensions(ourSize[0], ourSize[1] - HACK_ADJUST_EXIT_HEIGHT)
             self.logger.info(f'Set new startup size: {ourSize}')
-
-        self._prefs     = cast(PyutPreferences, None)
-        self._pluginMgr = cast(PluginManager, None)
-        self._pyutUI    = cast(PyutUI, None)
 
         self.logger.info(f'Pyut execution complete')
         self.logger.info(START_STOP_MARKER)

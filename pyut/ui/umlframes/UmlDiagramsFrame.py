@@ -135,13 +135,9 @@ class UmlDiagramsFrame(UmlFrame):
         """
         self._commandProcessor.Redo()
 
-    # noinspection PyUnusedLocal
-    def OnClose(self, force=False):
+    def OnClose(self):
         """
         Closing handler (must be called explicitly).
-
-        Args:
-            force:
 
         Returns: True if the close succeeded
         """

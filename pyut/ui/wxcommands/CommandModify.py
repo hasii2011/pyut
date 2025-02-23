@@ -129,20 +129,3 @@ class CommandModify(Command):
             parameters: values that will be changed by calling the redo method. Must be ordered as in the method profile.
         """
         self._newParameters = parameters
-
-    def _getModifiedObject(self, strObject, anObject):
-        """
-        @return the object that is represented by the string strObject. Used
-        for deserialization.
-        Notes : This method requires a lot of CPU resources and place on the
-        stack. A refactoring must be proceeded in order to identify every
-        object present in a frame more quickly.
-        """
-        pass
-        # if cmp(repr(anObject), strObject) == 0:
-        #     return anObject
-        # else:
-        #
-        #     for anSubObject in anObject.__dict__.values():
-        #         anSubObject = self._getModifiedObject(strObject, anSubObject)
-        #     return anSubObject
