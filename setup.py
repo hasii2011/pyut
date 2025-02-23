@@ -1,5 +1,6 @@
 
 from setuptools import setup
+from setuptools import find_packages
 
 import pathlib
 
@@ -26,24 +27,7 @@ setup(
     version=__version__,
     app=APP,
     data_files=DATA_FILES,
-    packages=[
-        'pyut',
-        'pyut.enums',
-        'pyut.errorcontroller',
-        'pyut.experimental',
-        'pyut.general', 'pyut.general.datatypes', 'pyut.general.exceptions',
-        'pyut.preferences',
-        'pyut.resources',
-        'pyut.resources.img',
-        'pyut.resources.img.splash',
-        'pyut.ui',
-        'pyut.ui.dialogs', 'pyut.ui.dialogs.preferences', 'pyut.ui.dialogs.textdialogs', 'pyut.ui.dialogs.tips',
-        'pyut.ui.eventengine', 'pyut.ui.eventengine.eventinformation', 'pyut.ui.eventengine.inspector',
-        'pyut.ui.main',
-        'pyut.ui.menuhandlers',
-        'pyut.ui.tools',
-        'pyut.ui.umlframes', 'pyut.ui.wxcommands',
-    ],
+    packages=find_packages(include=['pyut.*']),
     include_package_data=True,
     zip_safe=False,
 
