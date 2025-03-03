@@ -31,6 +31,10 @@ from pyutplugins.ExternalTypes import CreatedLinkCallback
 from pyutplugins.ExternalTypes import LinkInformation
 from pyutplugins.ExternalTypes import ObjectBoundaries
 from pyutplugins.ExternalTypes import ObjectBoundaryCallback
+from pyutplugins.ExternalTypes import IntegerList
+from pyutplugins.ExternalTypes import Points
+from pyutplugins.ExternalTypes import Rectangle
+from pyutplugins.ExternalTypes import Rectangles
 
 from pyutplugins.IPluginAdapter import IPluginAdapter
 from pyutplugins.IPluginAdapter import ScreenMetrics
@@ -183,6 +187,15 @@ class PluginAdapter(IPluginAdapter):
         self._eventEngine.sendEvent(EventType.ActiveUmlFrame, callback=self._onCreateLinkActiveUmlFrame)
         wxYield()   # make sure we process the above event first
 
+    def showOrthogonalRoutingPoints(self, show: bool, spots: Points):
+        pass
+
+    def showRulers(self, show: bool, horizontalRulers: IntegerList, verticalRulers: IntegerList, diagramBounds: Rectangle):
+        pass
+
+    def showRouteGrid(self, show: bool, routeGrid: Rectangles):
+        pass
+
     def _onObjectBoundariesActiveUmlFrame(self, activeFrame: UmlDiagramsFrame):
 
         objectBoundaries: ObjectBoundaries = activeFrame.objectBoundaries
@@ -317,7 +330,8 @@ class PluginAdapter(IPluginAdapter):
         for pt in pathCopy:
             point: OglPosition = cast(OglPosition, pt)
             controlPoint: ControlPoint = ControlPoint(x=point.x, y=point.y)
-            controlPoint.visible = True
+            controlPoint.visible   = True
+            controlPoint.draggable = True
 
             controlPoints.append(controlPoint)
 

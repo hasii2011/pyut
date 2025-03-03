@@ -283,7 +283,6 @@ class BaseWxLinkCommand(Command):
                 x, y = controlPoint.GetPosition()
                 controlPoint.parent = parent
                 controlPoint.SetPosition(x, y)
-                controlPoint.draggable = True
 
     def _toCommandName(self, linkType: PyutLinkType) -> str:
         # Because I do not like the generated name
