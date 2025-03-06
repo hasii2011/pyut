@@ -54,7 +54,7 @@ class BaseWxCommand(Command):
 
         for obj in umlObjects:
 
-            # if isinstance(obj, OglClass):
+            # if isinstance(instance, OglClass):
             # This is a duplicate of the UmlObject, since I cannot use NewType
             if isinstance(obj, (OglClass, OglLink, OglNote, OglText, OglSDMessage, OglSDInstance, OglActor, OglUseCase, OglInterface2)):
 

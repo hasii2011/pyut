@@ -16,7 +16,9 @@ from pyutmodelv2.PyutInterface import PyutInterface
 from miniogl.Shape import Shape
 
 from ogl.OglInterface2 import OglInterface2
+from wx import PaintEvent
 
+from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import OrthogonalRoutingDiagnosticMixin
 from pyut.ui.umlframes.UmlClassDiagramFrameMenuHandler import UmlClassDiagramFrameMenuHandler
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
@@ -28,16 +30,15 @@ from pyut.ui.eventengine.IEventEngine import IEventEngine
 CreatedClassesType = namedtuple('CreatedClassesType', 'pyutClass, oglClass')
 
 
-class UmlClassDiagramsFrame(UmlDiagramsFrame):
+class UmlClassDiagramsFrame(UmlDiagramsFrame, OrthogonalRoutingDiagnosticMixin):
 
     UMLFrameNextId: int = 0x000FF   # UML Class Diagrams Frame ID
 
     """
-    UmlClassDiagramsFrame : a UML class diagram frame.
+    UmlClassDiagramsFrame : A UML class diagram frame.
 
     This class is the instance of one UML class diagram structure.
-    It derives its functionality from UmlDiagramsFrame, but
-    it knows the structure of a class diagram and it can load class diagram data.
+    It derives its functionality from UmlDiagramsFrame.
     """
     def __init__(self, parent, eventEngine: IEventEngine | None = None):
         """
@@ -46,10 +47,10 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
             parent:
             eventEngine: Pyut event engine
         """
-
         super().__init__(parent, eventEngine=eventEngine)   # type: ignore
+        OrthogonalRoutingDiagnosticMixin.__init__(self)
+
         self.localLogger: Logger = getLogger(__name__)
-        self.newDiagram()
 
         self._menuHandler:  UmlClassDiagramFrameMenuHandler = cast(UmlClassDiagramFrameMenuHandler, None)
 
@@ -73,6 +74,11 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame):
                 self._menuHandler = UmlClassDiagramFrameMenuHandler(self)
 
             self._menuHandler.popupMenu(event=event)
+
+    def OnPaint(self, event: PaintEvent):
+        super().OnPaint(event=event)
+
+        OrthogonalRoutingDiagnosticMixin.OnPaint(self, umlFrame=self)
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 

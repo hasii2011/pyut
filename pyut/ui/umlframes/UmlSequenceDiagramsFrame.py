@@ -42,8 +42,8 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
 
         UmlSequenceDiagramsFrame.cdfDebugId += 1
 
-        self.newDiagram()
-        self._cdInstances = []  # type: ignore
+        # self.clearDiagram()
+        # self._cdInstances = []  # type: ignore
 
     # noinspection PyUnusedLocal
     def createNewSDInstance(self, x, y) -> OglSDInstance:

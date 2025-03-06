@@ -7,6 +7,7 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from pyutplugins.ExternalTypes import Points
 from wx import CANCEL
 from wx import CENTRE
 from wx import EVT_MENU
@@ -74,8 +75,11 @@ from pyut.ui.dialogs.textdialogs.DlgEditText import DlgEditText
 from pyut.enums.DiagramType import DiagramType
 
 from pyut.ui.Action import Action
+from pyut.ui.eventengine.Events import EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS
+from pyut.ui.eventengine.Events import ShowOrthogonalRoutingPointsEvent
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
+from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 
 from pyut.ui.umlframes.UmlDiagramsFrame import UmlDiagramsFrame
 from pyut.ui.umlframes.UmlFrame import UmlObjects
@@ -233,6 +237,8 @@ class PyutUI(SplitterWindow):
         self._eventEngine.registerListener(pyEventBinder=EVENT_REFRESH_FRAME,        callback=self._refreshFrame)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_REQUEST_CURRENT_PROJECT, callback=self._pluginRequestCurrentProject)
+
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS, callback=self._onShowOrthogonalRoutingPoints)
 
     def handleUnsavedProjects(self):
         """
@@ -752,6 +758,31 @@ class PyutUI(SplitterWindow):
         cb: FrameSizeCallback = event.eventHandler
 
         cb(frameSize)
+
+    def _onShowOrthogonalRoutingPoints(self, event: ShowOrthogonalRoutingPointsEvent):
+
+        from wx import Point as WxPoint
+        from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import Points as WxPythonPoints
+
+        def toWxPythonPoints(pts: Points):
+            wxPythonPoints: WxPythonPoints = WxPythonPoints([])
+
+            for pt in pts:
+                wxPoint: WxPoint = WxPoint(x=pt.x, y=pt.y)
+                wxPythonPoints.append(wxPoint)
+
+            return wxPythonPoints
+
+        points: Points = event.points
+
+        umlClassDiagramsFrame: UmlClassDiagramsFrame = cast(UmlClassDiagramsFrame, self._projectManager.currentFrame)
+
+        if event.show is True:
+            umlClassDiagramsFrame.referencePoints     = toWxPythonPoints(pts=points)
+            umlClassDiagramsFrame.showReferencePoints = True
+        else:
+            umlClassDiagramsFrame.showReferencePoints = False
+            umlClassDiagramsFrame.referencePoints     = cast(WxPythonPoints, None)
 
     def _pluginRequestCurrentProject(self, event: RequestCurrentProjectEvent):
 

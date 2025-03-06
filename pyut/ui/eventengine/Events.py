@@ -58,3 +58,7 @@ ClassNameChangedEvent,         EVENT_CLASS_NAME_CHANGED      = NewEvent()
 RequestCurrentProjectEvent,    EVENT_REQUEST_CURRENT_PROJECT = NewEvent()
 DeleteLinkEvent,               EVENT_DELETE_LINK             = NewEvent()
 CreateLinkEvent,               EVENT_CREATE_LINK             = NewEvent()
+
+ShowOrthogonalRoutingPointsEvent, EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS = NewEvent()
+ShowRulersEvent,                  EVENT_SHOW_RULERS                    = NewEvent()
+ShowRouteGridEvent,               EVENT_SHOW_ROUTE_GRID                = NewEvent()

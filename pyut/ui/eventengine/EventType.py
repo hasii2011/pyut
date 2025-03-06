@@ -45,6 +45,9 @@ from pyut.ui.eventengine.Events import EVENT_SELECTED_OGL_OBJECTS
 from pyut.ui.eventengine.Events import EVENT_SELECT_ALL_SHAPES
 from pyut.ui.eventengine.Events import EVENT_SELECT_TOOL
 from pyut.ui.eventengine.Events import EVENT_SET_TOOL_ACTION
+from pyut.ui.eventengine.Events import EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS
+from pyut.ui.eventengine.Events import EVENT_SHOW_ROUTE_GRID
+from pyut.ui.eventengine.Events import EVENT_SHOW_RULERS
 from pyut.ui.eventengine.Events import EVENT_UML_DIAGRAM_MODIFIED
 from pyut.ui.eventengine.Events import EVENT_UNDO
 from pyut.ui.eventengine.Events import EVENT_UPDATE_APPLICATION_STATUS
@@ -230,5 +233,9 @@ class EventType(Enum):
 
     OverrideProgramExitSize     = EVENT_OVERRIDE_PROGRAM_EXIT_SIZE.typeId
     OverrideProgramExitPosition = EVENT_OVERRIDE_PROGRAM_EXIT_POSITION.typeId
+
+    ShowOrthogonalRoutingPoints = EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS.typeId
+    ShowRulers                  = EVENT_SHOW_RULERS.typeId
+    ShowRouteGrid               = EVENT_SHOW_ROUTE_GRID.typeId
 
     NOT_SET = -6666

@@ -188,7 +188,17 @@ class PluginAdapter(IPluginAdapter):
         wxYield()   # make sure we process the above event first
 
     def showOrthogonalRoutingPoints(self, show: bool, spots: Points):
-        pass
+        """
+        This is currently only a debug entry point.  I am not
+        sure if I should keep this.  I am going to go fast and break
+        things and correct them later.  Go DOGE
+
+        Args:
+            show:   Show or not
+            spots:  What the Orthogonal Line router calls these (only valid whe
+            `show` is True
+        """
+        self._eventEngine.sendEvent(EventType.ShowOrthogonalRoutingPoints, show=show, points=spots)
 
     def showRulers(self, show: bool, horizontalRulers: IntegerList, verticalRulers: IntegerList, diagramBounds: Rectangle):
         pass

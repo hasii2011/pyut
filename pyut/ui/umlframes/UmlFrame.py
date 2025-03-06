@@ -197,10 +197,9 @@ class UmlFrame(UmlFrameShapeHandler):
 
         super().OnLeftDClick(event)
 
-    def newDiagram(self):
+    def clearDiagram(self):
         """
-        Remove all shapes, get a brand new empty diagram.
-        TODO:  rename to clearDiagram
+        Remove all shapes
         """
         self._diagram.DeleteAllShapes()
         self.Refresh()

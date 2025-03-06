@@ -7,6 +7,7 @@ from typing import NewType
 from logging import Logger
 from logging import getLogger
 
+from pyutplugins.ExternalTypes import Points
 from wx import CommandEvent
 from wx import PostEvent
 from wx import PyEventBinder
@@ -31,6 +32,7 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.eventengine.Events import DarkModeChangedEvent
+from pyut.ui.eventengine.Events import ShowOrthogonalRoutingPointsEvent
 
 from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
@@ -129,6 +131,13 @@ OLD_CLASS_NAME_PARAMETER: str = 'oldClassName'
 NEW_CLASS_NAME_PARAMETER: str = 'newClassName'
 OVERRIDE_PARAMETER:       str = 'override'
 DARK_MODE_PARAMETER:      str = 'darkMode'
+
+POINTS_PARAMETER:            str = 'points'
+SHOW_PARAMETER:              str = 'show'
+HORIZONTAL_RULERS_PARAMETER: str = 'horizontalRulers'
+VERTICAL_RULERS_PARAMETER:   str = 'verticalRulers'
+DIAGRAM_BOUNDS_PARAMETER:    str = 'diagramBounds'
+ROUTE_GRID_PARAMETER:        str = 'routeGrid'
 
 MiniProjectInformationCallback    = Callable[[MiniProjectInformation], None]
 ActiveUmlFrameCallback            = Callable[[Any], None]                       # Figure out appropriate type for eventHandler
@@ -268,6 +277,10 @@ class EventEngine(IEventEngine):
 
             case EventType.GetLollipopInterfaces:
                 self._sendGetLollipopInterfacesEvent(**kwargs)
+
+            case EventType.ShowOrthogonalRoutingPoints:
+                self._sendShowOrthogonalRoutingPointsEvent(**kwargs)
+
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
                     EventType.CopyShapes | EventType.PasteShapes | EventType.Undo | EventType.Redo | EventType.CutShapes | \
@@ -473,3 +486,12 @@ class EventEngine(IEventEngine):
         value:       bool                 = kwargs[DARK_MODE_PARAMETER]
         eventToPost: DarkModeChangedEvent = DarkModeChangedEvent(darkMode=value)
         PostEvent(dest=self._listeningWindow, event=eventToPost)
+
+    def _sendShowOrthogonalRoutingPointsEvent(self, **kwargs):
+
+        points: Points = kwargs[POINTS_PARAMETER]
+        show:   bool   = kwargs[SHOW_PARAMETER]
+
+        event:  ShowOrthogonalRoutingPointsEvent = ShowOrthogonalRoutingPointsEvent(points=points, show=show)
+
+        PostEvent(dest=self._listeningWindow, event=event)
