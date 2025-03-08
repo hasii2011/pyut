@@ -122,7 +122,7 @@ class OrthogonalRoutingDiagnosticMixin:
     def routeGrid(self, routeGrid: Rectangles):
         self._routeGrid = routeGrid
 
-    def OnPaint(self, umlFrame: DiagramFrame):
+    def drawDiagnostics(self, umlFrame: DiagramFrame):
 
         if self._showDiagnostics() is True:
             w, h = umlFrame.GetSize()

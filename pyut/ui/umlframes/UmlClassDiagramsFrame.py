@@ -78,7 +78,7 @@ class UmlClassDiagramsFrame(UmlDiagramsFrame, OrthogonalRoutingDiagnosticMixin):
     def OnPaint(self, event: PaintEvent):
         super().OnPaint(event=event)
 
-        OrthogonalRoutingDiagnosticMixin.OnPaint(self, umlFrame=self)
+        OrthogonalRoutingDiagnosticMixin.drawDiagnostics(self, umlFrame=self)
 
     def _onClassNameChanged(self, event: ClassNameChangedEvent):
 
