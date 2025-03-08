@@ -33,6 +33,8 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.preferences.PyutPreferences import PyutPreferences
 from pyut.ui.eventengine.Events import DarkModeChangedEvent
 from pyut.ui.eventengine.Events import ShowOrthogonalRoutingPointsEvent
+from pyut.ui.eventengine.Events import ShowRouteGridEvent
+from pyut.ui.eventengine.Events import ShowRulersEvent
 
 from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
 from pyut.ui.eventengine.eventinformation.ActiveProjectInformation import ActiveProjectInformation
@@ -94,6 +96,9 @@ from pyut.ui.eventengine.Events import UpdateTreeItemNameEvent
 
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 from pyut.ui.eventengine.inspector.EventEngineDiagnostics import EventEngineDiagnostics
+from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import IntegerList
+from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import Rectangle
+from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import Rectangles
 
 NEW_NAME_PARAMETER:     str = 'newName'
 DIAGRAM_TYPE_PARAMETER: str = 'diagramType'
@@ -280,6 +285,12 @@ class EventEngine(IEventEngine):
 
             case EventType.ShowOrthogonalRoutingPoints:
                 self._sendShowOrthogonalRoutingPointsEvent(**kwargs)
+
+            case EventType.ShowRouteGrid:
+                self._sendShowRouteGridEvent(**kwargs)
+
+            case EventType.ShowRulers:
+                self._sendShowRulersEvent(**kwargs)
 
             case EventType.NewProject | EventType.DeleteDiagram | EventType.CloseProject | EventType.SaveProject | EventType.SaveProjectAs | \
                     EventType.UMLDiagramModified | EventType.SelectAllShapes | EventType.DeSelectAllShapes | \
@@ -493,5 +504,28 @@ class EventEngine(IEventEngine):
         show:   bool   = kwargs[SHOW_PARAMETER]
 
         event:  ShowOrthogonalRoutingPointsEvent = ShowOrthogonalRoutingPointsEvent(points=points, show=show)
+
+        PostEvent(dest=self._listeningWindow, event=event)
+
+    def _sendShowRulersEvent(self, **kwargs):
+
+        horizontalRulers: IntegerList = kwargs[HORIZONTAL_RULERS_PARAMETER]
+        verticalRulers:   IntegerList = kwargs[VERTICAL_RULERS_PARAMETER]
+        diagramBounds:    Rectangle   = kwargs[DIAGRAM_BOUNDS_PARAMETER]
+        show:             bool        = kwargs[SHOW_PARAMETER]
+
+        event:  ShowRulersEvent = ShowRulersEvent(horizontalRulers=horizontalRulers,
+                                                  verticalRulers=verticalRulers,
+                                                  diagramBounds=diagramBounds,
+                                                  show=show)
+
+        PostEvent(dest=self._listeningWindow, event=event)
+
+    def _sendShowRouteGridEvent(self, **kwargs):
+
+        routeGrid: Rectangles = kwargs[ROUTE_GRID_PARAMETER]
+        show:      bool       = kwargs[SHOW_PARAMETER]
+
+        event: ShowRouteGridEvent = ShowRouteGridEvent(routeGrid=routeGrid, show=show)
 
         PostEvent(dest=self._listeningWindow, event=event)

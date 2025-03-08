@@ -11,13 +11,18 @@ from dataclasses import dataclass
 from miniogl.MiniOglColorEnum import MiniOglColorEnum
 from wx import BLACK_PEN
 from wx import Brush
+from wx import Colour
 from wx import DC
+from wx import PENSTYLE_LONG_DASH
 from wx import PaintDC
 from wx import Pen
+from wx import PenInfo
 from wx import Point
+# I know it is there
+# noinspection PyUnresolvedReferences
+from wx.core import PenStyle
 
 from miniogl.DiagramFrame import DiagramFrame
-
 
 Points      = NewType('Points',      List[Point])
 IntegerList = NewType('IntegerList', List[int])
@@ -129,10 +134,10 @@ class OrthogonalRoutingDiagnosticMixin:
 
             if self._showReferencePoints is True:
                 self._drawReferencePoints(dc=mem)
-            # if self._showRulers is True:
-            #     self._drawRulers(dc=mem)
-            # if self._showRouteGrid is True:
-            #     self._drawRouteGrid(dc=mem)
+            if self._showRulers is True:
+                self._drawRulers(dc=mem)
+            if self._showRouteGrid is True:
+                self._drawRouteGrid(dc=mem, umlFrame=umlFrame)
 
             paintDC: PaintDC = PaintDC(self)
             umlFrame.Redraw(mem)
@@ -155,6 +160,46 @@ class OrthogonalRoutingDiagnosticMixin:
         dc.SetPen(savePen)
         dc.SetBrush(saveBrush)
 
+    def _drawRulers(self, dc: DC):
+
+        savePen:   Pen   = dc.GetPen()
+        saveBrush: Brush = dc.GetBrush()
+        #
+        dc.SetPen(self._getRulerPen())
+
+        horizontalRulers: IntegerList  = self._horizontalRulers
+        verticalRulers:   IntegerList  = self._verticalRulers
+        globalBounds:     Rectangle    = self._diagramBounds
+
+        for y in horizontalRulers:
+            dc.DrawLine(x1=0, y1=y, x2=globalBounds.width, y2=y)
+
+        for x in verticalRulers:
+            dc.DrawLine(x1=x, y1=0, x2=x, y2=globalBounds.height)
+
+        dc.SetPen(savePen)
+        dc.SetBrush(saveBrush)
+
+    def _drawRouteGrid(self, dc: DC, umlFrame: DiagramFrame):
+        savePen:   Pen   = dc.GetPen()
+        saveBrush: Brush = dc.GetBrush()
+
+        # noinspection PyProtectedMember
+        dc.SetPen(umlFrame._getGridPen())
+        rectangles: Rectangles = self._routeGrid
+        for r in rectangles:
+            rectangle: Rectangle = cast(Rectangle, r)
+
+            x:      int = rectangle.left
+            y:      int = rectangle.top
+            width:  int = rectangle.width
+            height: int = rectangle.height
+
+            dc.DrawRectangle(x=x, y=y, width=width, height=height)
+
+        dc.SetPen(savePen)
+        dc.SetBrush(saveBrush)
+
     def _showDiagnostics(self) -> bool:
 
         show: bool = False
@@ -163,3 +208,11 @@ class OrthogonalRoutingDiagnosticMixin:
             show = True
 
         return show
+
+    def _getRulerPen(self) -> Pen:
+        gridLineColor: Colour = MiniOglColorEnum.toWxColor(MiniOglColorEnum.DARK_SLATE_BLUE)
+
+        gridLineStyle: PenStyle = PENSTYLE_LONG_DASH
+        pen: Pen = Pen(PenInfo(gridLineColor).Style(gridLineStyle).Width(1))
+
+        return pen

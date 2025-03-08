@@ -152,7 +152,6 @@ class PluginAdapter(IPluginAdapter):
             shape:
 
         Returns:
-
         """
         self._eventEngine.sendEvent(EventType.AddShape, shapeToAdd=shape)
 
@@ -201,10 +200,15 @@ class PluginAdapter(IPluginAdapter):
         self._eventEngine.sendEvent(EventType.ShowOrthogonalRoutingPoints, show=show, points=spots)
 
     def showRulers(self, show: bool, horizontalRulers: IntegerList, verticalRulers: IntegerList, diagramBounds: Rectangle):
-        pass
+        self._eventEngine.sendEvent(EventType.ShowRulers,
+                                    show=show,
+                                    horizontalRulers=horizontalRulers,
+                                    verticalRulers=verticalRulers,
+                                    diagramBounds=diagramBounds
+                                    )
 
     def showRouteGrid(self, show: bool, routeGrid: Rectangles):
-        pass
+        self._eventEngine.sendEvent(EventType.ShowRouteGrid, show=show, routeGrid=routeGrid)
 
     def _onObjectBoundariesActiveUmlFrame(self, activeFrame: UmlDiagramsFrame):
 

@@ -7,7 +7,10 @@ from logging import Logger
 from logging import getLogger
 from logging import DEBUG
 
+from pyutplugins.ExternalTypes import IntegerList
 from pyutplugins.ExternalTypes import Points
+from pyutplugins.ExternalTypes import Rectangle
+from pyutplugins.ExternalTypes import Rectangles
 from wx import CANCEL
 from wx import CENTRE
 from wx import EVT_MENU
@@ -76,7 +79,11 @@ from pyut.enums.DiagramType import DiagramType
 
 from pyut.ui.Action import Action
 from pyut.ui.eventengine.Events import EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS
+from pyut.ui.eventengine.Events import EVENT_SHOW_ROUTE_GRID
+from pyut.ui.eventengine.Events import EVENT_SHOW_RULERS
 from pyut.ui.eventengine.Events import ShowOrthogonalRoutingPointsEvent
+from pyut.ui.eventengine.Events import ShowRouteGridEvent
+from pyut.ui.eventengine.Events import ShowRulersEvent
 
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
@@ -239,6 +246,8 @@ class PyutUI(SplitterWindow):
         self._eventEngine.registerListener(pyEventBinder=EVENT_REQUEST_CURRENT_PROJECT, callback=self._pluginRequestCurrentProject)
 
         self._eventEngine.registerListener(pyEventBinder=EVENT_SHOW_ORTHOGONAL_ROUTING_POINTS, callback=self._onShowOrthogonalRoutingPoints)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SHOW_RULERS,                    callback=self._onShowRulers)
+        self._eventEngine.registerListener(pyEventBinder=EVENT_SHOW_ROUTE_GRID,                callback=self._onShowRouteGrid)
 
     def handleUnsavedProjects(self):
         """
@@ -783,6 +792,66 @@ class PyutUI(SplitterWindow):
         else:
             umlClassDiagramsFrame.showReferencePoints = False
             umlClassDiagramsFrame.referencePoints     = cast(WxPythonPoints, None)
+
+    def _onShowRulers(self, event: ShowRulersEvent):
+
+        from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import IntegerList as WxIntegerList
+        from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import Rectangle as WxRectangle
+
+        def toWxIntegerList(ruler: IntegerList) -> WxIntegerList:
+            wxIntegerList: WxIntegerList = WxIntegerList([])
+            for integer in ruler:
+                wxIntegerList.append(integer)
+
+            return wxIntegerList
+
+        def toWxRectangle(rectangle: Rectangle) -> WxRectangle:
+            return WxRectangle(
+                left=rectangle.left,
+                top=rectangle.top,
+                height=rectangle.height,
+                width=rectangle.width
+            )
+
+        umlClassDiagramsFrame: UmlClassDiagramsFrame = cast(UmlClassDiagramsFrame, self._projectManager.currentFrame)
+
+        if event.show is True:
+            umlClassDiagramsFrame.showRulers       = True
+            umlClassDiagramsFrame.horizontalRulers = toWxIntegerList(event.horizontalRulers)
+            umlClassDiagramsFrame.verticalRulers   = toWxIntegerList(event.verticalRulers)
+            umlClassDiagramsFrame.diagramBounds    = toWxRectangle(event.diagramBounds)
+        else:
+            umlClassDiagramsFrame.showRulers = False
+            umlClassDiagramsFrame.horizontalRulers = cast(WxIntegerList, None)
+            umlClassDiagramsFrame.verticalRulers   = cast(WxIntegerList, None)
+            umlClassDiagramsFrame.diagramBounds    = cast(WxRectangle, None)
+
+    def _onShowRouteGrid(self, event: ShowRouteGridEvent):
+
+        from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import Rectangle as WxRectangle
+        from pyut.ui.umlframes.OrthogonalRoutingDiagnosticMixin import Rectangles as WxRectangles
+
+        def toWxRectangles(rectangles: Rectangles) -> WxRectangles:
+            wxRectangles: WxRectangles = WxRectangles([])
+            for rectangle in rectangles:
+                wxRectangles.append(
+                    WxRectangle(
+                        left=rectangle.left,
+                        top=rectangle.top,
+                        height=rectangle.height,
+                        width=rectangle.width
+                    )
+                )
+            return wxRectangles
+
+        umlClassDiagramsFrame: UmlClassDiagramsFrame = cast(UmlClassDiagramsFrame, self._projectManager.currentFrame)
+
+        if event.show is True:
+            umlClassDiagramsFrame.showRouteGrid = True
+            umlClassDiagramsFrame.routeGrid     = toWxRectangles(event.routeGrid)
+        else:
+            umlClassDiagramsFrame.showRouteGrid = False
+            umlClassDiagramsFrame.routeGrid     = cast(WxRectangles, None)
 
     def _pluginRequestCurrentProject(self, event: RequestCurrentProjectEvent):
 
