@@ -67,7 +67,7 @@ setup(
         'oglio>=2.4.0',
         'pyutplugins>=3.2.6',
         'semantic-version==2.10.0',
-        'PyGithub==2.4.0',
+        'PyGithub==2.6.1',
         'wxPython==4.2.2',
         'chardet==5.2.0'
     ]

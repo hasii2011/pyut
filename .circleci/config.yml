@@ -32,7 +32,7 @@ jobs:
             pip install attrdict3~=2.0.2  
             pip install -v -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-22.04  wxPython
             pip install semantic-version==2.10.0
-            pip install PyGithub==2.4.0
+            pip install PyGithub==2.6.1
             pip install codeallybasic==1.10.0
             pip install codeallyadvanced==1.4.2
             pip install pyutmodelv2==2.2.3

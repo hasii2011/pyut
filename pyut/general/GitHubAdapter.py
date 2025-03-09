@@ -14,6 +14,16 @@ from github.GitRelease import GitRelease
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 
+#
+# Import the module because it appears that PyGithub dynamically loads it.  So
+# while the code works when executed in the IDE, it does not work when I build
+# Pyut as a standalone applications.  The noinspection comments I include because
+# I despise warnings in the PyCharm IDE.  ;-)
+#
+# noinspection PyPackageRequirements
+# noinspection PyUnresolvedReferences
+from cffi import api
+
 
 class GitHubAdapter:
 

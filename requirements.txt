@@ -5,7 +5,7 @@ setuptools==70.1.1
 # the following necessary when building the
 # application with py2App
 chardet==5.2.0
-PyGithub==2.4.0
+PyGithub==2.6.1
 Deprecated==1.2.14
 
 py2app==0.28.8
@@ -15,6 +15,7 @@ html-testRunner~=1.2.1
 mypy==1.15.0
 mypy-extensions==1.0.0
 types-Deprecated==1.2.9.20240311
+types-cffi==1.16.0.20250307
 
 wxPython==4.2.2
 semantic-version==2.10.0
