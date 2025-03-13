@@ -35,7 +35,7 @@ class UmlSequenceDiagramsFrame(UmlDiagramsFrame):
             parent:  The parent window
             eventEngine: Pyut event engine
         """
-        super().__init__(parent, eventEngine=eventEngine)   # type: ignore
+        super().__init__(parent, eventEngine=eventEngine)    # type: ignore
 
         self._seqLogger: Logger = getLogger(__name__)
         self._cdfDebugId: int = UmlSequenceDiagramsFrame.cdfDebugId

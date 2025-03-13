@@ -15,6 +15,7 @@ class TestErrorManager(ProjectTestBase):
         super().setUp()
 
     def testAddToLogFile(self):
+
         ErrorManager.addToLogFile(title='A Test Log Entry Title', msg='This is only a test error message')
 
 

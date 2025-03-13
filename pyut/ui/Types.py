@@ -13,8 +13,9 @@ from pyut.enums.DiagramType import DiagramType
 from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
 from pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
 from pyut.ui.eventengine.IEventEngine import IEventEngine
+from pyut.ui.umlframes.UmlUseCaseDiagramsFrame import UmlUseCaseDiagramsFrame
 
-UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame]
+UmlFrameType = Union[UmlClassDiagramsFrame, UmlSequenceDiagramsFrame, UmlUseCaseDiagramsFrame]
 Frames = NewType('Frames', List[UmlFrameType])
 
 
@@ -39,7 +40,7 @@ def createDiagramFrame(parentFrame: Notebook, diagramType: DiagramType,
             diagramFrame       = UmlSequenceDiagramsFrame(parentFrame, eventEngine=eventEngine)
         case DiagramType.USECASE_DIAGRAM:
             defaultDiagramName = DiagramsLabels[diagramType]
-            diagramFrame       = UmlClassDiagramsFrame(parentFrame, eventEngine=eventEngine)
+            diagramFrame       = UmlUseCaseDiagramsFrame(parentFrame, eventEngine=eventEngine)
         case _:
             print(f'Unsupported diagram type; replacing with class diagram: {diagramType}')
             defaultDiagramName = DiagramsLabels[DiagramType.CLASS_DIAGRAM]

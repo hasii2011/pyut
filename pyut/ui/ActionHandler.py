@@ -27,6 +27,7 @@ from wx import Yield as wxYield
 from pyutmodelv2.enumerations.PyutLinkType import PyutLinkType
 
 from miniogl.SelectAnchorPoint import SelectAnchorPoint
+
 from miniogl.Constants import EVENT_PROCESSED
 from miniogl.Constants import SKIP_EVENT
 
@@ -52,11 +53,13 @@ from pyut.ui.Action import Action
 from pyut.ui.tools.SharedIdentifiers import SharedIdentifiers
 
 from pyut.ui.eventengine.eventinformation.MiniProjectInformation import MiniProjectInformation
+
 from pyut.ui.eventengine.IEventEngine import IEventEngine
 
 from pyut.ui.eventengine.Events import EVENT_SET_TOOL_ACTION
-from pyut.ui.eventengine.EventType import EventType
 from pyut.ui.eventengine.Events import SetToolActionEvent
+
+from pyut.ui.eventengine.EventType import EventType
 
 from pyut.PyutUtils import PyutUtils
 
@@ -264,24 +267,37 @@ class ActionHandler(metaclass=SingletonV3):
         match currentAction:
             case Action.SELECTOR:
                 handlerStatus = SKIP_EVENT
+
             case Action.NEW_CLASS:
-                cmd = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
+                if self._isThisLegalClassDiagramAction(umlFrame=umlFrame) is True:
+                    cmd = CommandCreateOglClass(x=x, y=y, eventEngine=self._eventEngine)
+
             case Action.NEW_TEXT:
                 cmd = CommandCreateOglText(x=x, y=y, eventEngine=self._eventEngine)
+
             case Action.NEW_NOTE:
-                cmd = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
+                if self._isThisLegalClassDiagramAction(umlFrame=umlFrame) is True:
+                    cmd = CommandCreateOglNote(x=x, y=y, eventEngine=self._eventEngine)
+
             case Action.NEW_ACTOR:
-                cmd = CommandCreateOglActor(x=x, y=y, eventEngine=self._eventEngine)
+                if self._isThisLegalUseCaseDiagramAction(umlFrame=umlFrame) is True:
+                    cmd = CommandCreateOglActor(x=x, y=y, eventEngine=self._eventEngine)
+
             case Action.NEW_USECASE:
-                cmd = CommandCreateOglUseCase(x=x, y=y, eventEngine=self._eventEngine)
+                if self._isThisLegalUseCaseDiagramAction(umlFrame=umlFrame) is True:
+                    cmd = CommandCreateOglUseCase(x=x, y=y, eventEngine=self._eventEngine)
+
             case Action.NEW_SD_INSTANCE:
                 self._attemptSDInstanceCreation(umlFrame, x, y)
+
             case Action.ZOOM_IN:
                 handlerStatus = SKIP_EVENT
+
             case Action.ZOOM_OUT:
                 self._doZoomOut(umlFrame, x, y)
             case _:
                 handlerStatus = SKIP_EVENT
+
         if cmd is not None:
             self._resetToActionSelector()
             submitStatus: bool = umlFrame.commandProcessor.Submit(command=cmd, storeIt=True)
@@ -424,6 +440,25 @@ class ActionHandler(metaclass=SingletonV3):
     def _onSetToolAction(self, event: SetToolActionEvent):
         self.currentAction = event.action
 
+    def _isThisLegalUseCaseDiagramAction(self, umlFrame) -> bool:
+        from pyut.ui.umlframes.UmlUseCaseDiagramsFrame import UmlUseCaseDiagramsFrame
+
+        if isinstance(umlFrame, UmlUseCaseDiagramsFrame):
+            return True
+        else:
+            PyutUtils.displayError('A use case symbol can only be added to a use case diagram.', title='Please create a use case diagram.')
+            return False
+
+    def _isThisLegalClassDiagramAction(self, umlFrame) -> bool:
+
+        from pyut.ui.umlframes.UmlClassDiagramsFrame import UmlClassDiagramsFrame
+
+        if isinstance(umlFrame, UmlClassDiagramsFrame):
+            return True
+        else:
+            PyutUtils.displayError('This symbol can only be added to a class diagram.', title='Please create a class diagram.')
+            return False
+
     def _attemptSDInstanceCreation(self, umlFrame, x, y):
         """
         Attempt because we need to check for valid diagram frame
@@ -433,10 +468,10 @@ class ActionHandler(metaclass=SingletonV3):
             y:
         """
         from pyut.ui.umlframes.UmlSequenceDiagramsFrame import UmlSequenceDiagramsFrame
-        if not isinstance(umlFrame, UmlSequenceDiagramsFrame):
-            PyutUtils.displayError("An SD INSTANCE cannot be added to a class diagram. PLease create a sequence diagram.")
-        else:
+        if isinstance(umlFrame, UmlSequenceDiagramsFrame):
             self._createNewSDInstance(umlFrame, x, y)
+        else:
+            PyutUtils.displayError('A sequence diagram symbol can only be added to a sequence diagram.', title='Please create a sequence diagram.')
 
     def _createNewSDInstance(self, umlFrame, x, y):
         """

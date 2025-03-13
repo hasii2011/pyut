@@ -6,7 +6,7 @@ from sys import exc_info
 
 from traceback import extract_tb
 
-from codeallybasic.SingletonV3 import SingletonV3
+from wx import Window
 
 from pyut.errorcontroller.IErrorView import IErrorView
 from pyut.errorcontroller.GraphicErrorView import GraphicErrorView
@@ -17,48 +17,59 @@ from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 from pyut.PyutConstants import PyutConstants
 
 
-class ErrorManager(metaclass=SingletonV3):
+class ErrorManager(IErrorView):
     """
     This class handle errors.
     """
     logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
-    # noinspection PyAttributeOutsideInit
     def __init__(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
         """
         """
-        self.changeType(view)
-        self._view: IErrorView = GraphicErrorView()
+        super().__init__()
+        if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
+            self._errorView: IErrorView = GraphicErrorView()
+        elif view == ErrorViewTypes.TEXT_ERROR_VIEW:
+            self._errorView = TextErrorView()
+        elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
+            self._errorView = RaiseErrorView()
+        else:
+            assert False, "ErrorManager: Unknown view type"
+        self._errorViewType = view
 
-    # noinspection PyAttributeOutsideInit
-    def changeType(self, view: ErrorViewTypes):
+    @property
+    def errorViewType(self):
+        return self._errorViewType
+
+    @errorViewType.setter
+    def errorViewType(self, view: ErrorViewTypes):
 
         if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
-            self._view = GraphicErrorView()
+            self._errorView = GraphicErrorView()
         elif view == ErrorViewTypes.TEXT_ERROR_VIEW:
-            self._view = TextErrorView()
+            self._errorView = TextErrorView()
         elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
-            self._view = RaiseErrorView()
+            self._errorView = RaiseErrorView()
 
-    def newFatalError(self, msg='', title='', parent=None):
+    def newFatalError(self, msg: str = '', title: str | None = '', parent: Window | None = None):
         if msg is None:
             msg = ""
         if title is None:
             title = ""
         ErrorManager.addToLogFile("Fatal error: " + title, msg)
-        self._view.newFatalError(msg, title, parent)
+        self._errorView.newFatalError(msg, title, parent)
 
-    def newWarning(self, msg, title='', parent=None):
+    def newWarning(self, msg: str, title: str | None = '', parent=None):
         ErrorManager.addToLogFile(f"Warning: {title}", msg)
-        self._view.newWarning(msg, title, parent)
+        self._errorView.newWarning(msg, title, parent)
 
-    def newInformation(self, msg, title='', parent=None):
+    def newInformation(self, msg: str, title: str | None = '', parent=None):
         ErrorManager.addToLogFile(f"Info: {title}", msg)
-        self._view.newInformation(msg, title, parent)
+        self._errorView.newInformation(msg, title, parent)
 
-    def displayInformation(self, msg, title='', parent=None):
+    def displayInformation(self, msg: str, title: str | None = '', parent=None):
         ErrorManager.addToLogFile(f"Info: {title}", msg)
-        self._view.displayInformation(msg, title, parent)
+        self._errorView.displayInformation(msg, title, parent)
 
     @classmethod
     def getErrorInfo(cls) -> str:

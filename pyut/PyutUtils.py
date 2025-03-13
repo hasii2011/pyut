@@ -17,6 +17,7 @@ from wx import Size
 from wx import NewIdRef as wxNewIdRef
 
 from codeallybasic.ResourceManager import ResourceManager
+from wx import Window
 
 from pyut.enums.ResourceTextType import ResourceTextType
 
@@ -75,7 +76,7 @@ class PyutUtils:
         return s
 
     @staticmethod
-    def displayInformation(msg, title=None, parent=None):
+    def displayInformation(msg: str, title: str = None, parent: Window = None):
         """
         Display information
         """
@@ -91,7 +92,7 @@ class PyutUtils:
         em.newWarning(msg, title, parent)
 
     @staticmethod
-    def displayError(msg, title=None, parent=None):
+    def displayError(msg: str, title: str = None, parent: Window = None):
         """
         Display an error
         """
