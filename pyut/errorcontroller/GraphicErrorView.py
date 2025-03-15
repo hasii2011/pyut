@@ -16,23 +16,13 @@ class GraphicErrorView(IErrorView):
     """
     This class is an error view which will display errors as
     wx message dialogs.
-
-    To use it, use the mediator methods :
-    ```python
-     mediator: Mediator = Mediator()
-
-     errorManager = mediator.getErrorManager()
-     errorManager.changeType(ErrorViewTypes.GRAPHIC_ERROR_VIEW)
-     errorManager.newFatalError("This is a message", "...")
-     errorManager.newWarning("This is a message", "...")
-     errorManager.newInformation("This is a message", "...")
-     ```
     """
     def __init__(self):
 
+        super().__init__()
         self.logger: Logger = getLogger(__name__)
 
-    def newFatalError(self, msg, title=None, parent=None):
+    def displayFatalError(self, msg: str, title=None, parent=None):
 
         from pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
 
@@ -50,7 +40,7 @@ class GraphicErrorView(IErrorView):
         except (ValueError, Exception) as e:
             self.logger.error(f'newFatalError: {e}')
 
-    def newWarning(self, msg, title=None, parent=None):
+    def displayWarning(self, msg: str, title=None, parent=None):
 
         if title is None:
             title = 'WARNING...'
@@ -61,10 +51,10 @@ class GraphicErrorView(IErrorView):
         except (ValueError, Exception) as e:
             self.logger.error(f'newWarning: {e}')
 
-    def newInformation(self, msg, title=None, parent=None):
+    def newInformation(self, msg: str, title=None, parent=None):
 
         if title is None:
-            title = 'WARNING...'
+            title = 'INFORMATION...'
         try:
             dlg = MessageDialog(parent, msg, title, OK | ICON_INFORMATION | CENTRE)
             dlg.ShowModal()
@@ -73,5 +63,5 @@ class GraphicErrorView(IErrorView):
         except (ValueError, Exception) as e:
             self.logger.error(f'newInformation: {e}')
 
-    def displayInformation(self, msg, title=None, parent=None):
-        self.logger.error(f"INFORMATION: {title} - {msg} - parent {parent}")
+    def displayInformation(self, msg: str, title=None, parent=None):
+        self.newInformation(msg=msg, title=title, parent=parent)

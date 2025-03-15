@@ -81,7 +81,7 @@ class PyutUtils:
         Display information
         """
         em: ErrorManager = ErrorManager()
-        em.newInformation(msg, title, parent)
+        em.displayInformation(msg, title, parent)
 
     @staticmethod
     def displayWarning(msg, title=None, parent=None):
@@ -89,7 +89,7 @@ class PyutUtils:
         Display a warning
         """
         em: ErrorManager = ErrorManager()
-        em.newWarning(msg, title, parent)
+        em.displayWarning(msg, title, parent)
 
     @staticmethod
     def displayError(msg: str, title: str = None, parent: Window = None):
@@ -99,7 +99,7 @@ class PyutUtils:
         errMsg: str = ErrorManager.getErrorInfo()
         try:
             em: ErrorManager = ErrorManager()
-            em.newFatalError(msg, title, parent)
+            em.displayFatalError(msg, title, parent)
         except (ValueError, Exception) as e:
             eLog: Logger = getLogger(__name__)
             # TODO  I don't this is correct anymore

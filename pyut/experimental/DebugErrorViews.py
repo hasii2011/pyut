@@ -30,8 +30,8 @@ class DebugErrorViews:
     @staticmethod
     def _makeCalls(em: ErrorManager, viewType: ErrorViewTypes):
 
-        em.errorViewType(viewType)
+        em.errorViewType = viewType
 
         em.displayInformation(msg=f'{viewType} Message', title=f'{viewType} Title', parent=None)
-        em.newWarning(msg=f'{viewType} - Warning Message', title=f'{viewType} - WarningTitle', parent=None)
-        em.newFatalError(msg=f'{viewType}: Fatal Message', title=f'{viewType} - Fatal Title', parent=None)
+        em.displayWarning(msg=f'{viewType} - Warning Message', title=f'{viewType} - WarningTitle', parent=None)
+        em.displayFatalError(msg=f'{viewType}: Fatal Message', title=f'{viewType} - Fatal Title', parent=None)

@@ -8,24 +8,13 @@ from pyut.errorcontroller.IErrorView import IErrorView
 class TextErrorView(IErrorView):
     """
     This class is an error view which will display an error as entries
-    in the debug log file.
-
-    To use it, use the mediator methods:
-    ```python
-     mediator: Mediator = Mediator()
-     ...
-     errorManager = mediator.getErrorManager()
-     errorManager.changeType(ErrorViewTypes.TEXT_ERROR_VIEW)
-
-     errorManager.newFatalError("This is a message", "...")
-     errorManager.newWarning("This is a message", "...")
-     errorManager.newInformation("This is a message", "...")
-     ```
+    in the Pyut log file.
     """
     def __init__(self):
+        super().__init__()
         self.logger: Logger = getLogger(__name__)
 
-    def newFatalError(self, msg, title=None, parent=None):
+    def displayFatalError(self, msg, title=None, parent=None):
 
         from pyut.errorcontroller.ErrorManager import ErrorManager  # Avoid cyclical dependency
 
@@ -35,7 +24,7 @@ class TextErrorView(IErrorView):
 
         self.logger.error(f"FATAL ERROR: {title} {errMsg} - parent {parent}")
 
-    def newWarning(self, msg, title=None, parent=None):
+    def displayWarning(self, msg, title=None, parent=None):
         self.logger.error(f"WARNING: {title} - {msg} - parent {parent}")
 
     def displayInformation(self, msg, title=None, parent=None):

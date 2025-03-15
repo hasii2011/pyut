@@ -440,7 +440,7 @@ class MenuCreator:
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpVersion,      id=SharedIdentifiers.ID_MENU_HELP_VERSION)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onHelpWeb,          id=SharedIdentifiers.ID_MENU_HELP_WEB)
         containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebug, id=SharedIdentifiers.ID_MENU_HELP_LOGGING_CONTROL)
-        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebugEventEngine, id= SharedIdentifiers.ID_MENU_HELP_DEBUG_EVENT_ENGINE)
+        containingFrame.Bind(EVT_MENU, helpMenuHandler.onDebugEventEngine, id=SharedIdentifiers.ID_MENU_HELP_DEBUG_EVENT_ENGINE)
 
     def __makeSubMenuEntry(self, subMenu: Menu, wxId: int, formatName: str, callback: Callable) -> Menu:
 

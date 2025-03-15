@@ -8,34 +8,49 @@ from traceback import extract_tb
 
 from wx import Window
 
-from pyut.errorcontroller.IErrorView import IErrorView
+from codeallybasic.SingletonV3 import SingletonV3
+
 from pyut.errorcontroller.GraphicErrorView import GraphicErrorView
-from pyut.errorcontroller.TextErrorView import TextErrorView
+from pyut.errorcontroller.IErrorView import IErrorView
 from pyut.errorcontroller.RaiseErrorView import RaiseErrorView
+from pyut.errorcontroller.TextErrorView import TextErrorView
+
 from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
 
 from pyut.PyutConstants import PyutConstants
 
 
-class ErrorManager(IErrorView):
+class ErrorManager(metaclass=SingletonV3):
     """
-    This class handle errors.
-    """
-    logger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
+    This handles errors dependent on the view type:
 
-    def __init__(self, view=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
+    To use it instantiate the ErrorManager (it is a Singleton)
+    ```python
+      ...
+      errorManager: ErrorManager = ErrorManager()
+      errorManager.errorViewType = ErrorViewTypes.RAISE_ERROR_VIEW | TEXT_ERROR_VIEW | GRAPHIC_ERROR_VIEW
+
+      errorManager.newFatalError("This is a message", "...")
+      errorManager.newWarning("This is a message", "...")
+      errorManager.newInformation("This is a message", "...")
+
+    ```
+    """
+    clsLogger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
+
+    def __init__(self, viewType=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
         """
         """
-        super().__init__()
-        if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
+        if viewType == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
             self._errorView: IErrorView = GraphicErrorView()
-        elif view == ErrorViewTypes.TEXT_ERROR_VIEW:
+        elif viewType == ErrorViewTypes.TEXT_ERROR_VIEW:
             self._errorView = TextErrorView()
-        elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
+        elif viewType == ErrorViewTypes.RAISE_ERROR_VIEW:
             self._errorView = RaiseErrorView()
         else:
             assert False, "ErrorManager: Unknown view type"
-        self._errorViewType = view
+
+        self._errorViewType: ErrorViewTypes = viewType
 
     @property
     def errorViewType(self):
@@ -44,6 +59,8 @@ class ErrorManager(IErrorView):
     @errorViewType.setter
     def errorViewType(self, view: ErrorViewTypes):
 
+        self._errorViewType = view
+
         if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
             self._errorView = GraphicErrorView()
         elif view == ErrorViewTypes.TEXT_ERROR_VIEW:
@@ -51,21 +68,17 @@ class ErrorManager(IErrorView):
         elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
             self._errorView = RaiseErrorView()
 
-    def newFatalError(self, msg: str = '', title: str | None = '', parent: Window | None = None):
+    def displayFatalError(self, msg: str = '', title: str | None = '', parent: Window | None = None):
         if msg is None:
             msg = ""
         if title is None:
             title = ""
         ErrorManager.addToLogFile("Fatal error: " + title, msg)
-        self._errorView.newFatalError(msg, title, parent)
+        self._errorView.displayFatalError(msg, title, parent)
 
-    def newWarning(self, msg: str, title: str | None = '', parent=None):
+    def displayWarning(self, msg: str, title: str | None = '', parent=None):
         ErrorManager.addToLogFile(f"Warning: {title}", msg)
-        self._errorView.newWarning(msg, title, parent)
-
-    def newInformation(self, msg: str, title: str | None = '', parent=None):
-        ErrorManager.addToLogFile(f"Info: {title}", msg)
-        self._errorView.newInformation(msg, title, parent)
+        self._errorView.displayWarning(msg, title, parent)
 
     def displayInformation(self, msg: str, title: str | None = '', parent=None):
         ErrorManager.addToLogFile(f"Info: {title}", msg)
@@ -92,9 +105,9 @@ class ErrorManager(IErrorView):
     @classmethod
     def addToLogFile(cls, title: str, msg: str):
 
-        cls.logger.error("--------------------------------------------------------------------")
-        cls.logger.error(f'{title} - {msg}')
+        cls.clsLogger.error("--------------------------------------------------------------------")
+        cls.clsLogger.error(f'{title} - {msg}')
 
         errMsg: str = ErrorManager.getErrorInfo()
         if errMsg != '':
-            cls.logger.error(errMsg)
+            cls.clsLogger.error(errMsg)
