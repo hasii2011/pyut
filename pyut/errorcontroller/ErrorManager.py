@@ -15,7 +15,7 @@ from pyut.errorcontroller.IErrorView import IErrorView
 from pyut.errorcontroller.RaiseErrorView import RaiseErrorView
 from pyut.errorcontroller.TextErrorView import TextErrorView
 
-from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
+from pyut.errorcontroller.ErrorViewType import ErrorViewType
 
 from pyut.PyutConstants import PyutConstants
 
@@ -28,7 +28,7 @@ class ErrorManager(metaclass=SingletonV3):
     ```python
       ...
       errorManager: ErrorManager = ErrorManager()
-      errorManager.errorViewType = ErrorViewTypes.RAISE_ERROR_VIEW | TEXT_ERROR_VIEW | GRAPHIC_ERROR_VIEW
+      errorManager.errorViewType = ErrorViewType.RAISE_ERROR_VIEW | TEXT_ERROR_VIEW | GRAPHIC_ERROR_VIEW
 
       errorManager.newFatalError("This is a message", "...")
       errorManager.newWarning("This is a message", "...")
@@ -38,34 +38,34 @@ class ErrorManager(metaclass=SingletonV3):
     """
     clsLogger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
-    def __init__(self, viewType=ErrorViewTypes.GRAPHIC_ERROR_VIEW):
+    def __init__(self, viewType=ErrorViewType.GRAPHIC_ERROR_VIEW):
         """
         """
-        if viewType == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
+        if viewType == ErrorViewType.GRAPHIC_ERROR_VIEW:
             self._errorView: IErrorView = GraphicErrorView()
-        elif viewType == ErrorViewTypes.TEXT_ERROR_VIEW:
+        elif viewType == ErrorViewType.TEXT_ERROR_VIEW:
             self._errorView = TextErrorView()
-        elif viewType == ErrorViewTypes.RAISE_ERROR_VIEW:
+        elif viewType == ErrorViewType.RAISE_ERROR_VIEW:
             self._errorView = RaiseErrorView()
         else:
             assert False, "ErrorManager: Unknown view type"
 
-        self._errorViewType: ErrorViewTypes = viewType
+        self._errorViewType: ErrorViewType = viewType
 
     @property
     def errorViewType(self):
         return self._errorViewType
 
     @errorViewType.setter
-    def errorViewType(self, view: ErrorViewTypes):
+    def errorViewType(self, view: ErrorViewType):
 
         self._errorViewType = view
 
-        if view == ErrorViewTypes.GRAPHIC_ERROR_VIEW:
+        if view == ErrorViewType.GRAPHIC_ERROR_VIEW:
             self._errorView = GraphicErrorView()
-        elif view == ErrorViewTypes.TEXT_ERROR_VIEW:
+        elif view == ErrorViewType.TEXT_ERROR_VIEW:
             self._errorView = TextErrorView()
-        elif view == ErrorViewTypes.RAISE_ERROR_VIEW:
+        elif view == ErrorViewType.RAISE_ERROR_VIEW:
             self._errorView = RaiseErrorView()
 
     def displayFatalError(self, msg: str = '', title: str | None = '', parent: Window | None = None):

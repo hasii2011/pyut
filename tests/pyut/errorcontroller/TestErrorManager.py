@@ -2,7 +2,7 @@
 from unittest import main as unitTestMain
 from unittest import TestSuite
 
-from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
+from pyut.errorcontroller.ErrorViewType import ErrorViewType
 from pyut.errorcontroller.IErrorView import IErrorView
 from pyut.errorcontroller.TextErrorView import TextErrorView
 
@@ -25,15 +25,15 @@ class TestErrorManager(ProjectTestBase):
     def testChangingViewType(self):
         errorManger: ErrorManager = ErrorManager()
 
-        errorManger.errorViewType = ErrorViewTypes.RAISE_ERROR_VIEW
+        errorManger.errorViewType = ErrorViewType.RAISE_ERROR_VIEW
 
-        self.assertEqual(ErrorViewTypes.RAISE_ERROR_VIEW, errorManger.errorViewType, 'Incorrect error type')
+        self.assertEqual(ErrorViewType.RAISE_ERROR_VIEW, errorManger.errorViewType, 'Incorrect error type')
 
     def testCorrectViewSet(self):
 
         errorManger: ErrorManager = ErrorManager()
 
-        errorManger.errorViewType = ErrorViewTypes.TEXT_ERROR_VIEW
+        errorManger.errorViewType = ErrorViewType.TEXT_ERROR_VIEW
 
         view: IErrorView = errorManger._errorView
 

@@ -2,7 +2,7 @@
 from enum import Enum
 
 
-class ErrorViewTypes(Enum):
+class ErrorViewType(Enum):
 
     GRAPHIC_ERROR_VIEW = 1
     TEXT_ERROR_VIEW    = 2

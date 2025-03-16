@@ -1,7 +1,7 @@
 from wx import CommandEvent
 
 from pyut.errorcontroller.ErrorManager import ErrorManager
-from pyut.errorcontroller.ErrorViewTypes import ErrorViewTypes
+from pyut.errorcontroller.ErrorViewType import ErrorViewType
 
 
 class DebugErrorViews:
@@ -11,24 +11,24 @@ class DebugErrorViews:
     def debugGraphicErrorView(commandEvent: CommandEvent):
 
         em: ErrorManager = ErrorManager()
-        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewTypes.GRAPHIC_ERROR_VIEW)
+        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewType.GRAPHIC_ERROR_VIEW)
 
     # noinspection PyUnusedLocal
     @staticmethod
     def debugTextErrorView(commandEvent: CommandEvent):
 
         em: ErrorManager = ErrorManager()
-        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewTypes.TEXT_ERROR_VIEW)
+        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewType.TEXT_ERROR_VIEW)
 
     # noinspection PyUnusedLocal
     @staticmethod
     def debugRaiseErrorView(commandEvent: CommandEvent):
 
         em: ErrorManager = ErrorManager()
-        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewTypes.RAISE_ERROR_VIEW)
+        DebugErrorViews._makeCalls(em=em, viewType=ErrorViewType.RAISE_ERROR_VIEW)
 
     @staticmethod
-    def _makeCalls(em: ErrorManager, viewType: ErrorViewTypes):
+    def _makeCalls(em: ErrorManager, viewType: ErrorViewType):
 
         em.errorViewType = viewType
 
