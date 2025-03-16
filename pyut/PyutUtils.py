@@ -102,7 +102,7 @@ class PyutUtils:
             em.displayFatalError(msg, title, parent)
         except (ValueError, Exception) as e:
             eLog: Logger = getLogger(__name__)
-            # TODO  I don't this is correct anymore
+            # TODO:  I don't think this is correct anymore
             eLog.error("Error in PyutUtils/displayError")
             eLog.error(f"Original error message was: {e}")
             eLog.error(errMsg)

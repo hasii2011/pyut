@@ -1,4 +1,6 @@
 
+from typing import cast
+
 from logging import Logger
 from logging import getLogger
 
@@ -18,11 +20,12 @@ from pyut.errorcontroller.TextErrorView import TextErrorView
 from pyut.errorcontroller.ErrorViewType import ErrorViewType
 
 from pyut.PyutConstants import PyutConstants
+from pyut.preferences.PyutPreferences import PyutPreferences
 
 
 class ErrorManager(metaclass=SingletonV3):
     """
-    This handles errors dependent on the view type:
+    This class implements the Strategy pattern and handles errors based on the view type:
 
     To use it instantiate the ErrorManager (it is a Singleton)
     ```python
@@ -38,35 +41,34 @@ class ErrorManager(metaclass=SingletonV3):
     """
     clsLogger: Logger = getLogger(PyutConstants.MAIN_LOGGING_NAME)
 
-    def __init__(self, viewType=ErrorViewType.GRAPHIC_ERROR_VIEW):
+    def __init__(self):
         """
         """
-        if viewType == ErrorViewType.GRAPHIC_ERROR_VIEW:
-            self._errorView: IErrorView = GraphicErrorView()
-        elif viewType == ErrorViewType.TEXT_ERROR_VIEW:
-            self._errorView = TextErrorView()
-        elif viewType == ErrorViewType.RAISE_ERROR_VIEW:
-            self._errorView = RaiseErrorView()
-        else:
-            assert False, "ErrorManager: Unknown view type"
+        self._errorViewType: ErrorViewType = cast(ErrorViewType, None)
+        self._errorView:     IErrorView    = cast(IErrorView,    None)
 
-        self._errorViewType: ErrorViewType = viewType
+        self._preferences:  PyutPreferences = PyutPreferences()
+        self.errorViewType: ErrorViewType   = self._preferences.errorViewType
 
     @property
     def errorViewType(self):
         return self._errorViewType
 
     @errorViewType.setter
-    def errorViewType(self, view: ErrorViewType):
+    def errorViewType(self, viewType: ErrorViewType):
 
-        self._errorViewType = view
+        self._errorViewType = viewType
 
-        if view == ErrorViewType.GRAPHIC_ERROR_VIEW:
+        if viewType == ErrorViewType.GRAPHIC_ERROR_VIEW:
             self._errorView = GraphicErrorView()
-        elif view == ErrorViewType.TEXT_ERROR_VIEW:
+        elif viewType == ErrorViewType.TEXT_ERROR_VIEW:
             self._errorView = TextErrorView()
-        elif view == ErrorViewType.RAISE_ERROR_VIEW:
+        elif viewType == ErrorViewType.RAISE_ERROR_VIEW:
             self._errorView = RaiseErrorView()
+        else:
+            assert False, "ErrorManager: Unknown viewType type"
+
+        self._preferences.errorViewType = viewType
 
     def displayFatalError(self, msg: str = '', title: str | None = '', parent: Window | None = None):
         if msg is None:

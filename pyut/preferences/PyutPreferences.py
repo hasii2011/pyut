@@ -18,6 +18,7 @@ from codeallybasic.SecureConversions import SecureConversions
 
 from codeallybasic.SingletonV3 import SingletonV3
 
+from pyut.errorcontroller.ErrorViewType import ErrorViewType
 from pyut.general.datatypes.ToolBarIconSize import ToolBarIconSize
 from pyut.preferences.FileHistoryPreference import FileHistoryPreference
 
@@ -26,6 +27,7 @@ DEFAULT_STARTUP_POSITION: str = Position(5, 5).__str__()
 DEFAULT_TB_ICON_SIZE:     str = ToolBarIconSize.SIZE_32.value
 
 DEFAULT_FILE_HISTORY_DISPLAY: str = FileHistoryPreference.SHOW_NEVER.value
+DEFAULT_ERROR_VIEW_TYPE:      str = ErrorViewType.GRAPHIC_ERROR_VIEW.value
 
 DEFAULT_TRACKED_LOGGERS: List[str] = [
     'pyut',
@@ -66,8 +68,9 @@ SECTION_FEATURES: ValueDescriptions = ValueDescriptions(
 
 SECTION_DEBUG: ValueDescriptions = ValueDescriptions(
     {
-        KeyName('debugErrorViews'):  ValueDescription(defaultValue='False', deserializer=SecureConversions.secureBoolean),
-        KeyName('debugEventEngine'): ValueDescription(defaultValue='True',  deserializer=SecureConversions.secureBoolean),
+        KeyName('debugErrorViews'):  ValueDescription(defaultValue='False',                 deserializer=SecureConversions.secureBoolean),
+        KeyName('debugEventEngine'): ValueDescription(defaultValue='False',                 deserializer=SecureConversions.secureBoolean),
+        KeyName('errorViewType'):    ValueDescription(defaultValue=DEFAULT_ERROR_VIEW_TYPE, deserializer=ErrorViewType, enumUseValue=True),
     }
 )
 
