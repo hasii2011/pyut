@@ -28,7 +28,7 @@
         },
         "pyut": {
             "level":     "WARNING",
-            "propagate": true
+            "propagate": false
         },
         "tests": {
             "level": "WARNING",
