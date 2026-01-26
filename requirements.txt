@@ -1,4 +1,4 @@
-wheel==0.44.0
+wheel==0.46.2
 # Don't upgrade past this version as 70.x.x does not work
 setuptools==70.1.1
 
